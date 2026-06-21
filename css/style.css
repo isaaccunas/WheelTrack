@@ -1,0 +1,515 @@
+/* ===================================================
+   WHEELTRACK
+   Hoja de estilos principal
+=================================================== */
+
+/* Reinicio básico */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* Configuración general */
+
+body{
+    font-family:"Segoe UI", sans-serif;
+    background:#f5f5f5;
+    color:#222;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+.header{
+    background:#111;
+    border-bottom:4px solid #ff6a00;
+}
+
+/* Logo circular */
+
+.logo-circle{
+    width:50px;
+    height:50px;
+    border:3px solid #ff6a00;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-size:24px;
+}
+
+/* Título */
+
+.logo-title{
+    color:white;
+    font-size:30px;
+    font-weight:800;
+    margin:0;
+}
+
+/* Subtítulo */
+
+.logo-subtitle{
+    color:#ff6a00;
+    font-size:20px;
+    font-weight:700;
+    margin:0;
+}
+
+/* Texto inferior */
+
+.logo-text{
+    color:#dddddd;
+    font-size:12px;
+    margin:0;
+}
+
+/* ==========================
+   CONTENIDO GENERAL
+========================== */
+
+main.container-fluid{
+    padding-top:20px !important;
+    padding-bottom:20px !important;
+}
+
+/* ==========================
+   LEYENDA
+========================== */
+
+.text-orange{
+    color:#ff6a00;
+}
+
+.legend-title{
+    color:#ff6a00;
+    font-size:20px;
+    font-weight:700;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:180px;
+}
+
+.legend-item strong{
+    display:block;
+    font-size:16px;
+}
+
+.legend-item small{
+    color:#666;
+    font-size:12px;
+}
+
+.dot{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    display:inline-block;
+    flex-shrink:0;
+}
+
+.bg-purple{
+    background:#9b59b6;
+}
+
+/* ==========================
+   PANEL RUEDAS
+========================== */
+
+.border-orange{
+    border:2px solid #ff6a00;
+    height:100%;
+}
+
+.panel-title{
+    color:#ff6a00;
+    font-size:26px;
+    font-weight:700;
+    margin:0;
+}
+
+.wheel-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 0;
+    border-bottom:1px solid #e5e5e5;
+}
+
+.status{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    display:inline-block;
+}
+
+/* ==========================
+   BOTONES DE ACCIÓN
+========================== */
+
+.action-button{
+    width:100%;
+    height:80px;
+    background:#fff;
+    border:2px solid #ff6a00;
+    border-radius:24px;
+    cursor:pointer;
+    transition:all .2s ease;
+    text-align:left;
+    padding:0 25px;
+}
+
+.action-button:hover{
+    background:#fff4ec;
+    transform:translateY(-2px);
+}
+
+.action-content{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.action-content span{
+    color:#ff6a00;
+    font-size:1.6rem;
+    font-weight:700;
+}
+
+.icon-circle{
+    width:56px;
+    height:56px;
+    border:3px solid #ff6a00;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.icon-circle i{
+    color:#ff6a00;
+    font-size:1.6rem;
+}
+
+.action-icon{
+    width:56px;
+    text-align:center;
+    font-size:2.3rem;
+    flex-shrink:0;
+}
+
+.gear-icon{
+    color:#8b8b8b;
+}
+
+.box-icon{
+    color:#a06b3b;
+}
+
+/* ==========================
+   INDICADORES
+========================== */
+
+.summary-card{
+    min-height:110px;
+    border-radius:24px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:20px;
+}
+
+.summary-light{
+    background:#fff3e8;
+}
+
+.summary-dark{
+    background:#ffe4d1;
+}
+
+.summary-icon{
+    font-size:2.8rem;
+    color:#ff6a00;
+}
+
+.summary-number{
+    font-size:3rem;
+    font-weight:700;
+    color:#ff6a00;
+    line-height:1;
+}
+
+.summary-title{
+    margin:0;
+    font-size:1.4rem;
+    font-weight:700;
+}
+
+.summary-text{
+    margin:0;
+    color:#555;
+}
+
+.week-circle{
+    width:70px;
+    height:70px;
+    border:5px solid #d95a00;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#d95a00;
+    font-size:2rem;
+    font-weight:700;
+    flex-shrink:0;
+}
+
+.week-info{
+    flex:1;
+}
+
+.distribution{
+    margin-top:10px;
+}
+
+.distribution div{
+    display:flex;
+    justify-content:space-between;
+    margin-top:6px;
+    font-size:1rem;
+}
+
+/* ==========================
+   COLORES DE ESTADO
+========================== */
+
+.bg-purple{
+    background:#9b59b6 !important;
+}
+
+.bg-gray{
+    background:#7f8c8d !important;
+}
+
+.bg-green{
+    background:#2ecc71 !important;
+}
+
+.bg-yellow{
+    background:#f1c40f !important;
+}
+
+.bg-blue{
+    background:#3498db !important;
+}
+
+.bg-red{
+    background:#e74c3c !important;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media (max-width: 992px){
+
+    .panel-title{
+        font-size:22px;
+    }
+
+    .action-content span{
+        font-size:1.3rem;
+    }
+
+    .summary-number{
+        font-size:2.5rem;
+    }
+
+    .week-circle{
+        width:70px;
+        height:70px;
+        font-size:2rem;
+    }
+}
+
+@media (max-width: 768px){
+
+    .logo-title{
+        font-size:28px;
+    }
+
+    .logo-subtitle{
+        font-size:20px;
+    }
+
+    .action-button{
+        height:auto;
+        padding:20px;
+    }
+
+    .action-content{
+        gap:15px;
+    }
+
+    .summary-card{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .distribution div{
+        font-size:.95rem;
+    }
+}
+/* ==========================================
+   AJUSTE AUTOMÁTICO A LA ALTURA DEL MONITOR
+========================================== */
+
+html,
+body{
+    min-height:100%;
+    overflow-x:hidden;
+}
+
+body{
+    display:flex;
+    flex-direction:column;
+}
+
+/* El header mantiene su tamaño */
+
+.header{
+    flex-shrink:0;
+}
+
+/* Contenido principal */
+
+main.container-fluid{
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+
+    padding-top:15px !important;
+    padding-bottom:15px !important;
+}
+
+/* Leyenda con scroll horizontal en pantallas pequeñas */
+
+.legend-card{
+    overflow-x:auto;
+}
+
+/* Espaciado del dashboard */
+
+.dashboard-row{
+    align-items:flex-start;
+}
+
+/* Panel de ruedas */
+
+.process-panel{
+    height: 540px;
+    overflow: hidden;
+}
+
+/* Barra de desplazamiento */
+
+.process-panel::-webkit-scrollbar{
+    width:8px;
+}
+
+.process-panel::-webkit-scrollbar-track{
+    background:#f1f1f1;
+}
+
+.process-panel::-webkit-scrollbar-thumb{
+    background:#ff6a00;
+    border-radius:10px;
+}
+
+.process-panel::-webkit-scrollbar-thumb:hover{
+    background:#d95a00;
+}
+
+/* Reducimos espacios verticales */
+
+.g-4{
+    --bs-gutter-y:1rem;
+    --bs-gutter-x:1rem;
+}
+/* ==========================================
+   LISTA DE RUEDAS CON SCROLL
+========================================== */
+
+#wheelList{
+    max-height: 430px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 8px;
+}
+
+/* Scroll personalizado */
+
+#wheelList::-webkit-scrollbar{
+    width: 8px;
+}
+
+#wheelList::-webkit-scrollbar-track{
+    background: #f1f1f1;
+}
+
+#wheelList::-webkit-scrollbar-thumb{
+    background: #ff6a00;
+    border-radius: 10px;
+}
+
+#wheelList::-webkit-scrollbar-thumb:hover{
+    background: #d95a00;
+}
+
+/* ==========================================
+   ACCIONES DE CADA RUEDA
+========================================== */
+
+.wheel-actions{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.action-btn{
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    transition: .2s;
+}
+
+.action-btn:hover{
+    transform: scale(1.15);
+}
+
+.edit-btn{
+    color: #3498db;
+}
+
+.delete-btn{
+    color: #e74c3c;
+}
+
+/* ==========================================
+   EVITAR QUE EL PANEL INFERIOR SE PIERDA
+========================================== */
+
+.dashboard-row{
+    align-items: flex-start;
+}

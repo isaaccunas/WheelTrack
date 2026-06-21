@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WheelTrack</title>
+
+    <!-- Bootstrap -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header bg-dark border-bottom border-warning border-2">
+
+        <div class="container-fluid">
+
+            <div class="row align-items-center py-2">
+
+                <div class="col-lg-6">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="logo-circle me-3">
+
+                            <i class="fa-solid fa-gear"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h1 class="logo-title">
+                                WHEELTRACK
+                            </h1>
+
+                            <h2 class="logo-subtitle">
+                                Rueda Cero Papel
+                            </h2>
+
+                            <p class="logo-text">
+                                Digital Wheel Management
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 text-end">
+
+                    <i class="fa-solid fa-bell text-warning me-3"></i>
+
+                    <i class="fa-regular fa-envelope text-white me-3"></i>
+
+                    <span class="text-white fw-bold">
+
+                        Jefe de Taller
+
+                    </span>
+
+                    <i class="fa-solid fa-chevron-down text-white ms-2"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- CONTENIDO -->
+
+    <main class="container-fluid py-2">
+
+        <!-- LEYENDA -->
+
+        <div class="card shadow-sm border-0 rounded-4 mb-2 legend-card">
+
+            <div class="card-body">
+
+                <div class="row align-items-center gy-3">
+
+                    <div class="col-auto">
+
+                        <div class="d-flex align-items-center">
+
+                            <i class="fa-solid fa-circle-info text-orange fs-3 me-2"></i>
+
+                            <strong class="legend-title">
+
+                                Leyenda de estados
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col">
+
+                        <div class="row gy-3">
+
+                            <div class="col-lg col-md-4 col-6">
+
+                                <div class="legend-item">
+
+                                    <span class="dot bg-success"></span>
+
+                                    <div>
+
+                                        <strong>En proceso</strong>
+
+                                        <small>Trabajo en ejecución</small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg col-md-4 col-6">
+
+                                <div class="legend-item">
+
+                                    <span class="dot bg-warning"></span>
+
+                                    <div>
+
+                                        <strong>Esperando material</strong>
+
+                                        <small>Pendiente de partes</small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg col-md-4 col-6">
+
+                                <div class="legend-item">
+
+                                    <span class="dot bg-primary"></span>
+
+                                    <div>
+
+                                        <strong>Esperando NDT</strong>
+
+                                        <small>Pendiente inspección</small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg col-md-4 col-6">
+
+                                <div class="legend-item">
+
+                                    <span class="dot bg-danger"></span>
+
+                                    <div>
+
+                                        <strong>Bloqueada</strong>
+
+                                        <small>Intervención requerida</small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg col-md-4 col-6">
+
+                                <div class="legend-item">
+
+                                    <span class="dot bg-purple"></span>
+
+                                    <div>
+
+                                        <strong>Lista para liberar</strong>
+
+                                        <small>Aprobada por inspector</small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg col-md-4 col-6">
+
+                                <div class="legend-item">
+
+                                    <span class="dot bg-secondary"></span>
+
+                                    <div>
+
+                                        <strong>Entregada a almacén</strong>
+
+                                        <small>Proceso completado</small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- DASHBOARD -->
+
+        <div class="row g-3 dashboard-row">
+
+            <!-- PANEL IZQUIERDO -->
+
+            <div class="col-lg-6">
+
+                <div class="card shadow-sm rounded-4 border-orange process-panel">
+
+                    <div class="card-body">
+
+                        <div class="d-flex align-items-center mb-4">
+
+                            <i class="fa-solid fa-circle-dot text-orange fs-4 me-2"></i>
+
+                            <h3 class="panel-title">
+
+                                Ruedas en proceso
+
+                            </h3>
+
+                        </div>
+
+                        <div id="wheelList"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PANEL DERECHO -->
+
+            <div class="col-lg-6">
+
+                <div class="d-flex flex-column gap-3 h-100">
+
+                    <button
+                        type="button"
+                        class="action-button"
+                        id="btnNuevaRueda">
+
+                        <div class="action-content">
+
+                            <div class="icon-circle">
+
+                                <i class="fa-solid fa-plus"></i>
+
+                            </div>
+
+                            <span>Ingresar una nueva rueda</span>
+
+                        </div>
+
+                    </button>
+
+                    <button type="button" class="action-button">
+
+                        <div class="action-content">
+
+                            <i class="fa-solid fa-gear action-icon gear-icon"></i>
+
+                            <span>Ruedas de overhaul</span>
+
+                        </div>
+
+                    </button>
+
+                    <button type="button" class="action-button">
+
+                        <div class="action-content">
+
+                            <i class="fa-solid fa-box action-icon box-icon"></i>
+
+                            <span>Cauchos usados para enviar</span>
+
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- INDICADORES -->
+
+        <div class="row g-4 mt-1">
+
+            <div class="col-lg-6">
+
+                <div class="summary-card summary-light">
+
+                    <i class="fa-solid fa-clipboard-list summary-icon"></i>
+
+                    <div class="summary-number" id="totalProcesadas">
+
+                        0
+
+                    </div>
+
+                    <div>
+
+                        <h3 class="summary-title">
+
+                            Total de ruedas procesadas
+
+                        </h3>
+
+                        <p class="summary-text">
+
+                            Hasta el momento
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <div class="summary-card summary-dark">
+
+                   <div class="week-circle" id="ruedasSemana">
+
+                        0
+
+                    </div>
+
+                    <div class="week-info">
+
+                        <h3 class="summary-title">
+
+                            Ruedas de esta semana
+
+                        </h3>
+
+                        <div class="distribution">
+
+                            <div>
+
+                                <span>NW (Nariz)</span>
+
+                                <strong>2</strong>
+
+                            </div>
+
+                            <div>
+
+                                <span>MW (Principal)</span>
+
+                                <strong>2</strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- MODAL NUEVA / EDITAR RUEDA -->
+
+    <div class="modal fade" id="modalRueda" tabindex="-1">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        Nueva rueda
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <form id="formNuevaRueda">
+
+                    <div class="modal-body">
+
+                        <div class="row g-3">
+
+                            <div class="col-md-4">
+                                <label class="form-label">1. Nº *</label>
+                                <input type="text" class="form-control" id="numeroRueda" placeholder="Ej: 125">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">2. Fecha de recepción *</label>
+                                <input type="date" class="form-control" id="fechaRecepcion">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">3. Avión *</label>
+                                <input type="text" class="form-control" id="avion" placeholder="CCCYL">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">4. S/N *</label>
+                                <input type="text" class="form-control" id="serial" placeholder="Ej: C3445">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">5. Ingreso al taller *</label>
+                                <input type="date" class="form-control" id="fechaIngreso">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">6. Detalle *</label>
+                                <input type="text" class="form-control" id="detalle" placeholder="Ej: Guayaquil / Condición de la rueda">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">7. WP *</label>
+                                <input type="text" class="form-control" id="wp" placeholder="Ej: T00Y7F5V">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">8. Tire Change *</label>
+
+                                <select class="form-select" id="tireChange">
+
+                                    <option value="">Seleccione (1 - 7)</option>
+
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7 - Overhaul</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">9. Shop Visit *</label>
+                                <input type="number" class="form-control" id="shopVisit" placeholder="Ej: 33">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">10. Razón *</label>
+                                <input type="text" class="form-control" id="razon" placeholder="0.4">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">11. Estación *</label>
+                                <input type="text" class="form-control" id="estacion" placeholder="UIO">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">12. Ciclos *</label>
+                                <input type="text" class="form-control" id="ciclos" placeholder="-16 o +16">
+                            </div>
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+
+                                    Estado inicial *
+
+                                </label>
+
+                                <select class="form-select" id="estado">
+
+                                    <option value="En proceso" selected>
+                                        En proceso
+                                    </option>
+
+                                    <option value="Esperando material">
+                                        Esperando material
+                                    </option>
+
+                                    <option value="Esperando NDT">
+                                        Esperando NDT
+                                    </option>
+
+                                    <option value="Bloqueada">
+                                        Bloqueada
+                                    </option>
+
+                                    <option value="Lista para liberar">
+                                        Lista para liberar
+                                    </option>
+
+                                    <option value="Entregada a almacén">
+                                        Entregada a almacén
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-warning"
+                        id="guardarRueda">
+
+                        Guardar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL DETALLE -->
+
+    <div class="modal fade" id="modalDetalleRueda" tabindex="-1">
+
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        Detalle de la rueda
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div id="detalleRuedaBody"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bootstrap -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript -->
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
