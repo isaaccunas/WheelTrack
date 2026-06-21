@@ -1,77 +1,12 @@
+import { getColorForState } from "./config/wheelStates.js";
+import { DEFAULT_WHEELS } from "./data/defaultWheels.js";
+import { loadWheels, saveWheels } from "./data/storage.js";
+
 // ==========================================
 // DATOS INICIALES
 // ==========================================
 
-let wheels = JSON.parse(localStorage.getItem("wheels")) || [
-
-    {
-        numeroRueda: "",
-        fechaRecepcion: "",
-        avion: "",
-        serial: "E1417",
-        fechaIngreso: "",
-        detalle: "",
-        wp: "",
-        tireChange: "",
-        shopVisit: "",
-        razon: "",
-        estacion: "",
-        ciclos: "",
-        estado: "Ensamblaje",
-        color: "bg-success"
-    },
-
-    {
-        numeroRueda: "",
-        fechaRecepcion: "",
-        avion: "",
-        serial: "70784",
-        fechaIngreso: "",
-        detalle: "",
-        wp: "",
-        tireChange: "",
-        shopVisit: "",
-        razon: "",
-        estacion: "",
-        ciclos: "",
-        estado: "Esperando Washer",
-        color: "bg-yellow"
-    },
-
-    {
-        numeroRueda: "",
-        fechaRecepcion: "",
-        avion: "",
-        serial: "50767",
-        fechaIngreso: "",
-        detalle: "",
-        wp: "",
-        tireChange: "",
-        shopVisit: "",
-        razon: "",
-        estacion: "",
-        ciclos: "",
-        estado: "Esperando NDT",
-        color: "bg-blue"
-    },
-
-    {
-        numeroRueda: "",
-        fechaRecepcion: "",
-        avion: "",
-        serial: "C1445",
-        fechaIngreso: "",
-        detalle: "",
-        wp: "",
-        tireChange: "",
-        shopVisit: "",
-        razon: "",
-        estacion: "",
-        ciclos: "",
-        estado: "Inflado",
-        color: "bg-success"
-    }
-];
+let wheels = loadWheels() || DEFAULT_WHEELS;
 
 // ==========================================
 // REFERENCIAS
@@ -152,10 +87,7 @@ function renderWheels() {
         `;
     });
 
-    localStorage.setItem(
-        "wheels",
-        JSON.stringify(wheels)
-    );
+    saveWheels(wheels);
 }
 
 renderWheels();
@@ -214,33 +146,7 @@ guardarRueda.addEventListener("click", () => {
         return;
     }
 
-    let color = "bg-success";
-
-    switch (estado) {
-
-        case "Esperando material":
-            color = "bg-yellow";
-            break;
-
-        case "Esperando NDT":
-            color = "bg-blue";
-            break;
-
-        case "Bloqueada":
-            color = "bg-red";
-            break;
-
-        case "Lista para liberar":
-            color = "bg-purple";
-            break;
-
-        case "Entregada a almacén":
-            color = "bg-gray";
-            break;
-
-        default:
-            color = "bg-green";
-    }
+    const color = getColorForState(estado);
 
     const nuevaRueda = {
 
@@ -271,10 +177,7 @@ guardarRueda.addEventListener("click", () => {
         wheels.push(nuevaRueda);
     }
 
-    localStorage.setItem(
-        "wheels",
-        JSON.stringify(wheels)
-    );
+    saveWheels(wheels);
 
     renderWheels();
 
@@ -328,10 +231,7 @@ function deleteWheel(index) {
 
     wheels.splice(index, 1);
 
-    localStorage.setItem(
-        "wheels",
-        JSON.stringify(wheels)
-    );
+    saveWheels(wheels);
 
     renderWheels();
 }
@@ -409,3 +309,7 @@ function showWheelDetail(index) {
 
     modalDetalle.show();
 }
+
+window.editWheel = editWheel;
+window.deleteWheel = deleteWheel;
+window.showWheelDetail = showWheelDetail;
