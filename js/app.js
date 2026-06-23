@@ -4,6 +4,7 @@ import {
     normalizeFormData,
     validateWheel
 } from "./domain/wheelModel.js";
+import { getDashboardKpis } from "./domain/kpiCalculator.js";
 import { refs } from "./ui/domRefs.js";
 import { renderWheelList } from "./ui/wheelListView.js";
 import { showWheelDetail as showWheelDetailView } from "./ui/wheelDetailView.js";
@@ -20,9 +21,28 @@ let editIndex = null;
 // RENDERIZAR RUEDAS
 // ==========================================
 
+function renderKpis() {
+
+    const kpis = getDashboardKpis(wheelRepository.getAll());
+
+    document.getElementById("totalProcesadas").textContent = kpis.totalProcessed;
+
+    document.getElementById("ruedasSemana").textContent = kpis.weeklyCount;
+
+    const distributionValues = document.querySelectorAll(".distribution strong");
+
+    if (distributionValues.length >= 2) {
+
+        distributionValues[0].textContent = kpis.nwCount;
+        distributionValues[1].textContent = kpis.mwCount;
+    }
+}
+
 function renderWheels() {
 
     renderWheelList(wheelRepository.getAll());
+
+    renderKpis();
 }
 
 renderWheels();
