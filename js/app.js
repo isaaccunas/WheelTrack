@@ -8,6 +8,12 @@ import { getDashboardKpis } from "./domain/kpiCalculator.js";
 import { refs } from "./ui/domRefs.js";
 import { renderWheelList } from "./ui/wheelListView.js";
 import { showWheelDetail as showWheelDetailView } from "./ui/wheelDetailView.js";
+import {
+    closeWheelModal,
+    openWheelModal,
+    populateWheelForm,
+    resetWheelForm
+} from "./ui/wheelFormView.js";
 
 // ==========================================
 // DATOS INICIALES
@@ -55,9 +61,9 @@ refs.btnNuevaRueda.addEventListener("click", () => {
 
     editIndex = null;
 
-    document.getElementById("formNuevaRueda").reset();
+    resetWheelForm();
 
-    refs.modalRueda.show();
+    openWheelModal();
 });
 
 // ==========================================
@@ -105,9 +111,9 @@ refs.guardarRueda.addEventListener("click", () => {
 
     renderWheels();
 
-    document.getElementById("formNuevaRueda").reset();
+    resetWheelForm();
 
-    refs.modalRueda.hide();
+    closeWheelModal();
 
     alert("Datos guardados correctamente.");
 });
@@ -122,21 +128,9 @@ function editWheel(index) {
 
     editIndex = index;
 
-    document.getElementById("numeroRueda").value = wheel.numeroRueda || "";
-    document.getElementById("fechaRecepcion").value = wheel.fechaRecepcion || "";
-    document.getElementById("avion").value = wheel.avion || "";
-    document.getElementById("serial").value = wheel.serial || "";
-    document.getElementById("fechaIngreso").value = wheel.fechaIngreso || "";
-    document.getElementById("detalle").value = wheel.detalle || "";
-    document.getElementById("wp").value = wheel.wp || "";
-    document.getElementById("tireChange").value = wheel.tireChange || "";
-    document.getElementById("shopVisit").value = wheel.shopVisit || "";
-    document.getElementById("razon").value = wheel.razon || "";
-    document.getElementById("estacion").value = wheel.estacion || "";
-    document.getElementById("ciclos").value = wheel.ciclos || "";
-    document.getElementById("estado").value = wheel.estado || "";
+    populateWheelForm(wheel);
 
-    refs.modalRueda.show();
+    openWheelModal();
 }
 
 // ==========================================
