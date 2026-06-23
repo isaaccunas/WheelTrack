@@ -1,30 +1,14 @@
 import { getColorForState } from "./config/wheelStates.js";
-import { DEFAULT_WHEELS } from "./data/defaultWheels.js";
-import { loadWheels, saveWheels } from "./data/storage.js";
+import * as wheelRepository from "./data/wheelRepository.js";
+import { refs } from "./ui/domRefs.js";
+import { renderWheelList } from "./ui/wheelListView.js";
+import { showWheelDetail as showWheelDetailView } from "./ui/wheelDetailView.js";
 
 // ==========================================
 // DATOS INICIALES
 // ==========================================
 
-let wheels = loadWheels() || DEFAULT_WHEELS;
-
-// ==========================================
-// REFERENCIAS
-// ==========================================
-
-const wheelList = document.getElementById("wheelList");
-
-const modalElement = document.getElementById("modalRueda");
-const modalRueda = new bootstrap.Modal(modalElement);
-
-const modalDetalleElement = document.getElementById("modalDetalleRueda");
-const modalDetalle = modalDetalleElement
-    ? new bootstrap.Modal(modalDetalleElement)
-    : null;
-
-const btnNuevaRueda = document.getElementById("btnNuevaRueda");
-
-const guardarRueda = document.getElementById("guardarRueda");
+wheelRepository.load();
 
 let editIndex = null;
 
@@ -34,60 +18,7 @@ let editIndex = null;
 
 function renderWheels() {
 
-    wheelList.innerHTML = "";
-
-    wheels.forEach((wheel, index) => {
-
-        wheelList.innerHTML += `
-
-            <div class="wheel-row">
-
-                <div
-                    style="cursor:pointer; flex:1"
-                    onclick="showWheelDetail(${index})"
-                >
-
-                    <strong>
-                        Nº: ${wheel.numeroRueda || "-"}
-                        | S/N: ${wheel.serial}
-                    </strong>
-
-                    <div>${wheel.avion || "-"}</div>
-
-                    <small>${wheel.estado}</small>
-
-                </div>
-
-                <div class="wheel-actions">
-
-                    <button
-                        type="button"
-                        class="action-btn edit-btn"
-                        title="Editar"
-                        onclick="event.stopPropagation(); editWheel(${index})"
-                    >
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-
-                    <button
-                        type="button"
-                        class="action-btn delete-btn"
-                        title="Eliminar"
-                        onclick="event.stopPropagation(); deleteWheel(${index})"
-                    >
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-
-                    <span class="status ${wheel.color}"></span>
-
-                </div>
-
-            </div>
-
-        `;
-    });
-
-    saveWheels(wheels);
+    renderWheelList(wheelRepository.getAll());
 }
 
 renderWheels();
@@ -96,20 +27,20 @@ renderWheels();
 // ABRIR MODAL NUEVA RUEDA
 // ==========================================
 
-btnNuevaRueda.addEventListener("click", () => {
+refs.btnNuevaRueda.addEventListener("click", () => {
 
     editIndex = null;
 
     document.getElementById("formNuevaRueda").reset();
 
-    modalRueda.show();
+    refs.modalRueda.show();
 });
 
 // ==========================================
 // GUARDAR RUEDA
 // ==========================================
 
-guardarRueda.addEventListener("click", () => {
+refs.guardarRueda.addEventListener("click", () => {
 
     const numeroRueda = document.getElementById("numeroRueda").value.trim();
     const fechaRecepcion = document.getElementById("fechaRecepcion").value;
@@ -168,22 +99,20 @@ guardarRueda.addEventListener("click", () => {
 
     if (editIndex !== null) {
 
-        wheels[editIndex] = nuevaRueda;
+        wheelRepository.update(editIndex, nuevaRueda);
 
         editIndex = null;
 
     } else {
 
-        wheels.push(nuevaRueda);
+        wheelRepository.add(nuevaRueda);
     }
-
-    saveWheels(wheels);
 
     renderWheels();
 
     document.getElementById("formNuevaRueda").reset();
 
-    modalRueda.hide();
+    refs.modalRueda.hide();
 
     alert("Datos guardados correctamente.");
 });
@@ -194,7 +123,7 @@ guardarRueda.addEventListener("click", () => {
 
 function editWheel(index) {
 
-    const wheel = wheels[index];
+    const wheel = wheelRepository.getById(index);
 
     editIndex = index;
 
@@ -212,7 +141,7 @@ function editWheel(index) {
     document.getElementById("ciclos").value = wheel.ciclos || "";
     document.getElementById("estado").value = wheel.estado || "";
 
-    modalRueda.show();
+    refs.modalRueda.show();
 }
 
 // ==========================================
@@ -221,7 +150,7 @@ function editWheel(index) {
 
 function deleteWheel(index) {
 
-    const wheel = wheels[index];
+    const wheel = wheelRepository.getById(index);
 
     const confirmar = confirm(
         `¿Deseas eliminar la rueda S/N: ${wheel.serial}?`
@@ -229,9 +158,7 @@ function deleteWheel(index) {
 
     if (!confirmar) return;
 
-    wheels.splice(index, 1);
-
-    saveWheels(wheels);
+    wheelRepository.remove(index);
 
     renderWheels();
 }
@@ -242,72 +169,7 @@ function deleteWheel(index) {
 
 function showWheelDetail(index) {
 
-    if (!modalDetalle) return;
-
-    const wheel = wheels[index];
-
-    document.getElementById("detalleRuedaBody").innerHTML = `
-
-        <div class="row g-3">
-
-            <div class="col-md-6">
-                <strong>Nº:</strong> ${wheel.numeroRueda || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Fecha recepción:</strong> ${wheel.fechaRecepcion || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Avión:</strong> ${wheel.avion || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>S/N:</strong> ${wheel.serial || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Ingreso al taller:</strong> ${wheel.fechaIngreso || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>WP:</strong> ${wheel.wp || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Tire Change:</strong> ${wheel.tireChange || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Shop Visit:</strong> ${wheel.shopVisit || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Razón:</strong> ${wheel.razon || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Estación:</strong> ${wheel.estacion || "-"}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Ciclos:</strong> ${wheel.ciclos || "-"}
-            </div>
-
-            <div class="col-md-12">
-                <strong>Detalle:</strong><br>
-                ${wheel.detalle || "-"}
-            </div>
-
-            <div class="col-md-12">
-                <strong>Estado:</strong> ${wheel.estado || "-"}
-            </div>
-
-        </div>
-
-    `;
-
-    modalDetalle.show();
+    showWheelDetailView(wheelRepository.getById(index));
 }
 
 window.editWheel = editWheel;
