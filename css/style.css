@@ -136,6 +136,23 @@ main.container-fluid{
     margin:0;
 }
 
+.search-filter-bar .search-filter-icon{
+    background:#fff3e8;
+    border-color:#ff6a00;
+    color:#ff6a00;
+}
+
+.search-filter-bar .search-filter-input,
+.search-filter-bar .search-filter-select{
+    border-color:#ff6a00;
+}
+
+.search-filter-bar .search-filter-input:focus,
+.search-filter-bar .search-filter-select:focus{
+    border-color:#d95a00;
+    box-shadow:0 0 0 .2rem rgba(255,106,0,.15);
+}
+
 .wheel-row{
     display:flex;
     justify-content:space-between;

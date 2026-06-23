@@ -5,11 +5,24 @@ import { refs } from "./domRefs.js";
 // RENDERIZAR LISTA DE RUEDAS
 // ==========================================
 
-export function renderWheelList(wheels) {
+export function renderWheelList(entries, options = {}) {
+
+    const { persist = true } = options;
 
     refs.wheelList.innerHTML = "";
 
-    wheels.forEach((wheel, index) => {
+    if (entries.length === 0) {
+
+        refs.wheelList.innerHTML = `
+            <p class="text-muted text-center py-3 mb-0">
+                No se encontraron ruedas.
+            </p>
+        `;
+
+        return;
+    }
+
+    entries.forEach(({ wheel, index }) => {
 
         refs.wheelList.innerHTML += `
 
@@ -60,5 +73,8 @@ export function renderWheelList(wheels) {
         `;
     });
 
-    saveWheels(wheels);
+    if (persist) {
+
+        saveWheels(entries.map(({ wheel }) => wheel));
+    }
 }

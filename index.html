@@ -259,6 +259,39 @@
 
                         </div>
 
+                        <div class="search-filter-bar mb-3">
+
+                            <div class="input-group mb-2">
+
+                                <span class="input-group-text search-filter-icon">
+
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                                </span>
+
+                                <input
+                                    type="search"
+                                    id="wheelSearchInput"
+                                    class="form-control search-filter-input"
+                                    placeholder="Buscar por Nº, S/N o avión..."
+                                >
+
+                            </div>
+
+                            <select id="wheelStatusFilter" class="form-select search-filter-select">
+
+                                <option value="todos" selected>Todos</option>
+                                <option value="recepcion">Recepción</option>
+                                <option value="enTaller">En taller</option>
+                                <option value="pendienteMaterial">Pendiente material</option>
+                                <option value="pendienteNdt">Pendiente NDT</option>
+                                <option value="bloqueada">Bloqueada</option>
+                                <option value="entregadaAlmacen">Entregada a almacén</option>
+
+                            </select>
+
+                        </div>
+
                         <div id="wheelList"></div>
 
                     </div>
