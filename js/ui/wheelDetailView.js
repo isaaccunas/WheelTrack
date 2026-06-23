@@ -1,4 +1,87 @@
+import { normalizeWheel } from "../domain/historyModel.js";
 import { refs } from "./domRefs.js";
+
+// ==========================================
+// UTILIDADES DE RENDER
+// ==========================================
+
+function formatEventDate(isoDate) {
+
+    if (!isoDate) {
+        return "-";
+    }
+
+    const date = new Date(isoDate);
+
+    if (Number.isNaN(date.getTime())) {
+        return isoDate;
+    }
+
+    return date.toLocaleString("es-EC", {
+        dateStyle: "short",
+        timeStyle: "short"
+    });
+}
+
+function renderHistorySection(wheel) {
+
+    const historial = normalizeWheel(wheel).historial;
+
+    if (historial.length === 0) {
+
+        return `
+            <div class="col-12 history-section">
+
+                <h6 class="history-title">Historial</h6>
+
+                <p class="history-empty mb-0">
+                    Sin eventos registrados.
+                </p>
+
+            </div>
+        `;
+    }
+
+    const sortedEvents = [...historial].sort(
+        (a, b) => new Date(b.fecha) - new Date(a.fecha)
+    );
+
+    const historyItems = sortedEvents.map((event) => `
+
+        <div class="history-item">
+
+            <div class="history-item-header">
+
+                <span class="history-date">
+                    ${formatEventDate(event.fecha)}
+                </span>
+
+                <span class="history-type">
+                    ${event.tipo || "-"}
+                </span>
+
+            </div>
+
+            <p class="history-description mb-0">
+                ${event.descripcion || "-"}
+            </p>
+
+        </div>
+
+    `).join("");
+
+    return `
+        <div class="col-12 history-section">
+
+            <h6 class="history-title">Historial</h6>
+
+            <div class="history-list">
+                ${historyItems}
+            </div>
+
+        </div>
+    `;
+}
 
 // ==========================================
 // MODAL DE DETALLE
@@ -64,6 +147,8 @@ export function showWheelDetail(wheel) {
             <div class="col-md-12">
                 <strong>Estado:</strong> ${wheel.estado || "-"}
             </div>
+
+            ${renderHistorySection(wheel)}
 
         </div>
 
