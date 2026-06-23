@@ -1,4 +1,8 @@
 import { getColorForState } from "../config/wheelStates.js";
+import {
+    appendCreationHistory,
+    appendUpdateHistory
+} from "./historyModel.js";
 
 // ==========================================
 // NORMALIZACIÓN DE DATOS
@@ -51,7 +55,7 @@ export function validateWheel(data) {
 // CONSTRUCCIÓN DE OBJETOS RUEDA
 // ==========================================
 
-export function createWheel(data) {
+function buildWheelFromData(data) {
 
     return {
 
@@ -70,4 +74,17 @@ export function createWheel(data) {
         estado: data.estado,
         color: getColorForState(data.estado)
     };
+}
+
+export function createWheel(data) {
+
+    return appendCreationHistory(buildWheelFromData(data));
+}
+
+export function updateWheel(existingWheel, data) {
+
+    return appendUpdateHistory(
+        existingWheel,
+        buildWheelFromData(data)
+    );
 }

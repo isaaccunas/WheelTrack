@@ -2,6 +2,7 @@ import * as wheelRepository from "../data/wheelRepository.js";
 import {
     createWheel,
     normalizeFormData,
+    updateWheel,
     validateWheel
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
@@ -64,17 +65,20 @@ export function initializeEvents(renderWheels) {
             return;
         }
 
-        const nuevaRueda = createWheel(formData);
-
         if (editIndex !== null) {
 
-            wheelRepository.update(editIndex, nuevaRueda);
+            const existingWheel = wheelRepository.getById(editIndex);
+
+            wheelRepository.update(
+                editIndex,
+                updateWheel(existingWheel, formData)
+            );
 
             editIndex = null;
 
         } else {
 
-            wheelRepository.add(nuevaRueda);
+            wheelRepository.add(createWheel(formData));
         }
 
         renderWheels();
