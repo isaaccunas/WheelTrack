@@ -1,5 +1,9 @@
-import { getColorForState } from "./config/wheelStates.js";
 import * as wheelRepository from "./data/wheelRepository.js";
+import {
+    createWheel,
+    normalizeFormData,
+    validateWheel
+} from "./domain/wheelModel.js";
 import { refs } from "./ui/domRefs.js";
 import { renderWheelList } from "./ui/wheelListView.js";
 import { showWheelDetail as showWheelDetailView } from "./ui/wheelDetailView.js";
@@ -42,60 +46,31 @@ refs.btnNuevaRueda.addEventListener("click", () => {
 
 refs.guardarRueda.addEventListener("click", () => {
 
-    const numeroRueda = document.getElementById("numeroRueda").value.trim();
-    const fechaRecepcion = document.getElementById("fechaRecepcion").value;
-    const avion = document.getElementById("avion").value.trim();
-    const serial = document.getElementById("serial").value.trim();
-    const fechaIngreso = document.getElementById("fechaIngreso").value;
-    const detalle = document.getElementById("detalle").value.trim();
-    const wp = document.getElementById("wp").value.trim();
-    const tireChange = document.getElementById("tireChange").value;
-    const shopVisit = document.getElementById("shopVisit").value.trim();
-    const razon = document.getElementById("razon").value.trim();
-    const estacion = document.getElementById("estacion").value.trim();
-    const ciclos = document.getElementById("ciclos").value.trim();
-    const estado = document.getElementById("estado").value;
+    const formData = normalizeFormData({
 
-    if (
-        !numeroRueda ||
-        !fechaRecepcion ||
-        !avion ||
-        !serial ||
-        !fechaIngreso ||
-        !detalle ||
-        !wp ||
-        !tireChange ||
-        !shopVisit ||
-        !razon ||
-        !estacion ||
-        !ciclos ||
-        !estado
-    ) {
+        numeroRueda: document.getElementById("numeroRueda").value,
+        fechaRecepcion: document.getElementById("fechaRecepcion").value,
+        avion: document.getElementById("avion").value,
+        serial: document.getElementById("serial").value,
+        fechaIngreso: document.getElementById("fechaIngreso").value,
+        detalle: document.getElementById("detalle").value,
+        wp: document.getElementById("wp").value,
+        tireChange: document.getElementById("tireChange").value,
+        shopVisit: document.getElementById("shopVisit").value,
+        razon: document.getElementById("razon").value,
+        estacion: document.getElementById("estacion").value,
+        ciclos: document.getElementById("ciclos").value,
+        estado: document.getElementById("estado").value
+    });
+
+    if (!validateWheel(formData)) {
 
         alert("Debes completar todos los campos obligatorios.");
 
         return;
     }
 
-    const color = getColorForState(estado);
-
-    const nuevaRueda = {
-
-        numeroRueda,
-        fechaRecepcion,
-        avion,
-        serial,
-        fechaIngreso,
-        detalle,
-        wp,
-        tireChange,
-        shopVisit,
-        razon,
-        estacion,
-        ciclos,
-        estado,
-        color
-    };
+    const nuevaRueda = createWheel(formData);
 
     if (editIndex !== null) {
 
