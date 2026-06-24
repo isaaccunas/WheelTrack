@@ -60,6 +60,51 @@ export function validateWheel(data) {
 }
 
 // ==========================================
+// CAUCHO ASIGNADO
+// ==========================================
+
+export function createTireAssignment() {
+
+    return {
+        serial: "",
+        partNumber: "",
+        issueDate: ""
+    };
+}
+
+export function normalizeTireAssignment(tireAssignment) {
+
+    if (!tireAssignment || typeof tireAssignment !== "object") {
+        return createTireAssignment();
+    }
+
+    return {
+        serial: (tireAssignment.serial ?? "").trim(),
+        partNumber: (tireAssignment.partNumber ?? "").trim(),
+        issueDate: tireAssignment.issueDate ?? ""
+    };
+}
+
+export function hasValidTireAssignment(tireAssignment) {
+
+    const normalizedAssignment = normalizeTireAssignment(tireAssignment);
+
+    return !!(
+        normalizedAssignment.serial ||
+        normalizedAssignment.partNumber ||
+        normalizedAssignment.issueDate
+    );
+}
+
+export function normalizeWheelTireAssignment(wheel) {
+
+    return {
+        ...wheel,
+        tireAssignment: normalizeTireAssignment(wheel.tireAssignment)
+    };
+}
+
+// ==========================================
 // CONSTRUCCIÓN DE OBJETOS RUEDA
 // ==========================================
 
@@ -89,6 +134,7 @@ export function createWheel(data) {
     const wheel = buildWheelFromData(data);
 
     wheel.process = createProcessState();
+    wheel.tireAssignment = createTireAssignment();
 
     return appendCreationHistory(wheel);
 }
@@ -101,6 +147,9 @@ export function updateWheel(existingWheel, data) {
     );
 
     updatedWheel.process = normalizeProcessState(existingWheel.process);
+    updatedWheel.tireAssignment = normalizeTireAssignment(
+        existingWheel.tireAssignment
+    );
 
     return updatedWheel;
 }

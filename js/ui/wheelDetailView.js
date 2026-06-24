@@ -3,6 +3,10 @@ import {
     getActiveStageState,
     normalizeProcessState
 } from "../domain/processModel.js";
+import {
+    hasValidTireAssignment,
+    normalizeTireAssignment
+} from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
 
 // ==========================================
@@ -154,6 +158,50 @@ function renderActiveSubstagesSection(wheel) {
     `;
 }
 
+function renderTireAssignmentSection(wheel) {
+
+    const tireAssignment = normalizeTireAssignment(wheel.tireAssignment);
+
+    if (!hasValidTireAssignment(tireAssignment)) {
+
+        return `
+            <div class="col-12 tire-assignment-section">
+
+                <h6 class="tire-assignment-title">Caucho asignado</h6>
+
+                <p class="tire-assignment-empty mb-0">
+                    Caucho no asignado
+                </p>
+
+            </div>
+        `;
+    }
+
+    return `
+        <div class="col-12 tire-assignment-section">
+
+            <h6 class="tire-assignment-title">Caucho asignado</h6>
+
+            <div class="row g-2">
+
+                <div class="col-md-4">
+                    <strong>S/N:</strong> ${tireAssignment.serial || "-"}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Part Number:</strong> ${tireAssignment.partNumber || "-"}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Fecha de emisión:</strong> ${tireAssignment.issueDate || "-"}
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
 function renderProcessSection(wheel) {
 
     const process = normalizeProcessState(wheel.process);
@@ -247,6 +295,8 @@ function renderDetailContent(wheel) {
             <div class="col-md-12">
                 <strong>Estado:</strong> ${wheel.estado || "-"}
             </div>
+
+            ${renderTireAssignmentSection(wheel)}
 
             ${renderProcessSection(wheel)}
 

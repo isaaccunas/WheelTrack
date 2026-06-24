@@ -733,6 +733,24 @@ main.container-fluid{
     cursor: not-allowed;
 }
 
+.tire-assignment-section{
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 2px solid #ff6a00;
+}
+
+.tire-assignment-title{
+    color: #ff6a00;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.tire-assignment-empty{
+    color: #666;
+    font-size: 0.95rem;
+}
+
 /* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */
