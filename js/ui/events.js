@@ -1,12 +1,16 @@
 import * as wheelRepository from "../data/wheelRepository.js";
 import {
+    advanceWheelStage,
     createWheel,
     normalizeFormData,
     updateWheel,
     validateWheel
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
-import { showWheelDetail as showWheelDetailView } from "./wheelDetailView.js";
+import {
+    refreshWheelDetail,
+    showWheelDetail as showWheelDetailView
+} from "./wheelDetailView.js";
 import {
     closeWheelModal,
     openWheelModal,
@@ -130,7 +134,36 @@ export function initializeEvents(renderWheels) {
 
     function showWheelDetail(index) {
 
-        showWheelDetailView(wheelRepository.getById(index));
+        const openDetail = () => {
+
+            const wheel = wheelRepository.getById(index);
+
+            const handleAdvanceStage = () => {
+
+                const currentWheel = wheelRepository.getById(index);
+                const updatedWheel = advanceWheelStage(currentWheel);
+
+                if (!updatedWheel) {
+                    return;
+                }
+
+                wheelRepository.update(index, updatedWheel);
+
+                renderWheels();
+
+                refreshWheelDetail({
+                    wheel: wheelRepository.getById(index),
+                    onAdvanceStage: handleAdvanceStage
+                });
+            };
+
+            showWheelDetailView({
+                wheel,
+                onAdvanceStage: handleAdvanceStage
+            });
+        };
+
+        openDetail();
     }
 
     window.editWheel = editWheel;

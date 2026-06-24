@@ -1,5 +1,8 @@
 import { normalizeWheel } from "../domain/historyModel.js";
-import { normalizeProcessState } from "../domain/processModel.js";
+import {
+    canAdvanceProcess,
+    normalizeProcessState
+} from "../domain/processModel.js";
 import { refs } from "./domRefs.js";
 
 // ==========================================
@@ -97,7 +100,7 @@ function getProcessStatusClass(status) {
     return statusClasses[status] || "process-status-pending";
 }
 
-function renderProcessSection(wheel) {
+function renderProcessSection(wheel, canAdvance) {
 
     const process = normalizeProcessState(wheel.process);
 
@@ -126,19 +129,22 @@ function renderProcessSection(wheel) {
                 ${stageItems}
             </div>
 
+            <button
+                type="button"
+                id="btnAvanzarEtapa"
+                class="btn btn-warning process-advance-btn mt-3"
+                ${canAdvance ? "" : "disabled"}
+            >
+                Avanzar Etapa
+            </button>
+
         </div>
     `;
 }
 
-// ==========================================
-// MODAL DE DETALLE
-// ==========================================
+function renderDetailContent(wheel, canAdvance) {
 
-export function showWheelDetail(wheel) {
-
-    if (!refs.modalDetalle) return;
-
-    refs.detalleRuedaBody.innerHTML = `
+    return `
 
         <div class="row g-3">
 
@@ -195,13 +201,55 @@ export function showWheelDetail(wheel) {
                 <strong>Estado:</strong> ${wheel.estado || "-"}
             </div>
 
-            ${renderProcessSection(wheel)}
+            ${renderProcessSection(wheel, canAdvance)}
 
             ${renderHistorySection(wheel)}
 
         </div>
 
     `;
+}
+
+// ==========================================
+// MODAL DE DETALLE
+// ==========================================
+
+export function showWheelDetail({ wheel, onAdvanceStage }) {
+
+    if (!refs.modalDetalle) return;
+
+    const canAdvance = canAdvanceProcess(wheel.process);
+
+    refs.detalleRuedaBody.innerHTML = renderDetailContent(wheel, canAdvance);
+
+    const advanceButton = document.getElementById("btnAvanzarEtapa");
+
+    if (advanceButton && onAdvanceStage) {
+
+        advanceButton.addEventListener("click", () => {
+
+            onAdvanceStage();
+        });
+    }
 
     refs.modalDetalle.show();
+}
+
+export function refreshWheelDetail({ wheel, onAdvanceStage }) {
+
+    if (!refs.modalDetalle) return;
+
+    const canAdvance = canAdvanceProcess(wheel.process);
+
+    refs.detalleRuedaBody.innerHTML = renderDetailContent(wheel, canAdvance);
+
+    const advanceButton = document.getElementById("btnAvanzarEtapa");
+
+    if (advanceButton && onAdvanceStage) {
+
+        advanceButton.addEventListener("click", () => {
+
+            onAdvanceStage();
+        });
+    }
 }

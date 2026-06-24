@@ -87,6 +87,7 @@ export const STAGE_STATUS = [
 const INITIAL_STAGE = "Recepción";
 const INITIAL_STATUS = "En proceso";
 const DEFAULT_STATUS = "Pendiente";
+const COMPLETED_STATUS = "Completada";
 
 // ==========================================
 // ESTADO DEL PROCESO
@@ -155,5 +156,82 @@ export function normalizeWheelProcess(wheel) {
     return {
         ...wheel,
         process: normalizeProcessState(wheel.process)
+    };
+}
+
+// ==========================================
+// AVANCE DE ETAPAS
+// ==========================================
+
+export function getCurrentStage(process) {
+
+    const normalizedProcess = normalizeProcessState(process);
+    const currentStage = normalizedProcess.stages.find(
+        (stageState) => stageState.status === INITIAL_STATUS
+    );
+
+    return currentStage ? currentStage.stage : null;
+}
+
+export function canAdvanceProcess(process) {
+
+    const normalizedProcess = normalizeProcessState(process);
+    const currentIndex = normalizedProcess.stages.findIndex(
+        (stageState) => stageState.status === INITIAL_STATUS
+    );
+
+    if (currentIndex === -1) {
+        return false;
+    }
+
+    return currentIndex < PROCESS_STAGES.length - 1;
+}
+
+export function advanceProcess(process) {
+
+    const normalizedProcess = normalizeProcessState(process);
+    const currentIndex = normalizedProcess.stages.findIndex(
+        (stageState) => stageState.status === INITIAL_STATUS
+    );
+
+    if (currentIndex === -1) {
+        return null;
+    }
+
+    const fromStage = normalizedProcess.stages[currentIndex].stage;
+
+    if (currentIndex >= PROCESS_STAGES.length - 1) {
+        return null;
+    }
+
+    const toStage = PROCESS_STAGES[currentIndex + 1];
+
+    const updatedStages = normalizedProcess.stages.map((stageState, index) => {
+
+        if (index === currentIndex) {
+
+            return {
+                ...stageState,
+                status: COMPLETED_STATUS,
+                substage: null
+            };
+        }
+
+        if (index === currentIndex + 1) {
+
+            return {
+                ...stageState,
+                status: INITIAL_STATUS,
+                substage: null
+            };
+        }
+
+        return { ...stageState };
+    });
+
+    return {
+        process: { stages: updatedStages },
+        fromStage,
+        toStage
     };
 }

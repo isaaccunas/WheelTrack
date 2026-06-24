@@ -1,9 +1,12 @@
 import { getColorForState } from "../config/wheelStates.js";
 import {
     appendCreationHistory,
-    appendUpdateHistory
+    appendUpdateHistory,
+    createStageChangeEvent,
+    normalizeWheel
 } from "./historyModel.js";
 import {
+    advanceProcess,
     createProcessState,
     normalizeProcessState
 } from "./processModel.js";
@@ -99,4 +102,27 @@ export function updateWheel(existingWheel, data) {
     updatedWheel.process = normalizeProcessState(existingWheel.process);
 
     return updatedWheel;
+}
+
+export function advanceWheelStage(wheel) {
+
+    const advanceResult = advanceProcess(wheel.process);
+
+    if (!advanceResult) {
+        return null;
+    }
+
+    const normalizedWheel = normalizeWheel(wheel);
+
+    return {
+        ...wheel,
+        process: advanceResult.process,
+        historial: [
+            ...normalizedWheel.historial,
+            createStageChangeEvent(
+                advanceResult.fromStage,
+                advanceResult.toStage
+            )
+        ]
+    };
 }

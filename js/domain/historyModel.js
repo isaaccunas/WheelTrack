@@ -20,6 +20,15 @@ export function createStatusChangeEvent(oldState, newState) {
     };
 }
 
+export function createStageChangeEvent(fromStage, toStage) {
+
+    return {
+        fecha: new Date().toISOString(),
+        tipo: "CAMBIO_ETAPA",
+        descripcion: `Etapa cambiada de ${fromStage} a ${toStage}`
+    };
+}
+
 // ==========================================
 // COMPATIBILIDAD
 // ==========================================

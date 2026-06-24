@@ -671,6 +671,14 @@ main.container-fluid{
     color: #c0392b;
 }
 
+.process-advance-btn{
+    font-weight: 700;
+}
+
+.process-advance-btn:disabled{
+    opacity: 0.65;
+}
+
 /* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */
