@@ -2,7 +2,12 @@ import { getColorForState } from "../config/wheelStates.js";
 import {
     appendCreationHistory,
     appendUpdateHistory,
+    createFinalPressureEvent,
+    createInitialPressureEvent,
+    createInspectorRegisteredEvent,
+    createServiceableRegisteredEvent,
     createStageChangeEvent,
+    createTireAssignmentEvent,
     normalizeWheel
 } from "./historyModel.js";
 import {
@@ -405,6 +410,132 @@ function applyStageTimingAfterCompletion(wheel, completeResult) {
     }
 
     return stageTiming;
+}
+
+// ==========================================
+// VALIDACIÓN PANEL OPERACIONAL
+// ==========================================
+
+export function validateTireAssignmentForm(data) {
+
+    const normalizedAssignment = normalizeTireAssignment(data);
+
+    return !!(
+        normalizedAssignment.serial &&
+        normalizedAssignment.partNumber &&
+        normalizedAssignment.issueDate
+    );
+}
+
+export function validatePressureForm(data) {
+
+    return hasPressureData(normalizePressureData(data));
+}
+
+export function validateInspectorForm(data) {
+
+    const normalizedInspector = normalizeInspectorData(data);
+
+    return !!normalizedInspector.inspectorName;
+}
+
+export function validateServiceableForm(data) {
+
+    const normalizedServiceable = normalizeServiceableData(data);
+
+    return !!normalizedServiceable.documentNumber;
+}
+
+// ==========================================
+// ACTUALIZACIÓN PANEL OPERACIONAL
+// ==========================================
+
+export function updateWheelTireAssignment(wheel, data) {
+
+    if (!validateTireAssignmentForm(data)) {
+        return null;
+    }
+
+    const normalizedWheel = normalizeWheel(wheel);
+    const tireAssignment = normalizeTireAssignment(data);
+
+    return {
+        ...wheel,
+        tireAssignment,
+        historial: [
+            ...normalizedWheel.historial,
+            createTireAssignmentEvent(tireAssignment)
+        ]
+    };
+}
+
+export function updateWheelPressureData(wheel, data) {
+
+    if (!validatePressureForm(data)) {
+        return null;
+    }
+
+    const normalizedWheel = normalizeWheel(wheel);
+    const pressureData = normalizePressureData(data);
+    const historial = [...normalizedWheel.historial];
+
+    if (
+        pressureData.initialPressure !== null ||
+        pressureData.initialPressureDate !== null
+    ) {
+        historial.push(createInitialPressureEvent(pressureData));
+    }
+
+    if (
+        pressureData.finalPressure !== null ||
+        pressureData.finalPressureDate !== null
+    ) {
+        historial.push(createFinalPressureEvent(pressureData));
+    }
+
+    return {
+        ...wheel,
+        pressureData,
+        historial
+    };
+}
+
+export function updateWheelInspectorData(wheel, data) {
+
+    if (!validateInspectorForm(data)) {
+        return null;
+    }
+
+    const normalizedWheel = normalizeWheel(wheel);
+    const inspectorData = normalizeInspectorData(data);
+
+    return {
+        ...wheel,
+        inspectorData,
+        historial: [
+            ...normalizedWheel.historial,
+            createInspectorRegisteredEvent(inspectorData)
+        ]
+    };
+}
+
+export function updateWheelServiceableData(wheel, data) {
+
+    if (!validateServiceableForm(data)) {
+        return null;
+    }
+
+    const normalizedWheel = normalizeWheel(wheel);
+    const serviceableData = normalizeServiceableData(data);
+
+    return {
+        ...wheel,
+        serviceableData,
+        historial: [
+            ...normalizedWheel.historial,
+            createServiceableRegisteredEvent(serviceableData)
+        ]
+    };
 }
 
 export function completeWheelSubstage(wheel, stageName, substageName) {

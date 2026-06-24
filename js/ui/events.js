@@ -4,6 +4,10 @@ import {
     createWheel,
     normalizeFormData,
     updateWheel,
+    updateWheelInspectorData,
+    updateWheelPressureData,
+    updateWheelServiceableData,
+    updateWheelTireAssignment,
     validateWheel
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
@@ -132,7 +136,7 @@ export function initializeEvents(renderWheels) {
     // MOSTRAR DETALLE
     // ==========================================
 
-    function showWheelDetail(index) {
+    function createWheelDetailCallbacks(index) {
 
         const handleCompleteSubstage = (stageName, substageName) => {
 
@@ -151,16 +155,82 @@ export function initializeEvents(renderWheels) {
 
             renderWheels();
 
-            refreshWheelDetail({
-                wheel: wheelRepository.getById(index),
-                onCompleteSubstage: handleCompleteSubstage
-            });
+            refreshWheelDetail(createWheelDetailCallbacks(index));
         };
 
-        showWheelDetailView({
+        const handleSaveTireAssignment = (data) => {
+
+            const currentWheel = wheelRepository.getById(index);
+            const updatedWheel = updateWheelTireAssignment(currentWheel, data);
+
+            if (!updatedWheel) {
+                alert("Completa S/N, Part Number y fecha de emisión del caucho.");
+                return;
+            }
+
+            wheelRepository.update(index, updatedWheel);
+
+            refreshWheelDetail(createWheelDetailCallbacks(index));
+        };
+
+        const handleSavePressureData = (data) => {
+
+            const currentWheel = wheelRepository.getById(index);
+            const updatedWheel = updateWheelPressureData(currentWheel, data);
+
+            if (!updatedWheel) {
+                alert("Registra al menos un dato de presión inicial o final.");
+                return;
+            }
+
+            wheelRepository.update(index, updatedWheel);
+
+            refreshWheelDetail(createWheelDetailCallbacks(index));
+        };
+
+        const handleSaveInspectorData = (data) => {
+
+            const currentWheel = wheelRepository.getById(index);
+            const updatedWheel = updateWheelInspectorData(currentWheel, data);
+
+            if (!updatedWheel) {
+                alert("Ingresa el nombre del inspector.");
+                return;
+            }
+
+            wheelRepository.update(index, updatedWheel);
+
+            refreshWheelDetail(createWheelDetailCallbacks(index));
+        };
+
+        const handleSaveServiceableData = (data) => {
+
+            const currentWheel = wheelRepository.getById(index);
+            const updatedWheel = updateWheelServiceableData(currentWheel, data);
+
+            if (!updatedWheel) {
+                alert("Ingresa el número de documento del serviciable.");
+                return;
+            }
+
+            wheelRepository.update(index, updatedWheel);
+
+            refreshWheelDetail(createWheelDetailCallbacks(index));
+        };
+
+        return {
             wheel: wheelRepository.getById(index),
-            onCompleteSubstage: handleCompleteSubstage
-        });
+            onCompleteSubstage: handleCompleteSubstage,
+            onSaveTireAssignment: handleSaveTireAssignment,
+            onSavePressureData: handleSavePressureData,
+            onSaveInspectorData: handleSaveInspectorData,
+            onSaveServiceableData: handleSaveServiceableData
+        };
+    }
+
+    function showWheelDetail(index) {
+
+        showWheelDetailView(createWheelDetailCallbacks(index));
     }
 
     window.editWheel = editWheel;

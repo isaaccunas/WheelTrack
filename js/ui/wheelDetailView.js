@@ -164,31 +164,87 @@ function renderActiveSubstagesSection(wheel) {
     `;
 }
 
+function renderOperationalSectionHeader(title, sectionKey, hasData) {
+
+    const buttonLabel = hasData ? "Editar" : "Registrar";
+
+    return `
+        <div class="operational-section-header">
+
+            <h6 class="operational-section-title">${title}</h6>
+
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-warning operational-edit-btn"
+                data-section="${sectionKey}">
+
+                ${buttonLabel}
+
+            </button>
+
+        </div>
+    `;
+}
+
+function renderTireAssignmentForm(tireAssignment) {
+
+    return `
+        <div class="operational-form d-none" data-form="tire">
+
+            <div class="row g-2">
+
+                <div class="col-md-4">
+                    <label class="form-label">S/N caucho *</label>
+                    <input
+                        type="text"
+                        class="form-control operational-input"
+                        data-field="serial"
+                        value="${tireAssignment.serial || ""}"
+                        placeholder="Ej: T-12345">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Part Number *</label>
+                    <input
+                        type="text"
+                        class="form-control operational-input"
+                        data-field="partNumber"
+                        value="${tireAssignment.partNumber || ""}"
+                        placeholder="Ej: P/N 9876">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Fecha de emisión *</label>
+                    <input
+                        type="date"
+                        class="form-control operational-input"
+                        data-field="issueDate"
+                        value="${tireAssignment.issueDate || ""}">
+                </div>
+
+            </div>
+
+            <div class="operational-form-actions">
+                <button type="button" class="btn btn-sm btn-warning operational-save-btn" data-section="tire">
+                    Guardar
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary operational-cancel-btn" data-section="tire">
+                    Cancelar
+                </button>
+            </div>
+
+        </div>
+    `;
+}
+
 function renderTireAssignmentSection(wheel) {
 
     const tireAssignment = normalizeTireAssignment(wheel.tireAssignment);
+    const hasData = hasValidTireAssignment(tireAssignment);
 
-    if (!hasValidTireAssignment(tireAssignment)) {
-
-        return `
-            <div class="col-12 tire-assignment-section">
-
-                <h6 class="tire-assignment-title">Caucho asignado</h6>
-
-                <p class="tire-assignment-empty mb-0">
-                    Caucho no asignado
-                </p>
-
-            </div>
-        `;
-    }
-
-    return `
-        <div class="col-12 tire-assignment-section">
-
-            <h6 class="tire-assignment-title">Caucho asignado</h6>
-
-            <div class="row g-2">
+    const displayContent = hasData
+        ? `
+            <div class="row g-2 operational-display" data-display="tire">
 
                 <div class="col-md-4">
                     <strong>S/N:</strong> ${tireAssignment.serial || "-"}
@@ -203,6 +259,21 @@ function renderTireAssignmentSection(wheel) {
                 </div>
 
             </div>
+        `
+        : `
+            <p class="tire-assignment-empty mb-0 operational-display" data-display="tire">
+                Caucho no asignado
+            </p>
+        `;
+
+    return `
+        <div class="col-12 tire-assignment-section operational-panel-section" data-section="tire">
+
+            ${renderOperationalSectionHeader("Caucho asignado", "tire", hasData)}
+
+            ${displayContent}
+
+            ${renderTireAssignmentForm(tireAssignment)}
 
         </div>
     `;
@@ -217,31 +288,76 @@ function formatPressureValue(pressure) {
     return String(pressure);
 }
 
+function renderPressureDataForm(pressureData) {
+
+    return `
+        <div class="operational-form d-none" data-form="pressure">
+
+            <div class="row g-2">
+
+                <div class="col-md-6">
+                    <label class="form-label">Presión inicial</label>
+                    <input
+                        type="number"
+                        step="0.1"
+                        class="form-control operational-input"
+                        data-field="initialPressure"
+                        value="${pressureData.initialPressure ?? ""}"
+                        placeholder="Ej: 185">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Fecha inicial</label>
+                    <input
+                        type="date"
+                        class="form-control operational-input"
+                        data-field="initialPressureDate"
+                        value="${pressureData.initialPressureDate || ""}">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Presión final</label>
+                    <input
+                        type="number"
+                        step="0.1"
+                        class="form-control operational-input"
+                        data-field="finalPressure"
+                        value="${pressureData.finalPressure ?? ""}"
+                        placeholder="Ej: 190">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Fecha final</label>
+                    <input
+                        type="date"
+                        class="form-control operational-input"
+                        data-field="finalPressureDate"
+                        value="${pressureData.finalPressureDate || ""}">
+                </div>
+
+            </div>
+
+            <div class="operational-form-actions">
+                <button type="button" class="btn btn-sm btn-warning operational-save-btn" data-section="pressure">
+                    Guardar
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary operational-cancel-btn" data-section="pressure">
+                    Cancelar
+                </button>
+            </div>
+
+        </div>
+    `;
+}
+
 function renderPressureDataSection(wheel) {
 
     const pressureData = normalizePressureData(wheel.pressureData);
+    const hasData = hasPressureData(pressureData);
 
-    if (!hasPressureData(pressureData)) {
-
-        return `
-            <div class="col-12 pressure-data-section">
-
-                <h6 class="pressure-data-title">Presiones</h6>
-
-                <p class="pressure-data-empty mb-0">
-                    Presiones no registradas
-                </p>
-
-            </div>
-        `;
-    }
-
-    return `
-        <div class="col-12 pressure-data-section">
-
-            <h6 class="pressure-data-title">Presiones</h6>
-
-            <div class="row g-2">
+    const displayContent = hasData
+        ? `
+            <div class="row g-2 operational-display" data-display="pressure">
 
                 <div class="col-md-6">
                     <strong>Presión inicial:</strong>
@@ -264,6 +380,80 @@ function renderPressureDataSection(wheel) {
                 </div>
 
             </div>
+        `
+        : `
+            <p class="pressure-data-empty mb-0 operational-display" data-display="pressure">
+                Presiones no registradas
+            </p>
+        `;
+
+    return `
+        <div class="col-12 pressure-data-section operational-panel-section" data-section="pressure">
+
+            ${renderOperationalSectionHeader("Presiones", "pressure", hasData)}
+
+            ${displayContent}
+
+            ${renderPressureDataForm(pressureData)}
+
+        </div>
+    `;
+}
+
+function renderInspectorDataForm(inspectorData) {
+
+    return `
+        <div class="operational-form d-none" data-form="inspector">
+
+            <div class="row g-2">
+
+                <div class="col-md-6">
+                    <label class="form-label">Fecha solicitada</label>
+                    <input
+                        type="date"
+                        class="form-control operational-input"
+                        data-field="requestedDate"
+                        value="${inspectorData.requestedDate || ""}">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Fecha de atención</label>
+                    <input
+                        type="date"
+                        class="form-control operational-input"
+                        data-field="attendedDate"
+                        value="${inspectorData.attendedDate || ""}">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Nombre del inspector *</label>
+                    <input
+                        type="text"
+                        class="form-control operational-input"
+                        data-field="inspectorName"
+                        value="${inspectorData.inspectorName || ""}"
+                        placeholder="Ej: Juan Pérez">
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label">Observaciones</label>
+                    <textarea
+                        class="form-control operational-input"
+                        data-field="observations"
+                        rows="2"
+                        placeholder="Observaciones del inspector">${inspectorData.observations || ""}</textarea>
+                </div>
+
+            </div>
+
+            <div class="operational-form-actions">
+                <button type="button" class="btn btn-sm btn-warning operational-save-btn" data-section="inspector">
+                    Guardar
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary operational-cancel-btn" data-section="inspector">
+                    Cancelar
+                </button>
+            </div>
 
         </div>
     `;
@@ -272,28 +462,11 @@ function renderPressureDataSection(wheel) {
 function renderInspectorDataSection(wheel) {
 
     const inspectorData = normalizeInspectorData(wheel.inspectorData);
+    const hasData = hasInspectorData(inspectorData);
 
-    if (!hasInspectorData(inspectorData)) {
-
-        return `
-            <div class="col-12 inspector-data-section">
-
-                <h6 class="inspector-data-title">Inspector</h6>
-
-                <p class="inspector-data-empty mb-0">
-                    Inspector no registrado
-                </p>
-
-            </div>
-        `;
-    }
-
-    return `
-        <div class="col-12 inspector-data-section">
-
-            <h6 class="inspector-data-title">Inspector</h6>
-
-            <div class="row g-2">
+    const displayContent = hasData
+        ? `
+            <div class="row g-2 operational-display" data-display="inspector">
 
                 <div class="col-md-6">
                     <strong>Fecha solicitada:</strong>
@@ -316,6 +489,71 @@ function renderInspectorDataSection(wheel) {
                 </div>
 
             </div>
+        `
+        : `
+            <p class="inspector-data-empty mb-0 operational-display" data-display="inspector">
+                Inspector no registrado
+            </p>
+        `;
+
+    return `
+        <div class="col-12 inspector-data-section operational-panel-section" data-section="inspector">
+
+            ${renderOperationalSectionHeader("Inspector", "inspector", hasData)}
+
+            ${displayContent}
+
+            ${renderInspectorDataForm(inspectorData)}
+
+        </div>
+    `;
+}
+
+function renderServiceableDataForm(serviceableData) {
+
+    return `
+        <div class="operational-form d-none" data-form="serviceable">
+
+            <div class="row g-2">
+
+                <div class="col-md-6">
+                    <label class="form-label">Nº documento *</label>
+                    <input
+                        type="text"
+                        class="form-control operational-input"
+                        data-field="documentNumber"
+                        value="${serviceableData.documentNumber || ""}"
+                        placeholder="Ej: SV-2024-001">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Fecha recibido</label>
+                    <input
+                        type="date"
+                        class="form-control operational-input"
+                        data-field="receivedDate"
+                        value="${serviceableData.receivedDate || ""}">
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label">Observaciones</label>
+                    <textarea
+                        class="form-control operational-input"
+                        data-field="observations"
+                        rows="2"
+                        placeholder="Observaciones del serviciable">${serviceableData.observations || ""}</textarea>
+                </div>
+
+            </div>
+
+            <div class="operational-form-actions">
+                <button type="button" class="btn btn-sm btn-warning operational-save-btn" data-section="serviceable">
+                    Guardar
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary operational-cancel-btn" data-section="serviceable">
+                    Cancelar
+                </button>
+            </div>
 
         </div>
     `;
@@ -324,28 +562,11 @@ function renderInspectorDataSection(wheel) {
 function renderServiceableDataSection(wheel) {
 
     const serviceableData = normalizeServiceableData(wheel.serviceableData);
+    const hasData = hasServiceableData(serviceableData);
 
-    if (!hasServiceableData(serviceableData)) {
-
-        return `
-            <div class="col-12 serviceable-data-section">
-
-                <h6 class="serviceable-data-title">Serviciable</h6>
-
-                <p class="serviceable-data-empty mb-0">
-                    Serviciable no registrado
-                </p>
-
-            </div>
-        `;
-    }
-
-    return `
-        <div class="col-12 serviceable-data-section">
-
-            <h6 class="serviceable-data-title">Serviciable</h6>
-
-            <div class="row g-2">
+    const displayContent = hasData
+        ? `
+            <div class="row g-2 operational-display" data-display="serviceable">
 
                 <div class="col-md-6">
                     <strong>Nº documento:</strong>
@@ -363,6 +584,21 @@ function renderServiceableDataSection(wheel) {
                 </div>
 
             </div>
+        `
+        : `
+            <p class="serviceable-data-empty mb-0 operational-display" data-display="serviceable">
+                Serviciable no registrado
+            </p>
+        `;
+
+    return `
+        <div class="col-12 serviceable-data-section operational-panel-section" data-section="serviceable">
+
+            ${renderOperationalSectionHeader("Serviciable", "serviceable", hasData)}
+
+            ${displayContent}
+
+            ${renderServiceableDataForm(serviceableData)}
 
         </div>
     `;
@@ -479,48 +715,163 @@ function renderDetailContent(wheel) {
     `;
 }
 
-function bindDetailInteractions(onCompleteSubstage) {
+function getSectionContainer(sectionKey) {
 
-    if (!onCompleteSubstage) {
+    return document.querySelector(
+        `.operational-panel-section[data-section="${sectionKey}"]`
+    );
+}
+
+function showOperationalForm(sectionKey) {
+
+    const section = getSectionContainer(sectionKey);
+
+    if (!section) {
         return;
     }
 
-    document.querySelectorAll(".substage-checkbox:not(:disabled)").forEach((checkbox) => {
+    section.querySelector(`[data-display="${sectionKey}"]`)?.classList.add("d-none");
+    section.querySelector(`[data-form="${sectionKey}"]`)?.classList.remove("d-none");
+    section.querySelector(".operational-edit-btn")?.classList.add("d-none");
+}
 
-        checkbox.addEventListener("change", (event) => {
+function hideOperationalForm(sectionKey) {
 
-            if (!event.target.checked) {
-                return;
-            }
+    const section = getSectionContainer(sectionKey);
 
-            onCompleteSubstage(
-                event.target.dataset.stage,
-                event.target.dataset.substage
-            );
+    if (!section) {
+        return;
+    }
+
+    section.querySelector(`[data-display="${sectionKey}"]`)?.classList.remove("d-none");
+    section.querySelector(`[data-form="${sectionKey}"]`)?.classList.add("d-none");
+    section.querySelector(".operational-edit-btn")?.classList.remove("d-none");
+}
+
+function readOperationalFormData(sectionKey) {
+
+    const section = getSectionContainer(sectionKey);
+
+    if (!section) {
+        return {};
+    }
+
+    const data = {};
+
+    section.querySelectorAll(".operational-input").forEach((input) => {
+
+        const field = input.dataset.field;
+
+        if (!field) {
+            return;
+        }
+
+        data[field] = input.value;
+    });
+
+    return data;
+}
+
+function bindOperationalPanelInteractions(callbacks) {
+
+    const {
+        onSaveTireAssignment,
+        onSavePressureData,
+        onSaveInspectorData,
+        onSaveServiceableData
+    } = callbacks || {};
+
+    document.querySelectorAll(".operational-edit-btn").forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+            showOperationalForm(button.dataset.section);
         });
     });
+
+    document.querySelectorAll(".operational-cancel-btn").forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+            hideOperationalForm(button.dataset.section);
+        });
+    });
+
+    document.querySelectorAll(".operational-save-btn").forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+            const sectionKey = button.dataset.section;
+            const formData = readOperationalFormData(sectionKey);
+
+            if (sectionKey === "tire" && onSaveTireAssignment) {
+                onSaveTireAssignment(formData);
+            }
+
+            if (sectionKey === "pressure" && onSavePressureData) {
+                onSavePressureData(formData);
+            }
+
+            if (sectionKey === "inspector" && onSaveInspectorData) {
+                onSaveInspectorData(formData);
+            }
+
+            if (sectionKey === "serviceable" && onSaveServiceableData) {
+                onSaveServiceableData(formData);
+            }
+        });
+    });
+}
+
+function bindDetailInteractions(callbacks) {
+
+    const { onCompleteSubstage } = callbacks || {};
+
+    if (onCompleteSubstage) {
+
+        document.querySelectorAll(".substage-checkbox:not(:disabled)").forEach((checkbox) => {
+
+            checkbox.addEventListener("change", (event) => {
+
+                if (!event.target.checked) {
+                    return;
+                }
+
+                onCompleteSubstage(
+                    event.target.dataset.stage,
+                    event.target.dataset.substage
+                );
+            });
+        });
+    }
+
+    bindOperationalPanelInteractions(callbacks);
 }
 
 // ==========================================
 // MODAL DE DETALLE
 // ==========================================
 
-export function showWheelDetail({ wheel, onCompleteSubstage }) {
+export function showWheelDetail(callbacks) {
 
-    if (!refs.modalDetalle) return;
+    const { wheel } = callbacks || {};
+
+    if (!refs.modalDetalle || !wheel) return;
 
     refs.detalleRuedaBody.innerHTML = renderDetailContent(wheel);
 
-    bindDetailInteractions(onCompleteSubstage);
+    bindDetailInteractions(callbacks);
 
     refs.modalDetalle.show();
 }
 
-export function refreshWheelDetail({ wheel, onCompleteSubstage }) {
+export function refreshWheelDetail(callbacks) {
 
-    if (!refs.modalDetalle) return;
+    const { wheel } = callbacks || {};
+
+    if (!refs.modalDetalle || !wheel) return;
 
     refs.detalleRuedaBody.innerHTML = renderDetailContent(wheel);
 
-    bindDetailInteractions(onCompleteSubstage);
+    bindDetailInteractions(callbacks);
 }

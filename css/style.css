@@ -736,7 +736,6 @@ main.container-fluid{
 .tire-assignment-section{
     margin-top: 8px;
     padding-top: 16px;
-    border-top: 2px solid #ff6a00;
 }
 
 .tire-assignment-title{
@@ -754,7 +753,6 @@ main.container-fluid{
 .pressure-data-section{
     margin-top: 8px;
     padding-top: 16px;
-    border-top: 2px solid #ff6a00;
 }
 
 .pressure-data-title{
@@ -772,7 +770,6 @@ main.container-fluid{
 .inspector-data-section{
     margin-top: 8px;
     padding-top: 16px;
-    border-top: 2px solid #ff6a00;
 }
 
 .inspector-data-title{
@@ -790,7 +787,6 @@ main.container-fluid{
 .serviceable-data-section{
     margin-top: 8px;
     padding-top: 16px;
-    border-top: 2px solid #ff6a00;
 }
 
 .serviceable-data-title{
@@ -803,6 +799,53 @@ main.container-fluid{
 .serviceable-data-empty{
     color: #666;
     font-size: 0.95rem;
+}
+
+.operational-panel-section{
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 2px solid #ff6a00;
+}
+
+.operational-section-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.operational-section-title{
+    color: #ff6a00;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.operational-form{
+    margin-top: 12px;
+    padding: 14px;
+    background: #fff8f2;
+    border: 1px solid #f0d4bc;
+    border-radius: 10px;
+}
+
+.operational-form-actions{
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.operational-edit-btn{
+    border-color: #ff6a00;
+    color: #d95a00;
+    font-weight: 600;
+}
+
+.operational-edit-btn:hover{
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
 }
 
 .operational-dashboard .operational-card{
