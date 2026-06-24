@@ -4,8 +4,10 @@ import {
     normalizeProcessState
 } from "../domain/processModel.js";
 import {
+    hasInspectorData,
     hasPressureData,
     hasValidTireAssignment,
+    normalizeInspectorData,
     normalizePressureData,
     normalizeTireAssignment
 } from "../domain/wheelModel.js";
@@ -265,6 +267,58 @@ function renderPressureDataSection(wheel) {
     `;
 }
 
+function renderInspectorDataSection(wheel) {
+
+    const inspectorData = normalizeInspectorData(wheel.inspectorData);
+
+    if (!hasInspectorData(inspectorData)) {
+
+        return `
+            <div class="col-12 inspector-data-section">
+
+                <h6 class="inspector-data-title">Inspector</h6>
+
+                <p class="inspector-data-empty mb-0">
+                    Inspector no registrado
+                </p>
+
+            </div>
+        `;
+    }
+
+    return `
+        <div class="col-12 inspector-data-section">
+
+            <h6 class="inspector-data-title">Inspector</h6>
+
+            <div class="row g-2">
+
+                <div class="col-md-6">
+                    <strong>Fecha solicitada:</strong>
+                    ${inspectorData.requestedDate || "-"}
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Fecha de atención:</strong>
+                    ${inspectorData.attendedDate || "-"}
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Nombre:</strong>
+                    ${inspectorData.inspectorName || "-"}
+                </div>
+
+                <div class="col-md-12">
+                    <strong>Observaciones:</strong><br>
+                    ${inspectorData.observations || "-"}
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
 function renderProcessSection(wheel) {
 
     const process = normalizeProcessState(wheel.process);
@@ -362,6 +416,8 @@ function renderDetailContent(wheel) {
             ${renderTireAssignmentSection(wheel)}
 
             ${renderPressureDataSection(wheel)}
+
+            ${renderInspectorDataSection(wheel)}
 
             ${renderProcessSection(wheel)}
 

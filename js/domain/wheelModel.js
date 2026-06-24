@@ -173,6 +173,63 @@ export function normalizeWheelPressureData(wheel) {
 }
 
 // ==========================================
+// INSPECTOR
+// ==========================================
+
+function normalizeInspectorDate(value) {
+
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+
+    return value;
+}
+
+export function createInspectorData() {
+
+    return {
+        requestedDate: null,
+        attendedDate: null,
+        inspectorName: "",
+        observations: ""
+    };
+}
+
+export function normalizeInspectorData(inspectorData) {
+
+    if (!inspectorData || typeof inspectorData !== "object") {
+        return createInspectorData();
+    }
+
+    return {
+        requestedDate: normalizeInspectorDate(inspectorData.requestedDate),
+        attendedDate: normalizeInspectorDate(inspectorData.attendedDate),
+        inspectorName: (inspectorData.inspectorName ?? "").trim(),
+        observations: (inspectorData.observations ?? "").trim()
+    };
+}
+
+export function hasInspectorData(inspectorData) {
+
+    const normalizedInspector = normalizeInspectorData(inspectorData);
+
+    return !!(
+        normalizedInspector.requestedDate ||
+        normalizedInspector.attendedDate ||
+        normalizedInspector.inspectorName ||
+        normalizedInspector.observations
+    );
+}
+
+export function normalizeWheelInspectorData(wheel) {
+
+    return {
+        ...wheel,
+        inspectorData: normalizeInspectorData(wheel.inspectorData)
+    };
+}
+
+// ==========================================
 // CONSTRUCCIÓN DE OBJETOS RUEDA
 // ==========================================
 
@@ -204,6 +261,7 @@ export function createWheel(data) {
     wheel.process = createProcessState();
     wheel.tireAssignment = createTireAssignment();
     wheel.pressureData = createPressureData();
+    wheel.inspectorData = createInspectorData();
 
     return appendCreationHistory(wheel);
 }
@@ -221,6 +279,9 @@ export function updateWheel(existingWheel, data) {
     );
     updatedWheel.pressureData = normalizePressureData(
         existingWheel.pressureData
+    );
+    updatedWheel.inspectorData = normalizeInspectorData(
+        existingWheel.inspectorData
     );
 
     return updatedWheel;

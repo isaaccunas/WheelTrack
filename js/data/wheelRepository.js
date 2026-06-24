@@ -1,7 +1,11 @@
 import { DEFAULT_WHEELS } from "./defaultWheels.js";
 import { normalizeWheel } from "../domain/historyModel.js";
 import { normalizeWheelProcess } from "../domain/processModel.js";
-import { normalizeWheelTireAssignment, normalizeWheelPressureData } from "../domain/wheelModel.js";
+import {
+    normalizeWheelInspectorData,
+    normalizeWheelPressureData,
+    normalizeWheelTireAssignment
+} from "../domain/wheelModel.js";
 import { loadWheels, saveWheels } from "./storage.js";
 
 // ==========================================
@@ -20,7 +24,8 @@ export function load() {
         .map(normalizeWheel)
         .map(normalizeWheelProcess)
         .map(normalizeWheelTireAssignment)
-        .map(normalizeWheelPressureData);
+        .map(normalizeWheelPressureData)
+        .map(normalizeWheelInspectorData);
 }
 
 // ==========================================
