@@ -1,7 +1,8 @@
 import { normalizeWheel } from "../domain/historyModel.js";
 import {
     getActiveStageState,
-    normalizeProcessState
+    normalizeProcessState,
+    PROCESS_STAGES
 } from "../domain/processModel.js";
 import {
     getWheelTypeLabel,
@@ -109,6 +110,131 @@ function getProcessStatusClass(status) {
     };
 
     return statusClasses[status] || "process-status-pending";
+}
+
+function getTimelineNodeClass(status) {
+
+    const nodeClasses = {
+
+        "Pendiente": "wheel-timeline-node-pending",
+        "En proceso": "wheel-timeline-node-active",
+        "Completada": "wheel-timeline-node-completed",
+        "Bloqueada": "wheel-timeline-node-blocked"
+    };
+
+    return nodeClasses[status] || "wheel-timeline-node-pending";
+}
+
+function getTimelineConnectorClass(status) {
+
+    return status === "Completada"
+        ? "wheel-timeline-connector-completed"
+        : "wheel-timeline-connector-pending";
+}
+
+function getTimelineNodeIcon(status) {
+
+    const icons = {
+
+        "Pendiente": "fa-regular fa-circle",
+        "En proceso": "fa-solid fa-gear",
+        "Completada": "fa-solid fa-check",
+        "Bloqueada": "fa-solid fa-ban"
+    };
+
+    return icons[status] || "fa-regular fa-circle";
+}
+
+function renderProcessTimeline(wheel) {
+
+    const process = normalizeProcessState(wheel.process);
+
+    const timelineSteps = PROCESS_STAGES.map((stageName, index) => {
+
+        const stageState = process.stages.find(
+            (stage) => stage.stage === stageName
+        ) ?? {
+            stage: stageName,
+            status: "Pendiente"
+        };
+
+        const isLast = index === PROCESS_STAGES.length - 1;
+
+        const connectorMarkup = isLast
+            ? ""
+            : `
+                <div
+                    class="wheel-timeline-connector ${getTimelineConnectorClass(stageState.status)}"
+                    aria-hidden="true">
+                </div>
+            `;
+
+        return `
+            <div class="wheel-timeline-step">
+
+                <div class="wheel-timeline-step-top">
+
+                    <div
+                        class="wheel-timeline-node ${getTimelineNodeClass(stageState.status)}"
+                        title="${stageState.stage}: ${stageState.status}">
+
+                        <i class="${getTimelineNodeIcon(stageState.status)}"></i>
+
+                    </div>
+
+                    ${connectorMarkup}
+
+                </div>
+
+                <div class="wheel-timeline-step-body">
+
+                    <span class="wheel-timeline-stage-name">
+                        ${stageState.stage}
+                    </span>
+
+                    <span class="wheel-timeline-stage-status ${getProcessStatusClass(stageState.status)}">
+                        ${stageState.status}
+                    </span>
+
+                </div>
+
+            </div>
+        `;
+    }).join("");
+
+    return `
+        <div class="wheel-timeline" aria-label="Línea de tiempo del proceso">
+
+            <div class="wheel-timeline-track">
+                ${timelineSteps}
+            </div>
+
+            <div class="wheel-timeline-legend">
+
+                <span class="wheel-timeline-legend-item">
+                    <span class="wheel-timeline-legend-dot wheel-timeline-node-completed"></span>
+                    Completada
+                </span>
+
+                <span class="wheel-timeline-legend-item">
+                    <span class="wheel-timeline-legend-dot wheel-timeline-node-active"></span>
+                    En proceso
+                </span>
+
+                <span class="wheel-timeline-legend-item">
+                    <span class="wheel-timeline-legend-dot wheel-timeline-node-pending"></span>
+                    Pendiente
+                </span>
+
+                <span class="wheel-timeline-legend-item">
+                    <span class="wheel-timeline-legend-dot wheel-timeline-node-blocked"></span>
+                    Bloqueada
+                </span>
+
+            </div>
+
+        </div>
+    `;
 }
 
 function renderActiveSubstagesSection(wheel) {
@@ -607,32 +733,12 @@ function renderServiceableDataSection(wheel) {
 
 function renderProcessSection(wheel) {
 
-    const process = normalizeProcessState(wheel.process);
-
-    const stageItems = process.stages.map((stageState) => `
-
-        <div class="process-stage-item">
-
-            <span class="process-stage-name">
-                ${stageState.stage}
-            </span>
-
-            <span class="process-stage-status ${getProcessStatusClass(stageState.status)}">
-                ${stageState.status}
-            </span>
-
-        </div>
-
-    `).join("");
-
     return `
         <div class="col-12 process-section">
 
             <h6 class="process-title">Proceso del Taller</h6>
 
-            <div class="process-stage-list">
-                ${stageItems}
-            </div>
+            ${renderProcessTimeline(wheel)}
 
             ${renderActiveSubstagesSection(wheel)}
 
