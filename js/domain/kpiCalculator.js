@@ -1,3 +1,5 @@
+import { normalizeStageTiming } from "./processModel.js";
+
 // ==========================================
 // CONSTANTES DE NEGOCIO
 // ==========================================
@@ -8,6 +10,17 @@ const PENDING_STATES = [
     "Esperando material",
     "Esperando NDT",
     "Bloqueada"
+];
+
+const OPERATIONAL_STAGE_NAMES = [
+    "Recepción",
+    "Desarme",
+    "Lavado",
+    "Inspección",
+    "Espera de Material",
+    "Ensamblaje",
+    "Inflado",
+    "Liberación"
 ];
 
 // Valores de la UI actual hasta contar por tipo de rueda (NW/MW)
@@ -48,6 +61,136 @@ function isDateInRange(dateString, start, end) {
     const date = new Date(`${dateString}T00:00:00`);
 
     return date >= start && date <= end;
+}
+
+function getStageDurations(wheels, stageName) {
+
+    return wheels.flatMap((wheel) => {
+
+        const stageTiming = normalizeStageTiming(wheel.stageTiming);
+        const stageEntry = stageTiming.find(
+            (entry) => entry.stage === stageName
+        );
+
+        if (
+            !stageEntry ||
+            stageEntry.durationMinutes === null ||
+            stageEntry.durationMinutes === undefined
+        ) {
+            return [];
+        }
+
+        return [stageEntry.durationMinutes];
+    });
+}
+
+function averageValues(values) {
+
+    if (values.length === 0) {
+        return null;
+    }
+
+    const total = values.reduce((sum, value) => sum + value, 0);
+
+    return Math.round(total / values.length);
+}
+
+export function formatDurationMinutes(minutes) {
+
+    if (minutes === null || minutes === undefined) {
+        return "Sin datos";
+    }
+
+    if (minutes < 60) {
+        return `${minutes} min`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (remainingMinutes === 0) {
+        return `${hours} h`;
+    }
+
+    return `${hours} h ${remainingMinutes} min`;
+}
+
+// ==========================================
+// KPIs OPERACIONALES
+// ==========================================
+
+export function averageWheelProcessingTime(wheels) {
+
+    const wheelTotals = wheels
+        .map((wheel) => {
+
+            const stageTiming = normalizeStageTiming(wheel.stageTiming);
+            const completedDurations = stageTiming
+                .map((entry) => entry.durationMinutes)
+                .filter((duration) => duration !== null && duration !== undefined);
+
+            if (completedDurations.length === 0) {
+                return null;
+            }
+
+            return completedDurations.reduce(
+                (sum, duration) => sum + duration,
+                0
+            );
+        })
+        .filter((total) => total !== null);
+
+    return averageValues(wheelTotals);
+}
+
+export function averageStageTime(wheels, stageName) {
+
+    return averageValues(getStageDurations(wheels, stageName));
+}
+
+export function slowestStage(wheels) {
+
+    let slowestStageName = null;
+    let slowestAverage = null;
+
+    OPERATIONAL_STAGE_NAMES.forEach((stageName) => {
+
+        const stageAverage = averageStageTime(wheels, stageName);
+
+        if (
+            stageAverage !== null &&
+            (slowestAverage === null || stageAverage > slowestAverage)
+        ) {
+
+            slowestAverage = stageAverage;
+            slowestStageName = stageName;
+        }
+    });
+
+    if (slowestStageName === null) {
+        return null;
+    }
+
+    return {
+        stage: slowestStageName,
+        averageMinutes: slowestAverage
+    };
+}
+
+export function getOperationalMetrics(wheels) {
+
+    const stageAverages = OPERATIONAL_STAGE_NAMES.reduce((metrics, stageName) => {
+
+        metrics[stageName] = averageStageTime(wheels, stageName);
+
+        return metrics;
+    }, {});
+
+    return {
+        averageWheelProcessingTime: averageWheelProcessingTime(wheels),
+        slowestStage: slowestStage(wheels),
+        stageAverages
+    };
 }
 
 // ==========================================
@@ -118,6 +261,7 @@ export function getDashboardKpis(wheels, referenceDate = new Date()) {
         totalProcessed: getTotalProcessed(wheels),
         weeklyCount: getWeeklyCount(wheels, referenceDate),
         nwCount: distribution.nw,
-        mwCount: distribution.mw
+        mwCount: distribution.mw,
+        operational: getOperationalMetrics(wheels)
     };
 }

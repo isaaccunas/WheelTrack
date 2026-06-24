@@ -805,6 +805,39 @@ main.container-fluid{
     font-size: 0.95rem;
 }
 
+.operational-dashboard .operational-card{
+    min-height: 110px;
+}
+
+.operational-metric-value{
+    color: #ff6a00;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.operational-stage-card{
+    background: #fff;
+    border: 1px solid #f0d4bc;
+    border-left: 4px solid #ff6a00;
+    border-radius: 10px;
+    padding: 12px;
+    min-height: 78px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.operational-stage-name{
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.operational-stage-time{
+    color: #d95a00;
+    font-size: 1rem;
+}
+
 /* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */

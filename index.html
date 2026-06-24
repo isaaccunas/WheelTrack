@@ -437,6 +437,84 @@
 
         </div>
 
+        <!-- DASHBOARD OPERACIONAL -->
+
+        <div class="row g-4 mt-1 operational-dashboard">
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-light operational-card">
+
+                    <i class="fa-solid fa-stopwatch summary-icon"></i>
+
+                    <div>
+
+                        <h3 class="summary-title">
+                            Tiempo promedio por rueda
+                        </h3>
+
+                        <p class="operational-metric-value mb-0" id="avgWheelProcessingTime">
+                            Sin datos
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-dark operational-card">
+
+                    <i class="fa-solid fa-hourglass-half summary-icon"></i>
+
+                    <div>
+
+                        <h3 class="summary-title">
+                            Etapa más lenta
+                        </h3>
+
+                        <p class="operational-metric-value mb-0" id="slowestStageMetric">
+                            Sin datos
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-light operational-card">
+
+                    <i class="fa-solid fa-chart-line summary-icon"></i>
+
+                    <div>
+
+                        <h3 class="summary-title">
+                            Promedios por etapa
+                        </h3>
+
+                        <p class="summary-text mb-0">
+                            Basado en tiempos registrados
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12">
+
+                <div class="row g-3" id="stageAveragesGrid"></div>
+
+            </div>
+
+        </div>
+
     </main>
 
     <!-- MODAL NUEVA / EDITAR RUEDA -->
