@@ -751,6 +751,24 @@ main.container-fluid{
     font-size: 0.95rem;
 }
 
+.pressure-data-section{
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 2px solid #ff6a00;
+}
+
+.pressure-data-title{
+    color: #ff6a00;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.pressure-data-empty{
+    color: #666;
+    font-size: 0.95rem;
+}
+
 /* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */

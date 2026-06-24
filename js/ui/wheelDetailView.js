@@ -4,7 +4,9 @@ import {
     normalizeProcessState
 } from "../domain/processModel.js";
 import {
+    hasPressureData,
     hasValidTireAssignment,
+    normalizePressureData,
     normalizeTireAssignment
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
@@ -202,6 +204,67 @@ function renderTireAssignmentSection(wheel) {
     `;
 }
 
+function formatPressureValue(pressure) {
+
+    if (pressure === null) {
+        return "-";
+    }
+
+    return String(pressure);
+}
+
+function renderPressureDataSection(wheel) {
+
+    const pressureData = normalizePressureData(wheel.pressureData);
+
+    if (!hasPressureData(pressureData)) {
+
+        return `
+            <div class="col-12 pressure-data-section">
+
+                <h6 class="pressure-data-title">Presiones</h6>
+
+                <p class="pressure-data-empty mb-0">
+                    Presiones no registradas
+                </p>
+
+            </div>
+        `;
+    }
+
+    return `
+        <div class="col-12 pressure-data-section">
+
+            <h6 class="pressure-data-title">Presiones</h6>
+
+            <div class="row g-2">
+
+                <div class="col-md-6">
+                    <strong>Presión inicial:</strong>
+                    ${formatPressureValue(pressureData.initialPressure)}
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Fecha inicial:</strong>
+                    ${pressureData.initialPressureDate || "-"}
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Presión final:</strong>
+                    ${formatPressureValue(pressureData.finalPressure)}
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Fecha final:</strong>
+                    ${pressureData.finalPressureDate || "-"}
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
 function renderProcessSection(wheel) {
 
     const process = normalizeProcessState(wheel.process);
@@ -297,6 +360,8 @@ function renderDetailContent(wheel) {
             </div>
 
             ${renderTireAssignmentSection(wheel)}
+
+            ${renderPressureDataSection(wheel)}
 
             ${renderProcessSection(wheel)}
 

@@ -105,6 +105,74 @@ export function normalizeWheelTireAssignment(wheel) {
 }
 
 // ==========================================
+// REGISTRO DE PRESIONES
+// ==========================================
+
+function normalizePressureValue(value) {
+
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+
+    const numericValue = Number(value);
+
+    return Number.isNaN(numericValue) ? null : numericValue;
+}
+
+function normalizePressureDate(value) {
+
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+
+    return value;
+}
+
+export function createPressureData() {
+
+    return {
+        initialPressure: null,
+        initialPressureDate: null,
+        finalPressure: null,
+        finalPressureDate: null
+    };
+}
+
+export function normalizePressureData(pressureData) {
+
+    if (!pressureData || typeof pressureData !== "object") {
+        return createPressureData();
+    }
+
+    return {
+        initialPressure: normalizePressureValue(pressureData.initialPressure),
+        initialPressureDate: normalizePressureDate(pressureData.initialPressureDate),
+        finalPressure: normalizePressureValue(pressureData.finalPressure),
+        finalPressureDate: normalizePressureDate(pressureData.finalPressureDate)
+    };
+}
+
+export function hasPressureData(pressureData) {
+
+    const normalizedPressure = normalizePressureData(pressureData);
+
+    return (
+        normalizedPressure.initialPressure !== null ||
+        normalizedPressure.initialPressureDate !== null ||
+        normalizedPressure.finalPressure !== null ||
+        normalizedPressure.finalPressureDate !== null
+    );
+}
+
+export function normalizeWheelPressureData(wheel) {
+
+    return {
+        ...wheel,
+        pressureData: normalizePressureData(wheel.pressureData)
+    };
+}
+
+// ==========================================
 // CONSTRUCCIÓN DE OBJETOS RUEDA
 // ==========================================
 
@@ -135,6 +203,7 @@ export function createWheel(data) {
 
     wheel.process = createProcessState();
     wheel.tireAssignment = createTireAssignment();
+    wheel.pressureData = createPressureData();
 
     return appendCreationHistory(wheel);
 }
@@ -149,6 +218,9 @@ export function updateWheel(existingWheel, data) {
     updatedWheel.process = normalizeProcessState(existingWheel.process);
     updatedWheel.tireAssignment = normalizeTireAssignment(
         existingWheel.tireAssignment
+    );
+    updatedWheel.pressureData = normalizePressureData(
+        existingWheel.pressureData
     );
 
     return updatedWheel;
