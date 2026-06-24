@@ -1,4 +1,9 @@
-import { normalizeStageTiming } from "./processModel.js";
+import {
+    getCurrentStage,
+    normalizeProcessState,
+    normalizeStageTiming,
+    PROCESS_STAGES
+} from "./processModel.js";
 
 // ==========================================
 // CONSTANTES DE NEGOCIO
@@ -194,6 +199,85 @@ export function getOperationalMetrics(wheels) {
 }
 
 // ==========================================
+// KPIs DE FLUJO DEL TALLER
+// ==========================================
+
+export function getActiveFlowWheels(wheels) {
+
+    return wheels.filter((wheel) => {
+
+        normalizeProcessState(wheel.process);
+
+        return getCurrentStage(wheel.process) !== null;
+    }).length;
+}
+
+export function getWheelsCountByStage(wheels) {
+
+    const counts = PROCESS_STAGES.reduce((stageCounts, stageName) => {
+
+        stageCounts[stageName] = 0;
+
+        return stageCounts;
+    }, {});
+
+    wheels.forEach((wheel) => {
+
+        normalizeProcessState(wheel.process);
+
+        const currentStage = getCurrentStage(wheel.process);
+
+        if (currentStage && Object.hasOwn(counts, currentStage)) {
+            counts[currentStage] += 1;
+        }
+    });
+
+    return counts;
+}
+
+export function getFlowBottleneck(wheels) {
+
+    const wheelsByStage = getWheelsCountByStage(wheels);
+    let bottleneckStage = null;
+    let maxCount = 0;
+
+    PROCESS_STAGES.forEach((stageName) => {
+
+        const count = wheelsByStage[stageName];
+
+        if (count > maxCount) {
+
+            maxCount = count;
+            bottleneckStage = stageName;
+        }
+    });
+
+    if (maxCount === 0) {
+        return null;
+    }
+
+    return {
+        stage: bottleneckStage,
+        wheelCount: maxCount
+    };
+}
+
+export function getAverageTotalWheelTime(wheels) {
+
+    return averageWheelProcessingTime(wheels);
+}
+
+export function getFlowMetrics(wheels) {
+
+    return {
+        activeWheels: getActiveFlowWheels(wheels),
+        wheelsByStage: getWheelsCountByStage(wheels),
+        bottleneck: getFlowBottleneck(wheels),
+        averageTotalWheelTime: getAverageTotalWheelTime(wheels)
+    };
+}
+
+// ==========================================
 // KPIs GENERALES
 // ==========================================
 
@@ -262,6 +346,7 @@ export function getDashboardKpis(wheels, referenceDate = new Date()) {
         weeklyCount: getWeeklyCount(wheels, referenceDate),
         nwCount: distribution.nw,
         mwCount: distribution.mw,
-        operational: getOperationalMetrics(wheels)
+        operational: getOperationalMetrics(wheels),
+        flow: getFlowMetrics(wheels)
     };
 }

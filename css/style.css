@@ -881,6 +881,43 @@ main.container-fluid{
     font-size: 1rem;
 }
 
+.flow-dashboard .flow-card{
+    min-height: 110px;
+}
+
+.flow-metric-value{
+    color: #ff6a00;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.flow-stage-summary{
+    padding: 20px;
+}
+
+.flow-stage-card{
+    background: #fff;
+    border: 1px solid #f0d4bc;
+    border-left: 4px solid #ff6a00;
+    border-radius: 10px;
+    padding: 12px;
+    min-height: 78px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.flow-stage-name{
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.flow-stage-count{
+    color: #d95a00;
+    font-size: 1.2rem;
+}
+
 /* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */

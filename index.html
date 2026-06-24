@@ -515,6 +515,100 @@
 
         </div>
 
+        <!-- DASHBOARD DE FLUJO DEL TALLER -->
+
+        <div class="row g-4 mt-1 flow-dashboard">
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-light flow-card">
+
+                    <i class="fa-solid fa-industry summary-icon"></i>
+
+                    <div>
+
+                        <h3 class="summary-title">
+                            Ruedas activas
+                        </h3>
+
+                        <p class="flow-metric-value mb-0" id="activeFlowWheels">
+                            0
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-dark flow-card">
+
+                    <i class="fa-solid fa-road-barrier summary-icon"></i>
+
+                    <div>
+
+                        <h3 class="summary-title">
+                            Cuello de botella actual
+                        </h3>
+
+                        <p class="flow-metric-value mb-0" id="flowBottleneckMetric">
+                            Sin datos
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-light flow-card">
+
+                    <i class="fa-solid fa-clock summary-icon"></i>
+
+                    <div>
+
+                        <h3 class="summary-title">
+                            Tiempo total promedio por rueda
+                        </h3>
+
+                        <p class="flow-metric-value mb-0" id="avgTotalWheelTime">
+                            Sin datos
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12">
+
+                <div class="summary-card summary-light flow-stage-summary">
+
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+
+                        <h3 class="summary-title mb-0">
+                            Ruedas por etapa
+                        </h3>
+
+                        <p class="summary-text mb-0">
+                            Estado operativo actual del taller
+                        </p>
+
+                    </div>
+
+                    <div class="row g-3" id="wheelsByStageGrid"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </main>
 
     <!-- MODAL NUEVA / EDITAR RUEDA -->

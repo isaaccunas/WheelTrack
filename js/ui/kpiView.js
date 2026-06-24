@@ -59,6 +59,64 @@ function renderOperationalMetrics(operational) {
         .join("");
 }
 
+function renderFlowMetrics(flow) {
+
+    const activeWheelsElement = document.getElementById("activeFlowWheels");
+    const bottleneckElement = document.getElementById("flowBottleneckMetric");
+    const averageTotalTimeElement = document.getElementById("avgTotalWheelTime");
+    const wheelsByStageGrid = document.getElementById("wheelsByStageGrid");
+
+    if (activeWheelsElement) {
+        activeWheelsElement.textContent = String(flow.activeWheels);
+    }
+
+    if (bottleneckElement) {
+
+        if (!flow.bottleneck) {
+
+            bottleneckElement.textContent = "Sin datos";
+
+        } else {
+
+            bottleneckElement.textContent =
+                `${flow.bottleneck.stage} (${flow.bottleneck.wheelCount} ruedas)`;
+        }
+    }
+
+    if (averageTotalTimeElement) {
+
+        averageTotalTimeElement.textContent = formatDurationMinutes(
+            flow.averageTotalWheelTime
+        );
+    }
+
+    if (!wheelsByStageGrid) {
+        return;
+    }
+
+    wheelsByStageGrid.innerHTML = Object.entries(flow.wheelsByStage)
+        .map(([stageName, wheelCount]) => `
+
+            <div class="col-lg-3 col-md-4 col-sm-6">
+
+                <div class="flow-stage-card">
+
+                    <span class="flow-stage-name">
+                        ${stageName}
+                    </span>
+
+                    <strong class="flow-stage-count">
+                        ${wheelCount}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        `)
+        .join("");
+}
+
 export function renderKpis(kpis) {
 
     document.getElementById("totalProcesadas").textContent = kpis.totalProcessed;
@@ -76,5 +134,10 @@ export function renderKpis(kpis) {
     if (kpis.operational) {
 
         renderOperationalMetrics(kpis.operational);
+    }
+
+    if (kpis.flow) {
+
+        renderFlowMetrics(kpis.flow);
     }
 }
