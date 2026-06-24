@@ -18,57 +18,61 @@ export const PROCESS_STAGES = [
 export const PROCESS_SUBSTAGES = {
 
     "Recepción": [
-        "Registro de ingreso",
-        "Verificación documental",
-        "Inspección visual inicial"
+        "Recepción física",
+        "Inspección preliminar",
+        "Asignación clasificación de cajas"
     ],
 
     "Desarme": [
-        "Remoción de caucho",
-        "Desmontaje de componentes",
-        "Etiquetado de piezas"
+        "Separación caucho-aros",
+        "Desarme de pernos"
     ],
 
     "Lavado": [
-        "Lavado preliminar",
-        "Lavado NDT",
-        "Secado"
+        "Lavado pernos",
+        "Lavado accesorios",
+        "Lavado aros"
     ],
 
     "Inspección": [
         "Inspección visual",
-        "NDT",
-        "Medición de componentes"
+        "Inspección NDT",
+        "Breakaway Torque",
+        "Inspección accesorios",
+        "Lubricación de rodamientos"
     ],
 
     "Espera de Material": [
-        "Solicitud de partes",
-        "Recepción de material",
-        "Verificación de partes"
+        "Repuesto solicitado",
+        "Repuesto recibido",
+        "Caucho solicitado"
     ],
 
     "Ensamblaje": [
-        "Montaje de componentes",
-        "Torque de pernos",
-        "Verificación de ensamble"
+        "Caucho asignado",
+        "Premontaje",
+        "Instalación accesorios",
+        "Solicitud de un Inspector",
+        "Torqueado"
     ],
 
     "Inflado": [
-        "Montaje de caucho",
-        "Inflado y balanceo",
-        "Verificación de presión"
+        "Inflado inicial",
+        "Liquid Test inicial",
+        "Instalación de rodamientos",
+        "Rack de espera"
     ],
 
     "Liberación": [
-        "Inspección final",
-        "Documentación de liberación",
-        "Aprobación QA"
+        "Inspector presente solicitado",
+        "Presión final",
+        "Liquid Test final",
+        "Documentación enviada"
     ],
 
     "Almacén": [
-        "Preparación para envío",
-        "Entrega a almacén",
-        "Cierre de orden"
+        "Entregada a almacén",
+        "Serviciable recibido"
     ]
 };
 

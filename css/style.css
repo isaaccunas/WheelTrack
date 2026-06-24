@@ -603,6 +603,75 @@ main.container-fluid{
 }
 
 /* ==========================================
+   PROCESO EN DETALLE
+========================================== */
+
+.process-section{
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 2px solid #ff6a00;
+}
+
+.process-title{
+    color: #ff6a00;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.process-stage-list{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.process-stage-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border: 1px solid #f0d4bc;
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.process-stage-name{
+    color: #222;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.process-stage-status{
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.process-status-pending{
+    background: #ececec;
+    color: #666;
+}
+
+.process-status-active{
+    background: #fff3e8;
+    color: #d95a00;
+    border: 1px solid #ff6a00;
+}
+
+.process-status-completed{
+    background: #e8f8ef;
+    color: #1e8449;
+}
+
+.process-status-blocked{
+    background: #fdecea;
+    color: #c0392b;
+}
+
+/* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */
 

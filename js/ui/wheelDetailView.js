@@ -1,4 +1,5 @@
 import { normalizeWheel } from "../domain/historyModel.js";
+import { normalizeProcessState } from "../domain/processModel.js";
 import { refs } from "./domRefs.js";
 
 // ==========================================
@@ -83,6 +84,52 @@ function renderHistorySection(wheel) {
     `;
 }
 
+function getProcessStatusClass(status) {
+
+    const statusClasses = {
+
+        "Pendiente": "process-status-pending",
+        "En proceso": "process-status-active",
+        "Completada": "process-status-completed",
+        "Bloqueada": "process-status-blocked"
+    };
+
+    return statusClasses[status] || "process-status-pending";
+}
+
+function renderProcessSection(wheel) {
+
+    const process = normalizeProcessState(wheel.process);
+
+    const stageItems = process.stages.map((stageState) => `
+
+        <div class="process-stage-item">
+
+            <span class="process-stage-name">
+                ${stageState.stage}
+            </span>
+
+            <span class="process-stage-status ${getProcessStatusClass(stageState.status)}">
+                ${stageState.status}
+            </span>
+
+        </div>
+
+    `).join("");
+
+    return `
+        <div class="col-12 process-section">
+
+            <h6 class="process-title">Proceso del Taller</h6>
+
+            <div class="process-stage-list">
+                ${stageItems}
+            </div>
+
+        </div>
+    `;
+}
+
 // ==========================================
 // MODAL DE DETALLE
 // ==========================================
@@ -147,6 +194,8 @@ export function showWheelDetail(wheel) {
             <div class="col-md-12">
                 <strong>Estado:</strong> ${wheel.estado || "-"}
             </div>
+
+            ${renderProcessSection(wheel)}
 
             ${renderHistorySection(wheel)}
 
