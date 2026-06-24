@@ -1,5 +1,6 @@
 import { DEFAULT_WHEELS } from "./defaultWheels.js";
 import { normalizeWheel } from "../domain/historyModel.js";
+import { normalizeWheelProcess } from "../domain/processModel.js";
 import { loadWheels, saveWheels } from "./storage.js";
 
 // ==========================================
@@ -14,7 +15,9 @@ let wheels = [];
 
 export function load() {
 
-    wheels = (loadWheels() || DEFAULT_WHEELS).map(normalizeWheel);
+    wheels = (loadWheels() || DEFAULT_WHEELS)
+        .map(normalizeWheel)
+        .map(normalizeWheelProcess);
 }
 
 // ==========================================

@@ -3,6 +3,10 @@ import {
     appendCreationHistory,
     appendUpdateHistory
 } from "./historyModel.js";
+import {
+    createProcessState,
+    normalizeProcessState
+} from "./processModel.js";
 
 // ==========================================
 // NORMALIZACIÓN DE DATOS
@@ -78,13 +82,21 @@ function buildWheelFromData(data) {
 
 export function createWheel(data) {
 
-    return appendCreationHistory(buildWheelFromData(data));
+    const wheel = buildWheelFromData(data);
+
+    wheel.process = createProcessState();
+
+    return appendCreationHistory(wheel);
 }
 
 export function updateWheel(existingWheel, data) {
 
-    return appendUpdateHistory(
+    const updatedWheel = appendUpdateHistory(
         existingWheel,
         buildWheelFromData(data)
     );
+
+    updatedWheel.process = normalizeProcessState(existingWheel.process);
+
+    return updatedWheel;
 }
