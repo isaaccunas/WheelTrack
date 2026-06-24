@@ -4,6 +4,7 @@ import {
     normalizeStageTiming,
     PROCESS_STAGES
 } from "./processModel.js";
+import { normalizeWheelType } from "./wheelModel.js";
 
 // ==========================================
 // CONSTANTES DE NEGOCIO
@@ -27,12 +28,6 @@ const OPERATIONAL_STAGE_NAMES = [
     "Inflado",
     "Liberación"
 ];
-
-// Valores de la UI actual hasta contar por tipo de rueda (NW/MW)
-const DEFAULT_NW_MW_DISTRIBUTION = {
-    nw: 2,
-    mw: 2
-};
 
 // ==========================================
 // UTILIDADES INTERNAS
@@ -325,11 +320,26 @@ export function getWeeklyCount(wheels, referenceDate = new Date()) {
     ).length;
 }
 
+export function getNwCount(wheels) {
+
+    return wheels.filter(
+        (wheel) => normalizeWheelType(wheel.wheelType) === "NW"
+    ).length;
+}
+
+export function getMwCount(wheels) {
+
+    return wheels.filter(
+        (wheel) => normalizeWheelType(wheel.wheelType) === "MW"
+    ).length;
+}
+
 export function getNwMwDistribution(wheels) {
 
-    void wheels;
-
-    return { ...DEFAULT_NW_MW_DISTRIBUTION };
+    return {
+        nw: getNwCount(wheels),
+        mw: getMwCount(wheels)
+    };
 }
 
 export function getDashboardKpis(wheels, referenceDate = new Date()) {

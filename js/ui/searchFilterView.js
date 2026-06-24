@@ -1,3 +1,5 @@
+import { normalizeWheelType } from "../domain/wheelModel.js";
+
 // ==========================================
 // FILTROS DE ESTADO
 // ==========================================
@@ -10,6 +12,12 @@ export const STATUS_FILTER_OPTIONS = [
     { value: "pendienteNdt", label: "Pendiente NDT" },
     { value: "bloqueada", label: "Bloqueada" },
     { value: "entregadaAlmacen", label: "Entregada a almacén" }
+];
+
+export const WHEEL_TYPE_FILTER_OPTIONS = [
+    { value: "todas", label: "Todas" },
+    { value: "NW", label: "NW (Nariz)" },
+    { value: "MW", label: "MW (Principal)" }
 ];
 
 const STATUS_FILTER_MAP = {
@@ -48,7 +56,8 @@ export function getDefaultFilters() {
 
     return {
         searchText: "",
-        statusFilter: "todos"
+        statusFilter: "todos",
+        wheelTypeFilter: "todas"
     };
 }
 
@@ -94,6 +103,15 @@ function matchesStatusFilter(wheel, statusFilter) {
     return allowedStates.includes(wheel.estado);
 }
 
+function matchesWheelTypeFilter(wheel, wheelTypeFilter) {
+
+    if (wheelTypeFilter === "todas") {
+        return true;
+    }
+
+    return normalizeWheelType(wheel.wheelType) === wheelTypeFilter;
+}
+
 export function filterWheels(wheels, filters = currentFilters) {
 
     const searchText = normalizeSearchText(filters.searchText);
@@ -102,13 +120,15 @@ export function filterWheels(wheels, filters = currentFilters) {
         .map((wheel, index) => ({ wheel, index }))
         .filter(({ wheel }) =>
             matchesSearch(wheel, searchText) &&
-            matchesStatusFilter(wheel, filters.statusFilter)
+            matchesStatusFilter(wheel, filters.statusFilter) &&
+            matchesWheelTypeFilter(wheel, filters.wheelTypeFilter)
         );
 }
 
 export function isFullListVisible(filters = currentFilters) {
 
     return filters.statusFilter === "todos" &&
+        filters.wheelTypeFilter === "todas" &&
         normalizeSearchText(filters.searchText) === "";
 }
 
@@ -120,8 +140,9 @@ export function initializeSearchFilters(onFiltersChange) {
 
     const searchInput = document.getElementById("wheelSearchInput");
     const statusFilter = document.getElementById("wheelStatusFilter");
+    const wheelTypeFilter = document.getElementById("wheelTypeFilter");
 
-    if (!searchInput || !statusFilter) {
+    if (!searchInput || !statusFilter || !wheelTypeFilter) {
         return;
     }
 
@@ -129,7 +150,8 @@ export function initializeSearchFilters(onFiltersChange) {
 
         currentFilters = {
             searchText: searchInput.value,
-            statusFilter: statusFilter.value
+            statusFilter: statusFilter.value,
+            wheelTypeFilter: wheelTypeFilter.value
         };
 
         onFiltersChange(getCurrentFilters());
@@ -137,4 +159,5 @@ export function initializeSearchFilters(onFiltersChange) {
 
     searchInput.addEventListener("input", notifyChange);
     statusFilter.addEventListener("change", notifyChange);
+    wheelTypeFilter.addEventListener("change", notifyChange);
 }

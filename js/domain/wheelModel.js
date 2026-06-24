@@ -21,6 +21,42 @@ import {
 } from "./processModel.js";
 
 // ==========================================
+// TIPO DE RUEDA
+// ==========================================
+
+export const WHEEL_TYPES = ["NW", "MW"];
+
+export const DEFAULT_WHEEL_TYPE = "MW";
+
+export function normalizeWheelType(wheelType) {
+
+    if (wheelType === "NW" || wheelType === "MW") {
+        return wheelType;
+    }
+
+    return DEFAULT_WHEEL_TYPE;
+}
+
+export function getWheelTypeLabel(wheelType) {
+
+    const normalizedType = normalizeWheelType(wheelType);
+
+    if (normalizedType === "NW") {
+        return "NW (Nariz)";
+    }
+
+    return "MW (Principal)";
+}
+
+export function normalizeWheelWheelType(wheel) {
+
+    return {
+        ...wheel,
+        wheelType: normalizeWheelType(wheel.wheelType)
+    };
+}
+
+// ==========================================
 // NORMALIZACIÓN DE DATOS
 // ==========================================
 
@@ -40,6 +76,7 @@ export function normalizeFormData(raw) {
         razon: (raw.razon ?? "").trim(),
         estacion: (raw.estacion ?? "").trim(),
         ciclos: (raw.ciclos ?? "").trim(),
+        wheelType: raw.wheelType ?? "",
         estado: raw.estado ?? ""
     };
 }
@@ -63,6 +100,7 @@ export function validateWheel(data) {
         data.razon &&
         data.estacion &&
         data.ciclos &&
+        (data.wheelType === "NW" || data.wheelType === "MW") &&
         data.estado
     );
 }
@@ -311,6 +349,7 @@ function buildWheelFromData(data) {
         razon: data.razon,
         estacion: data.estacion,
         ciclos: data.ciclos,
+        wheelType: normalizeWheelType(data.wheelType),
         estado: data.estado,
         color: getColorForState(data.estado)
     };

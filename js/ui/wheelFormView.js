@@ -37,5 +37,6 @@ export function populateWheelForm(wheel) {
     document.getElementById("razon").value = wheel.razon || "";
     document.getElementById("estacion").value = wheel.estacion || "";
     document.getElementById("ciclos").value = wheel.ciclos || "";
+    document.getElementById("wheelType").value = wheel.wheelType || "";
     document.getElementById("estado").value = wheel.estado || "";
 }

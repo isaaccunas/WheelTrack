@@ -278,7 +278,7 @@
 
                             </div>
 
-                            <select id="wheelStatusFilter" class="form-select search-filter-select">
+                            <select id="wheelStatusFilter" class="form-select search-filter-select mb-2">
 
                                 <option value="todos" selected>Todos</option>
                                 <option value="recepcion">Recepción</option>
@@ -287,6 +287,14 @@
                                 <option value="pendienteNdt">Pendiente NDT</option>
                                 <option value="bloqueada">Bloqueada</option>
                                 <option value="entregadaAlmacen">Entregada a almacén</option>
+
+                            </select>
+
+                            <select id="wheelTypeFilter" class="form-select search-filter-select">
+
+                                <option value="todas" selected>Todas</option>
+                                <option value="NW">NW (Nariz)</option>
+                                <option value="MW">MW (Principal)</option>
 
                             </select>
 
@@ -713,6 +721,19 @@
                             <div class="col-md-4">
                                 <label class="form-label">12. Ciclos *</label>
                                 <input type="text" class="form-control" id="ciclos" placeholder="-16 o +16">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">13. Tipo de rueda *</label>
+
+                                <select class="form-select" id="wheelType">
+
+                                    <option value="">Seleccione tipo</option>
+                                    <option value="NW">NW (Nariz)</option>
+                                    <option value="MW">MW (Principal)</option>
+
+                                </select>
+
                             </div>
 
                             <div class="col-12">

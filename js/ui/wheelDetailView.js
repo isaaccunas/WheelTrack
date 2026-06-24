@@ -4,6 +4,7 @@ import {
     normalizeProcessState
 } from "../domain/processModel.js";
 import {
+    getWheelTypeLabel,
     hasInspectorData,
     hasPressureData,
     hasServiceableData,
@@ -687,6 +688,10 @@ function renderDetailContent(wheel) {
 
             <div class="col-md-6">
                 <strong>Ciclos:</strong> ${wheel.ciclos || "-"}
+            </div>
+
+            <div class="col-md-6">
+                <strong>Tipo de rueda:</strong> ${getWheelTypeLabel(wheel.wheelType)}
             </div>
 
             <div class="col-md-12">

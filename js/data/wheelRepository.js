@@ -5,7 +5,8 @@ import {
     normalizeWheelInspectorData,
     normalizeWheelPressureData,
     normalizeWheelServiceableData,
-    normalizeWheelTireAssignment
+    normalizeWheelTireAssignment,
+    normalizeWheelWheelType
 } from "../domain/wheelModel.js";
 import { loadWheels, saveWheels } from "./storage.js";
 
@@ -28,7 +29,8 @@ export function load() {
         .map(normalizeWheelTireAssignment)
         .map(normalizeWheelPressureData)
         .map(normalizeWheelInspectorData)
-        .map(normalizeWheelServiceableData);
+        .map(normalizeWheelServiceableData)
+        .map(normalizeWheelWheelType);
 }
 
 // ==========================================

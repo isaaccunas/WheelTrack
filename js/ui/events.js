@@ -63,6 +63,7 @@ export function initializeEvents(renderWheels) {
             razon: document.getElementById("razon").value,
             estacion: document.getElementById("estacion").value,
             ciclos: document.getElementById("ciclos").value,
+            wheelType: document.getElementById("wheelType").value,
             estado: document.getElementById("estado").value
         });
 
