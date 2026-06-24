@@ -6,9 +6,11 @@ import {
 import {
     hasInspectorData,
     hasPressureData,
+    hasServiceableData,
     hasValidTireAssignment,
     normalizeInspectorData,
     normalizePressureData,
+    normalizeServiceableData,
     normalizeTireAssignment
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
@@ -319,6 +321,53 @@ function renderInspectorDataSection(wheel) {
     `;
 }
 
+function renderServiceableDataSection(wheel) {
+
+    const serviceableData = normalizeServiceableData(wheel.serviceableData);
+
+    if (!hasServiceableData(serviceableData)) {
+
+        return `
+            <div class="col-12 serviceable-data-section">
+
+                <h6 class="serviceable-data-title">Serviciable</h6>
+
+                <p class="serviceable-data-empty mb-0">
+                    Serviciable no registrado
+                </p>
+
+            </div>
+        `;
+    }
+
+    return `
+        <div class="col-12 serviceable-data-section">
+
+            <h6 class="serviceable-data-title">Serviciable</h6>
+
+            <div class="row g-2">
+
+                <div class="col-md-6">
+                    <strong>Nº documento:</strong>
+                    ${serviceableData.documentNumber || "-"}
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Fecha recibido:</strong>
+                    ${serviceableData.receivedDate || "-"}
+                </div>
+
+                <div class="col-md-12">
+                    <strong>Observaciones:</strong><br>
+                    ${serviceableData.observations || "-"}
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
 function renderProcessSection(wheel) {
 
     const process = normalizeProcessState(wheel.process);
@@ -418,6 +467,8 @@ function renderDetailContent(wheel) {
             ${renderPressureDataSection(wheel)}
 
             ${renderInspectorDataSection(wheel)}
+
+            ${renderServiceableDataSection(wheel)}
 
             ${renderProcessSection(wheel)}
 

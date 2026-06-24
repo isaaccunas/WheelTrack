@@ -233,6 +233,60 @@ export function normalizeWheelInspectorData(wheel) {
 }
 
 // ==========================================
+// SERVICIABLE
+// ==========================================
+
+function normalizeServiceableDate(value) {
+
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+
+    return value;
+}
+
+export function createServiceableData() {
+
+    return {
+        documentNumber: "",
+        receivedDate: null,
+        observations: ""
+    };
+}
+
+export function normalizeServiceableData(serviceableData) {
+
+    if (!serviceableData || typeof serviceableData !== "object") {
+        return createServiceableData();
+    }
+
+    return {
+        documentNumber: (serviceableData.documentNumber ?? "").trim(),
+        receivedDate: normalizeServiceableDate(serviceableData.receivedDate),
+        observations: (serviceableData.observations ?? "").trim()
+    };
+}
+
+export function hasServiceableData(serviceableData) {
+
+    const normalizedServiceable = normalizeServiceableData(serviceableData);
+
+    return !!(
+        normalizedServiceable.documentNumber ||
+        normalizedServiceable.receivedDate ||
+        normalizedServiceable.observations
+    );
+}
+
+export function normalizeWheelServiceableData(wheel) {
+
+    return {
+        ...wheel,
+        serviceableData: normalizeServiceableData(wheel.serviceableData)
+    };
+}
+
+// ==========================================
 // CONSTRUCCIÓN DE OBJETOS RUEDA
 // ==========================================
 
@@ -266,6 +320,7 @@ export function createWheel(data) {
     wheel.tireAssignment = createTireAssignment();
     wheel.pressureData = createPressureData();
     wheel.inspectorData = createInspectorData();
+    wheel.serviceableData = createServiceableData();
 
     return appendCreationHistory(wheel);
 }
@@ -287,6 +342,9 @@ export function updateWheel(existingWheel, data) {
     );
     updatedWheel.inspectorData = normalizeInspectorData(
         existingWheel.inspectorData
+    );
+    updatedWheel.serviceableData = normalizeServiceableData(
+        existingWheel.serviceableData
     );
 
     return updatedWheel;

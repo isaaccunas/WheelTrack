@@ -4,6 +4,7 @@ import { normalizeWheelProcess, normalizeWheelStageTiming } from "../domain/proc
 import {
     normalizeWheelInspectorData,
     normalizeWheelPressureData,
+    normalizeWheelServiceableData,
     normalizeWheelTireAssignment
 } from "../domain/wheelModel.js";
 import { loadWheels, saveWheels } from "./storage.js";
@@ -26,7 +27,8 @@ export function load() {
         .map(normalizeWheelStageTiming)
         .map(normalizeWheelTireAssignment)
         .map(normalizeWheelPressureData)
-        .map(normalizeWheelInspectorData);
+        .map(normalizeWheelInspectorData)
+        .map(normalizeWheelServiceableData);
 }
 
 // ==========================================
