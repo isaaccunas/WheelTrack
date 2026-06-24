@@ -7,6 +7,7 @@ import {
 } from "./historyModel.js";
 import {
     advanceProcess,
+    completeSubstage,
     createProcessState,
     normalizeProcessState
 } from "./processModel.js";
@@ -124,5 +125,41 @@ export function advanceWheelStage(wheel) {
                 advanceResult.toStage
             )
         ]
+    };
+}
+
+export function completeWheelSubstage(wheel, stageName, substageName) {
+
+    const completeResult = completeSubstage(
+        wheel.process,
+        stageName,
+        substageName
+    );
+
+    if (!completeResult) {
+        return null;
+    }
+
+    const normalizedWheel = normalizeWheel(wheel);
+    const historial = [...normalizedWheel.historial];
+
+    if (
+        completeResult.stageAdvanced &&
+        completeResult.fromStage &&
+        completeResult.toStage
+    ) {
+
+        historial.push(
+            createStageChangeEvent(
+                completeResult.fromStage,
+                completeResult.toStage
+            )
+        );
+    }
+
+    return {
+        ...wheel,
+        process: completeResult.process,
+        historial
     };
 }

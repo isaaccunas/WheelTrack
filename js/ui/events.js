@@ -1,6 +1,6 @@
 import * as wheelRepository from "../data/wheelRepository.js";
 import {
-    advanceWheelStage,
+    completeWheelSubstage,
     createWheel,
     normalizeFormData,
     updateWheel,
@@ -134,36 +134,33 @@ export function initializeEvents(renderWheels) {
 
     function showWheelDetail(index) {
 
-        const openDetail = () => {
+        const handleCompleteSubstage = (stageName, substageName) => {
 
-            const wheel = wheelRepository.getById(index);
+            const currentWheel = wheelRepository.getById(index);
+            const updatedWheel = completeWheelSubstage(
+                currentWheel,
+                stageName,
+                substageName
+            );
 
-            const handleAdvanceStage = () => {
+            if (!updatedWheel) {
+                return;
+            }
 
-                const currentWheel = wheelRepository.getById(index);
-                const updatedWheel = advanceWheelStage(currentWheel);
+            wheelRepository.update(index, updatedWheel);
 
-                if (!updatedWheel) {
-                    return;
-                }
+            renderWheels();
 
-                wheelRepository.update(index, updatedWheel);
-
-                renderWheels();
-
-                refreshWheelDetail({
-                    wheel: wheelRepository.getById(index),
-                    onAdvanceStage: handleAdvanceStage
-                });
-            };
-
-            showWheelDetailView({
-                wheel,
-                onAdvanceStage: handleAdvanceStage
+            refreshWheelDetail({
+                wheel: wheelRepository.getById(index),
+                onCompleteSubstage: handleCompleteSubstage
             });
         };
 
-        openDetail();
+        showWheelDetailView({
+            wheel: wheelRepository.getById(index),
+            onCompleteSubstage: handleCompleteSubstage
+        });
     }
 
     window.editWheel = editWheel;

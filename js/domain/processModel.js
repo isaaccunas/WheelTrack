@@ -90,6 +90,51 @@ const DEFAULT_STATUS = "Pendiente";
 const COMPLETED_STATUS = "Completada";
 
 // ==========================================
+// UTILIDADES INTERNAS
+// ==========================================
+
+function createStageSubstages(stageName, existingSubstages = []) {
+
+    const catalog = PROCESS_SUBSTAGES[stageName] ?? [];
+    const completedByName = new Map(
+        existingSubstages.map((substage) => [
+            substage.name,
+            substage.completed === true
+        ])
+    );
+
+    return catalog.map((name) => ({
+
+        name,
+        completed: completedByName.get(name) ?? false
+    }));
+}
+
+function cloneStage(stageState) {
+
+    return {
+        stage: stageState.stage,
+        status: stageState.status,
+        substages: stageState.substages.map((substage) => ({
+            name: substage.name,
+            completed: substage.completed
+        }))
+    };
+}
+
+function activateNextStage(stages, stageIndex) {
+
+    if (stageIndex >= PROCESS_STAGES.length - 1) {
+        return null;
+    }
+
+    return {
+        fromStage: stages[stageIndex].stage,
+        toStage: PROCESS_STAGES[stageIndex + 1]
+    };
+}
+
+// ==========================================
 // ESTADO DEL PROCESO
 // ==========================================
 
@@ -101,7 +146,7 @@ export function createProcessState() {
 
             stage,
             status: stage === INITIAL_STAGE ? INITIAL_STATUS : DEFAULT_STATUS,
-            substage: null
+            substages: createStageSubstages(stage)
         }))
     };
 }
@@ -126,25 +171,36 @@ export function normalizeProcessState(process) {
             const defaultStage = defaultState.stages[index];
 
             if (!existingStage) {
-                return { ...defaultStage };
+                return cloneStage(defaultStage);
             }
 
             const status = STAGE_STATUS.includes(existingStage.status)
                 ? existingStage.status
                 : defaultStage.status;
 
-            const allowedSubstages = PROCESS_SUBSTAGES[stageName] ?? [];
-            const substage = allowedSubstages.includes(existingStage.substage)
-                ? existingStage.substage
-                : null;
+            const substages = createStageSubstages(
+                stageName,
+                Array.isArray(existingStage.substages)
+                    ? existingStage.substages
+                    : []
+            );
 
             return {
                 stage: stageName,
                 status,
-                substage
+                substages
             };
         })
     };
+}
+
+export function areAllSubstagesCompleted(stage) {
+
+    if (!Array.isArray(stage.substages) || stage.substages.length === 0) {
+        return true;
+    }
+
+    return stage.substages.every((substage) => substage.completed === true);
 }
 
 // ==========================================
@@ -160,6 +216,70 @@ export function normalizeWheelProcess(wheel) {
 }
 
 // ==========================================
+// SUBETAPAS
+// ==========================================
+
+export function completeSubstage(process, stageName, substageName) {
+
+    const normalizedProcess = normalizeProcessState(process);
+    const stageIndex = normalizedProcess.stages.findIndex(
+        (stageState) => stageState.stage === stageName
+    );
+
+    if (stageIndex === -1) {
+        return null;
+    }
+
+    const targetStage = normalizedProcess.stages[stageIndex];
+    const substageIndex = targetStage.substages.findIndex(
+        (substage) => substage.name === substageName
+    );
+
+    if (substageIndex === -1) {
+        return null;
+    }
+
+    if (targetStage.substages[substageIndex].completed) {
+        return {
+            process: normalizedProcess,
+            stageAdvanced: false,
+            fromStage: null,
+            toStage: null
+        };
+    }
+
+    const updatedStages = normalizedProcess.stages.map(cloneStage);
+
+    updatedStages[stageIndex].substages[substageIndex].completed = true;
+
+    let stageAdvanced = false;
+    let fromStage = null;
+    let toStage = null;
+
+    if (areAllSubstagesCompleted(updatedStages[stageIndex])) {
+
+        updatedStages[stageIndex].status = COMPLETED_STATUS;
+
+        const nextStageInfo = activateNextStage(updatedStages, stageIndex);
+
+        if (nextStageInfo) {
+
+            updatedStages[stageIndex + 1].status = INITIAL_STATUS;
+            stageAdvanced = true;
+            fromStage = nextStageInfo.fromStage;
+            toStage = nextStageInfo.toStage;
+        }
+    }
+
+    return {
+        process: { stages: updatedStages },
+        stageAdvanced,
+        fromStage,
+        toStage
+    };
+}
+
+// ==========================================
 // AVANCE DE ETAPAS
 // ==========================================
 
@@ -171,6 +291,15 @@ export function getCurrentStage(process) {
     );
 
     return currentStage ? currentStage.stage : null;
+}
+
+export function getActiveStageState(process) {
+
+    const normalizedProcess = normalizeProcessState(process);
+
+    return normalizedProcess.stages.find(
+        (stageState) => stageState.status === INITIAL_STATUS
+    ) ?? null;
 }
 
 export function canAdvanceProcess(process) {
@@ -205,29 +334,14 @@ export function advanceProcess(process) {
     }
 
     const toStage = PROCESS_STAGES[currentIndex + 1];
+    const updatedStages = normalizedProcess.stages.map(cloneStage);
 
-    const updatedStages = normalizedProcess.stages.map((stageState, index) => {
+    updatedStages[currentIndex].status = COMPLETED_STATUS;
+    updatedStages[currentIndex].substages = updatedStages[currentIndex].substages.map(
+        (substage) => ({ ...substage, completed: true })
+    );
 
-        if (index === currentIndex) {
-
-            return {
-                ...stageState,
-                status: COMPLETED_STATUS,
-                substage: null
-            };
-        }
-
-        if (index === currentIndex + 1) {
-
-            return {
-                ...stageState,
-                status: INITIAL_STATUS,
-                substage: null
-            };
-        }
-
-        return { ...stageState };
-    });
+    updatedStages[currentIndex + 1].status = INITIAL_STATUS;
 
     return {
         process: { stages: updatedStages },
