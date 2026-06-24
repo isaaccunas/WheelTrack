@@ -9,6 +9,7 @@ import {
     isFullListVisible
 } from "./ui/searchFilterView.js";
 import { renderWheelList } from "./ui/wheelListView.js";
+import { renderWorkshopMonitor } from "./ui/workshopMonitorView.js";
 
 // ==========================================
 // PUNTO DE ARRANQUE
@@ -28,9 +29,13 @@ function renderWheelListView(filters = getCurrentFilters()) {
 
 function renderWheels() {
 
+    const allWheels = wheelRepository.getAll();
+
     renderWheelListView();
 
-    renderKpis(getDashboardKpis(wheelRepository.getAll()));
+    renderKpis(getDashboardKpis(allWheels));
+
+    renderWorkshopMonitor(allWheels);
 }
 
 renderWheels();

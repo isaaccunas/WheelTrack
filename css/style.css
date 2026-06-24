@@ -1047,6 +1047,146 @@ main.container-fluid{
     font-size: 1.2rem;
 }
 
+.workshop-monitor-section{
+    margin-top: 8px;
+}
+
+.workshop-monitor-card{
+    background: linear-gradient(180deg, #fff 0%, #fffaf6 100%);
+}
+
+.workshop-monitor-board{
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    min-height: 320px;
+    scrollbar-width: thin;
+}
+
+.workshop-monitor-board::-webkit-scrollbar{
+    height: 8px;
+}
+
+.workshop-monitor-board::-webkit-scrollbar-thumb{
+    background: #ff6a00;
+    border-radius: 999px;
+}
+
+.monitor-column{
+    flex: 1 0 190px;
+    min-width: 190px;
+    max-width: 240px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #f0d4bc;
+    border-top: 4px solid #ff6a00;
+    border-radius: 12px;
+    min-height: 280px;
+    max-height: 520px;
+}
+
+.monitor-column-header{
+    padding: 12px 14px;
+    border-bottom: 1px solid #f5e3d4;
+    background: #fff8f2;
+    border-radius: 12px 12px 0 0;
+}
+
+.monitor-column-title{
+    color: #d95a00;
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.monitor-column-body{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.monitor-column-empty{
+    color: #999;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 18px 8px;
+}
+
+.monitor-card{
+    width: 100%;
+    border: 1px solid #f0d4bc;
+    border-left: 4px solid #ff6a00;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.monitor-card:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 106, 0, 0.15);
+}
+
+.monitor-card-number{
+    color: #222;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.monitor-card-aircraft{
+    color: #555;
+    font-size: 0.85rem;
+}
+
+.monitor-card-type{
+    align-self: flex-start;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+}
+
+.monitor-card-type-nw{
+    background: #e8f4fd;
+    color: #1a5276;
+}
+
+.monitor-card-type-mw{
+    background: #fff3e8;
+    color: #d95a00;
+}
+
+@media (min-width: 1600px){
+
+    .workshop-monitor-board{
+        overflow-x: visible;
+    }
+
+    .monitor-column{
+        flex: 1 1 0;
+        max-width: none;
+    }
+}
+
+@media (max-width: 991px){
+
+    .monitor-column{
+        flex: 0 0 220px;
+        min-width: 220px;
+    }
+}
+
 /* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */
