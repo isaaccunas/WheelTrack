@@ -134,6 +134,37 @@ function activateNextStage(stages, stageIndex) {
     };
 }
 
+function toIsoTimestamp(timestamp = new Date()) {
+
+    if (timestamp instanceof Date) {
+        return timestamp.toISOString();
+    }
+
+    return timestamp;
+}
+
+function calculateDurationMinutes(startedAt, finishedAt) {
+
+    const startDate = new Date(startedAt);
+    const endDate = new Date(finishedAt);
+
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+        return null;
+    }
+
+    return Math.round((endDate.getTime() - startDate.getTime()) / 60000);
+}
+
+function cloneStageTimingEntry(entry) {
+
+    return {
+        stage: entry.stage,
+        startedAt: entry.startedAt,
+        finishedAt: entry.finishedAt,
+        durationMinutes: entry.durationMinutes
+    };
+}
+
 // ==========================================
 // ESTADO DEL PROCESO
 // ==========================================
@@ -216,6 +247,136 @@ export function normalizeWheelProcess(wheel) {
 }
 
 // ==========================================
+// TIEMPOS POR ETAPA
+// ==========================================
+
+export function createStageTiming() {
+
+    const startedAt = new Date().toISOString();
+
+    return PROCESS_STAGES.map((stage) => ({
+
+        stage,
+        startedAt: stage === INITIAL_STAGE ? startedAt : null,
+        finishedAt: null,
+        durationMinutes: null
+    }));
+}
+
+export function normalizeStageTiming(stageTiming) {
+
+    const existingEntries = Array.isArray(stageTiming)
+        ? stageTiming
+        : [];
+
+    const entriesByStage = new Map(
+        existingEntries.map((entry) => [entry.stage, entry])
+    );
+
+    return PROCESS_STAGES.map((stage) => {
+
+        const existingEntry = entriesByStage.get(stage);
+
+        if (!existingEntry) {
+
+            return {
+                stage,
+                startedAt: null,
+                finishedAt: null,
+                durationMinutes: null
+            };
+        }
+
+        const durationMinutes = existingEntry.durationMinutes === null ||
+            existingEntry.durationMinutes === undefined
+            ? null
+            : Number(existingEntry.durationMinutes);
+
+        return {
+            stage,
+            startedAt: existingEntry.startedAt ?? null,
+            finishedAt: existingEntry.finishedAt ?? null,
+            durationMinutes: Number.isNaN(durationMinutes) ? null : durationMinutes
+        };
+    });
+}
+
+export function completeStageTiming(
+    stageTiming,
+    completedStage,
+    nextStage = null,
+    timestamp = new Date()
+) {
+
+    const normalizedTiming = normalizeStageTiming(stageTiming)
+        .map(cloneStageTimingEntry);
+
+    const finishedAt = toIsoTimestamp(timestamp);
+    const completedIndex = normalizedTiming.findIndex(
+        (entry) => entry.stage === completedStage
+    );
+
+    if (completedIndex === -1) {
+        return normalizedTiming;
+    }
+
+    const completedEntry = normalizedTiming[completedIndex];
+
+    if (!completedEntry.startedAt) {
+        completedEntry.startedAt = finishedAt;
+    }
+
+    completedEntry.finishedAt = finishedAt;
+    completedEntry.durationMinutes = calculateDurationMinutes(
+        completedEntry.startedAt,
+        completedEntry.finishedAt
+    );
+
+    if (nextStage) {
+
+        const nextIndex = normalizedTiming.findIndex(
+            (entry) => entry.stage === nextStage
+        );
+
+        if (nextIndex !== -1) {
+
+            normalizedTiming[nextIndex].startedAt =
+                normalizedTiming[nextIndex].startedAt ?? finishedAt;
+        }
+    }
+
+    return normalizedTiming;
+}
+
+export function normalizeWheelStageTiming(wheel) {
+
+    let stageTiming = normalizeStageTiming(wheel.stageTiming);
+    const activeStage = getCurrentStage(wheel.process);
+
+    if (activeStage) {
+
+        const activeIndex = stageTiming.findIndex(
+            (entry) => entry.stage === activeStage
+        );
+
+        if (
+            activeIndex !== -1 &&
+            !stageTiming[activeIndex].startedAt &&
+            !stageTiming[activeIndex].finishedAt
+        ) {
+
+            stageTiming = stageTiming.map(cloneStageTimingEntry);
+            stageTiming[activeIndex].startedAt = new Date().toISOString();
+        }
+    }
+
+    return {
+        ...wheel,
+        stageTiming
+    };
+}
+
+// ==========================================
 // SUBETAPAS
 // ==========================================
 
@@ -244,7 +405,8 @@ export function completeSubstage(process, stageName, substageName) {
             process: normalizedProcess,
             stageAdvanced: false,
             fromStage: null,
-            toStage: null
+            toStage: null,
+            stageCompleted: null
         };
     }
 
@@ -255,10 +417,12 @@ export function completeSubstage(process, stageName, substageName) {
     let stageAdvanced = false;
     let fromStage = null;
     let toStage = null;
+    let stageCompleted = null;
 
     if (areAllSubstagesCompleted(updatedStages[stageIndex])) {
 
         updatedStages[stageIndex].status = COMPLETED_STATUS;
+        stageCompleted = updatedStages[stageIndex].stage;
 
         const nextStageInfo = activateNextStage(updatedStages, stageIndex);
 
@@ -275,7 +439,8 @@ export function completeSubstage(process, stageName, substageName) {
         process: { stages: updatedStages },
         stageAdvanced,
         fromStage,
-        toStage
+        toStage,
+        stageCompleted
     };
 }
 

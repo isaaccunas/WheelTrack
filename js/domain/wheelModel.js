@@ -7,9 +7,12 @@ import {
 } from "./historyModel.js";
 import {
     advanceProcess,
+    completeStageTiming,
     completeSubstage,
     createProcessState,
-    normalizeProcessState
+    createStageTiming,
+    normalizeProcessState,
+    normalizeStageTiming
 } from "./processModel.js";
 
 // ==========================================
@@ -259,6 +262,7 @@ export function createWheel(data) {
     const wheel = buildWheelFromData(data);
 
     wheel.process = createProcessState();
+    wheel.stageTiming = createStageTiming();
     wheel.tireAssignment = createTireAssignment();
     wheel.pressureData = createPressureData();
     wheel.inspectorData = createInspectorData();
@@ -274,6 +278,7 @@ export function updateWheel(existingWheel, data) {
     );
 
     updatedWheel.process = normalizeProcessState(existingWheel.process);
+    updatedWheel.stageTiming = normalizeStageTiming(existingWheel.stageTiming);
     updatedWheel.tireAssignment = normalizeTireAssignment(
         existingWheel.tireAssignment
     );
@@ -300,6 +305,11 @@ export function advanceWheelStage(wheel) {
     return {
         ...wheel,
         process: advanceResult.process,
+        stageTiming: completeStageTiming(
+            normalizeStageTiming(wheel.stageTiming),
+            advanceResult.fromStage,
+            advanceResult.toStage
+        ),
         historial: [
             ...normalizedWheel.historial,
             createStageChangeEvent(
@@ -308,6 +318,35 @@ export function advanceWheelStage(wheel) {
             )
         ]
     };
+}
+
+function applyStageTimingAfterCompletion(wheel, completeResult) {
+
+    let stageTiming = normalizeStageTiming(wheel.stageTiming);
+
+    if (
+        completeResult.stageAdvanced &&
+        completeResult.fromStage &&
+        completeResult.toStage
+    ) {
+
+        return completeStageTiming(
+            stageTiming,
+            completeResult.fromStage,
+            completeResult.toStage
+        );
+    }
+
+    if (completeResult.stageCompleted) {
+
+        return completeStageTiming(
+            stageTiming,
+            completeResult.stageCompleted,
+            null
+        );
+    }
+
+    return stageTiming;
 }
 
 export function completeWheelSubstage(wheel, stageName, substageName) {
@@ -342,6 +381,7 @@ export function completeWheelSubstage(wheel, stageName, substageName) {
     return {
         ...wheel,
         process: completeResult.process,
+        stageTiming: applyStageTimingAfterCompletion(wheel, completeResult),
         historial
     };
 }

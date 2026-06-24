@@ -1,6 +1,6 @@
 import { DEFAULT_WHEELS } from "./defaultWheels.js";
 import { normalizeWheel } from "../domain/historyModel.js";
-import { normalizeWheelProcess } from "../domain/processModel.js";
+import { normalizeWheelProcess, normalizeWheelStageTiming } from "../domain/processModel.js";
 import {
     normalizeWheelInspectorData,
     normalizeWheelPressureData,
@@ -23,6 +23,7 @@ export function load() {
     wheels = (loadWheels() || DEFAULT_WHEELS)
         .map(normalizeWheel)
         .map(normalizeWheelProcess)
+        .map(normalizeWheelStageTiming)
         .map(normalizeWheelTireAssignment)
         .map(normalizeWheelPressureData)
         .map(normalizeWheelInspectorData);
