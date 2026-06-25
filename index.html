@@ -651,19 +651,34 @@
 
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
 
-                            <h3 class="summary-title mb-0">
+                            <div>
 
-                                <i class="fa-solid fa-display text-orange me-2"></i>
+                                <h3 class="summary-title mb-0">
 
-                                Monitor del Taller
+                                    <i class="fa-solid fa-display text-orange me-2"></i>
 
-                            </h3>
+                                    Monitor del Taller
 
-                            <p class="summary-text mb-0">
+                                </h3>
 
-                                Supervisión por etapa actual del proceso
+                                <p class="summary-text mb-0">
 
-                            </p>
+                                    Supervisión por etapa actual del proceso
+
+                                </p>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-warning tv-open-btn"
+                                id="openTvMonitorBtn">
+
+                                <i class="fa-solid fa-tv me-2"></i>
+
+                                Modo TV
+
+                            </button>
 
                         </div>
 
@@ -678,6 +693,45 @@
         </div>
 
     </main>
+
+    <!-- MODO TV FULL SCREEN -->
+
+    <div id="tvMonitorOverlay" class="tv-monitor-overlay d-none" aria-hidden="true">
+
+        <div class="tv-monitor-shell">
+
+            <header class="tv-monitor-topbar">
+
+                <div class="tv-monitor-brand-block">
+
+                    <span class="tv-monitor-brand">WheelTrack</span>
+
+                    <span class="tv-monitor-subbrand">Monitor de Taller</span>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-outline-light btn-sm tv-close-btn"
+                    id="closeTvMonitorBtn">
+
+                    <i class="fa-solid fa-xmark me-1"></i>
+
+                    Salir
+
+                </button>
+
+            </header>
+
+            <main id="tvMonitorContent" class="tv-monitor-content"></main>
+
+            <footer id="tvMonitorFooter" class="tv-monitor-footer">
+                WheelTrack · Monitor TV
+            </footer>
+
+        </div>
+
+    </div>
 
     <!-- MODAL NUEVA / EDITAR RUEDA -->
 

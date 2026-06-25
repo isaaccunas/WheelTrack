@@ -11,6 +11,7 @@ import {
     isFullListVisible
 } from "./ui/searchFilterView.js";
 import { renderWheelList } from "./ui/wheelListView.js";
+import { initializeTvMonitor, refreshTvMonitorIfOpen } from "./ui/tvMonitorView.js";
 import { renderWorkshopMonitor } from "./ui/workshopMonitorView.js";
 
 // ==========================================
@@ -47,6 +48,8 @@ function renderWheels() {
     renderKpis(getDashboardKpis(allWheels));
 
     renderWorkshopMonitor(allWheels);
+
+    refreshTvMonitorIfOpen(allWheels);
 }
 
 renderWheels();
@@ -57,3 +60,5 @@ initializeSearchFilters(() => {
 });
 
 initializeEvents(renderWheels);
+
+initializeTvMonitor(() => wheelRepository.getAll());

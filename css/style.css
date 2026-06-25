@@ -1537,6 +1537,375 @@ main.container-fluid{
     }
 }
 
+.tv-open-btn{
+    font-weight: 700;
+    border-color: #ff6a00;
+    color: #d95a00;
+}
+
+.tv-open-btn:hover{
+    background: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+body.tv-monitor-open{
+    overflow: hidden;
+}
+
+.tv-monitor-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: #101014;
+    color: #fff;
+}
+
+.tv-monitor-shell{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+}
+
+.tv-monitor-topbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 28px;
+    background: linear-gradient(90deg, #1a1a1f 0%, #2a1608 100%);
+    border-bottom: 3px solid #ff6a00;
+}
+
+.tv-monitor-brand-block{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tv-monitor-brand{
+    color: #ff6a00;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.tv-monitor-subbrand{
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.tv-monitor-content{
+    flex: 1;
+    overflow: auto;
+    padding: 24px 28px 12px;
+}
+
+.tv-monitor-footer{
+    padding: 12px 28px 18px;
+    color: #aaa;
+    font-size: 0.9rem;
+    border-top: 1px solid #2d2d33;
+    background: #141418;
+}
+
+.tv-monitor-slide{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: calc(100vh - 170px);
+}
+
+.tv-priority-zone{
+    background: linear-gradient(180deg, #fff 0%, #fff8f2 100%);
+    color: #111;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.tv-priority-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.tv-priority-badge{
+    background: #ff6a00;
+    color: #fff;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+}
+
+.tv-priority-stage{
+    color: #d95a00;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.tv-priority-grid{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.tv-priority-card{
+    background: #fff;
+    border: 2px solid #f0d4bc;
+    border-radius: 14px;
+    padding: 18px 16px;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tv-priority-card-main{
+    grid-column: span 2;
+    border-color: #ff6a00;
+    background: linear-gradient(135deg, #fff7ef 0%, #fff 100%);
+}
+
+.tv-priority-card-tire{
+    grid-column: span 2;
+}
+
+.tv-priority-card-warning{
+    border-color: #c0392b;
+    background: #fff5f5;
+}
+
+.tv-priority-card-warning .tv-priority-value{
+    color: #c0392b;
+}
+
+.tv-priority-card-type-nw{
+    border-color: #1a5276;
+}
+
+.tv-priority-card-type-mw{
+    border-color: #ff6a00;
+}
+
+.tv-priority-card-box{
+    border-color: #d95a00;
+}
+
+.tv-priority-label{
+    color: #666;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.tv-priority-value{
+    color: #111;
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.tv-priority-value-xl{
+    font-size: 3rem;
+    color: #d95a00;
+}
+
+.tv-secondary-zone{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    flex: 1;
+}
+
+.tv-secondary-block,
+.tv-secondary-details{
+    background: #18181d;
+    border: 1px solid #2d2d33;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.tv-secondary-title{
+    color: #ff6a00;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.tv-secondary-details{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tv-secondary-card{
+    background: #101014;
+    border: 1px solid #333;
+    border-left: 4px solid #ff6a00;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.tv-secondary-label{
+    display: block;
+    color: #aaa;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.tv-secondary-value{
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.tv-timeline-track{
+    display: flex;
+    align-items: flex-start;
+    overflow-x: auto;
+    gap: 0;
+    padding-bottom: 8px;
+}
+
+.tv-timeline-step{
+    min-width: 96px;
+    flex: 1 0 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tv-timeline-step-top{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.tv-timeline-node{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+.tv-timeline-node-pending{
+    background: #2a2a30;
+    color: #888;
+}
+
+.tv-timeline-node-active{
+    background: #fff3e8;
+    color: #ff6a00;
+    box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.2);
+}
+
+.tv-timeline-node-completed{
+    background: #1e8449;
+    color: #fff;
+}
+
+.tv-timeline-node-blocked{
+    background: #c0392b;
+    color: #fff;
+}
+
+.tv-timeline-connector{
+    flex: 1;
+    height: 4px;
+    min-width: 8px;
+    border-radius: 999px;
+}
+
+.tv-timeline-connector-completed{
+    background: linear-gradient(90deg, #1e8449, #ff6a00);
+}
+
+.tv-timeline-connector-pending{
+    background: #333;
+}
+
+.tv-timeline-step-body{
+    margin-top: 10px;
+    text-align: center;
+}
+
+.tv-timeline-stage-name{
+    display: block;
+    color: #ddd;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.tv-timeline-stage-status{
+    display: block;
+    color: #888;
+    font-size: 0.68rem;
+    margin-top: 2px;
+}
+
+.tv-monitor-empty{
+    min-height: calc(100vh - 170px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #ccc;
+}
+
+.tv-monitor-empty-icon{
+    font-size: 4rem;
+    color: #ff6a00;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 1200px){
+
+    .tv-priority-grid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tv-priority-card-main,
+    .tv-priority-card-tire{
+        grid-column: span 2;
+    }
+
+    .tv-secondary-zone{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px){
+
+    .tv-priority-grid{
+        grid-template-columns: 1fr;
+    }
+
+    .tv-priority-card-main,
+    .tv-priority-card-tire{
+        grid-column: span 1;
+    }
+
+    .tv-priority-value-xl{
+        font-size: 2.2rem;
+    }
+}
+
 /* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */
