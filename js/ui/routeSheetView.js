@@ -527,3 +527,76 @@ export function printRouteSheet(wheel) {
     `);
     printWindow.document.close();
 }
+
+export function buildRouteSheetFilename(wheel) {
+
+    const wheelNumber = String(wheel.numeroRueda || "sin-numero")
+        .trim()
+        .replace(/[^\w.-]+/g, "-");
+
+    return `Hoja-Ruta-Rueda-${wheelNumber}.pdf`;
+}
+
+function createRouteSheetPdfContainer(wheel) {
+
+    const container = document.createElement("div");
+
+    container.className = "route-sheet-document route-sheet-pdf-source";
+    container.innerHTML = buildRouteSheetHtml(wheel);
+
+    return container;
+}
+
+export async function downloadRouteSheetPdf(wheel) {
+
+    const html2pdf = window.html2pdf;
+
+    if (typeof html2pdf !== "function") {
+
+        alert("No se pudo cargar la librería de PDF. Recarga la página e intenta de nuevo.");
+
+        return;
+    }
+
+    const container = createRouteSheetPdfContainer(wheel);
+
+    document.body.appendChild(container);
+
+    try {
+
+        await html2pdf()
+            .set({
+                margin: [10, 10, 10, 10],
+                filename: buildRouteSheetFilename(wheel),
+                image: {
+                    type: "jpeg",
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                },
+                jsPDF: {
+                    unit: "mm",
+                    format: "a4",
+                    orientation: "portrait"
+                },
+                pagebreak: {
+                    mode: ["avoid-all", "css", "legacy"]
+                }
+            })
+            .from(container)
+            .save();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("No se pudo generar el PDF. Intenta nuevamente.");
+
+    } finally {
+
+        container.remove();
+    }
+}

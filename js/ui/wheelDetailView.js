@@ -17,7 +17,7 @@ import {
     normalizeTireAssignment
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
-import { printRouteSheet } from "./routeSheetView.js";
+import { downloadRouteSheetPdf, printRouteSheet } from "./routeSheetView.js";
 
 // ==========================================
 // UTILIDADES DE RENDER
@@ -767,6 +767,17 @@ function renderDetailContent(wheel) {
 
                 </button>
 
+                <button
+                    type="button"
+                    class="btn btn-outline-warning route-sheet-btn"
+                    id="downloadRouteSheetPdfBtn">
+
+                    <i class="fa-solid fa-file-pdf me-2"></i>
+
+                    Descargar PDF
+
+                </button>
+
             </div>
 
             <div class="col-md-6">
@@ -904,18 +915,39 @@ function readOperationalFormData(sectionKey) {
     return data;
 }
 
-function bindRouteSheetButton(wheel) {
+function bindRouteSheetButtons(wheel) {
 
-    const button = document.getElementById("generateRouteSheetBtn");
+    const printButton = document.getElementById("generateRouteSheetBtn");
+    const pdfButton = document.getElementById("downloadRouteSheetPdfBtn");
 
-    if (!button || !wheel) {
+    if (!wheel) {
         return;
     }
 
-    button.addEventListener("click", () => {
+    if (printButton) {
 
-        printRouteSheet(wheel);
-    });
+        printButton.addEventListener("click", () => {
+
+            printRouteSheet(wheel);
+        });
+    }
+
+    if (pdfButton) {
+
+        pdfButton.addEventListener("click", async () => {
+
+            pdfButton.disabled = true;
+
+            try {
+
+                await downloadRouteSheetPdf(wheel);
+
+            } finally {
+
+                pdfButton.disabled = false;
+            }
+        });
+    }
 }
 
 function bindOperationalPanelInteractions(callbacks) {
@@ -992,7 +1024,7 @@ function bindDetailInteractions(callbacks) {
     }
 
     bindOperationalPanelInteractions(callbacks);
-    bindRouteSheetButton(wheel);
+    bindRouteSheetButtons(wheel);
 }
 
 // ==========================================
