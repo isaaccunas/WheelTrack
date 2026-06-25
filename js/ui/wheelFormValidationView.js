@@ -64,10 +64,6 @@ const REQUIRED_FIELD_CONFIG = [
     {
         id: "wheelType",
         validate: (data) => data.wheelType === "NW" || data.wheelType === "MW"
-    },
-    {
-        id: "estado",
-        validate: (data) => !!data.estado
     }
 ];
 
@@ -96,8 +92,7 @@ function readFormDataFromDom() {
         estacion: document.getElementById("estacion")?.value ?? "",
         ciclos: document.getElementById("ciclos")?.value ?? "",
         wheelType: document.getElementById("wheelType")?.value ?? "",
-        boxNumber: document.getElementById("boxNumber")?.value ?? "",
-        estado: document.getElementById("estado")?.value ?? ""
+        boxNumber: document.getElementById("boxNumber")?.value ?? ""
     });
 }
 

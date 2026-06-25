@@ -333,6 +333,14 @@ main.container-fluid{
     background:#e74c3c !important;
 }
 
+.bg-orange{
+    background:#ff6a00 !important;
+}
+
+.bg-teal{
+    background:#1abc9c !important;
+}
+
 /* ==========================
    RESPONSIVE
 ========================== */

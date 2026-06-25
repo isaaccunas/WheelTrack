@@ -81,8 +81,7 @@ export function initializeEvents(renderWheels) {
             estacion: document.getElementById("estacion").value,
             ciclos: document.getElementById("ciclos").value,
             wheelType: document.getElementById("wheelType").value,
-            boxNumber: document.getElementById("boxNumber").value,
-            estado: document.getElementById("estado").value
+            boxNumber: document.getElementById("boxNumber").value
         });
 
         if (!validateWheel(formData)) {

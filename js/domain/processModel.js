@@ -458,6 +458,62 @@ export function getCurrentStage(process) {
     return currentStage ? currentStage.stage : null;
 }
 
+// ==========================================
+// MAPEO VISUAL DE ETAPAS (LISTA)
+// ==========================================
+
+export const STAGE_INDICATOR_COLORS = {
+
+    "Recepción": "bg-orange",
+    "Desarme": "bg-green",
+    "Lavado": "bg-yellow",
+    "Inspección": "bg-blue",
+    "Espera de Material": "bg-red",
+    "Ensamblaje": "bg-purple",
+    "Inflado": "bg-teal",
+    "Liberación": "bg-yellow",
+    "Almacén": "bg-gray"
+};
+
+export function getStageIndicatorColor(stage) {
+
+    if (!stage) {
+        return "bg-gray";
+    }
+
+    return STAGE_INDICATOR_COLORS[stage] ?? "bg-gray";
+}
+
+export function getWheelListStageLabel(process) {
+
+    const currentStage = getCurrentStage(process);
+
+    if (currentStage) {
+        return currentStage;
+    }
+
+    const normalizedProcess = normalizeProcessState(process);
+    const allCompleted = normalizedProcess.stages.every(
+        (stageState) => stageState.status === COMPLETED_STATUS
+    );
+
+    if (allCompleted) {
+        return "Almacén";
+    }
+
+    return "Sin etapa activa";
+}
+
+export function getWheelListStageDisplay(wheel) {
+
+    const label = getWheelListStageLabel(wheel.process);
+
+    return {
+        label,
+        colorClass: getStageIndicatorColor(label === "Sin etapa activa" ? null : label)
+    };
+}
+
 export function getActiveStageState(process) {
 
     const normalizedProcess = normalizeProcessState(process);

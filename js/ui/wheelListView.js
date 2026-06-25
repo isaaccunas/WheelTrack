@@ -1,4 +1,5 @@
 import { saveWheels } from "../data/storage.js";
+import { getWheelListStageDisplay } from "../domain/processModel.js";
 import { getWheelSerialSummary } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
 
@@ -25,6 +26,8 @@ export function renderWheelList(entries, options = {}) {
 
     entries.forEach(({ wheel, index }) => {
 
+        const stageDisplay = getWheelListStageDisplay(wheel);
+
         refs.wheelList.innerHTML += `
 
             <div class="wheel-row">
@@ -41,7 +44,7 @@ export function renderWheelList(entries, options = {}) {
 
                     <div>${wheel.avion || "-"}</div>
 
-                    <small>${wheel.estado}</small>
+                    <small>${stageDisplay.label}</small>
 
                 </div>
 
@@ -74,7 +77,7 @@ export function renderWheelList(entries, options = {}) {
                         <i class="fa-solid fa-trash"></i>
                     </button>
 
-                    <span class="status ${wheel.color}"></span>
+                    <span class="status ${stageDisplay.colorClass}"></span>
 
                 </div>
 

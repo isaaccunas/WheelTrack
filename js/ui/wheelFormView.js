@@ -92,5 +92,4 @@ export function populateWheelForm(wheel) {
     document.getElementById("ciclos").value = wheel.ciclos || "";
     document.getElementById("wheelType").value = wheel.wheelType || "";
     document.getElementById("boxNumber").value = normalizeBoxData(wheel.boxData).boxNumber ?? "";
-    document.getElementById("estado").value = wheel.estado || "";
 }

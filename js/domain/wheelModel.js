@@ -1,4 +1,3 @@
-import { getColorForState } from "../config/wheelStates.js";
 import {
     appendCreationHistory,
     appendUpdateHistory,
@@ -16,6 +15,8 @@ import {
     completeSubstage,
     createProcessState,
     createStageTiming,
+    getCurrentStage,
+    getStageIndicatorColor,
     normalizeProcessState,
     normalizeStageTiming
 } from "./processModel.js";
@@ -434,8 +435,7 @@ export function normalizeFormData(raw) {
         estacion: (raw.estacion ?? "").trim(),
         ciclos: (raw.ciclos ?? "").trim(),
         wheelType: raw.wheelType ?? "",
-        boxNumber: raw.boxNumber ?? "",
-        estado: raw.estado ?? ""
+        boxNumber: raw.boxNumber ?? ""
     };
 }
 
@@ -462,8 +462,7 @@ export function validateWheel(data) {
         (data.wheelType === "NW" || data.wheelType === "MW") &&
         data.boxNumber &&
         Number(data.boxNumber) >= 1 &&
-        Number(data.boxNumber) <= TOTAL_BOXES &&
-        data.estado
+        Number(data.boxNumber) <= TOTAL_BOXES
     );
 }
 
@@ -695,6 +694,14 @@ export function normalizeWheelServiceableData(wheel) {
 // CONSTRUCCIÓN DE OBJETOS RUEDA
 // ==========================================
 
+function syncWheelStageSnapshot(wheel) {
+
+    const stage = getCurrentStage(wheel.process);
+
+    wheel.estado = stage ?? "Recepción";
+    wheel.color = getStageIndicatorColor(stage);
+}
+
 function buildWheelFromData(data) {
 
     const wheelSerialData = buildWheelSerialDataFromForm(data);
@@ -715,9 +722,7 @@ function buildWheelFromData(data) {
         razon: data.razon,
         estacion: data.estacion,
         ciclos: data.ciclos,
-        wheelType: normalizeWheelType(data.wheelType),
-        estado: data.estado,
-        color: getColorForState(data.estado)
+        wheelType: normalizeWheelType(data.wheelType)
     };
 }
 
@@ -733,6 +738,8 @@ export function createWheel(data) {
     wheel.serviceableData = createServiceableData();
     wheel.boxData = buildBoxDataFromForm(data);
     wheel.operationalStatus = createOperationalStatus();
+
+    syncWheelStageSnapshot(wheel);
 
     return appendCreationHistory(wheel);
 }
@@ -773,6 +780,8 @@ export function updateWheel(existingWheel, data) {
     updatedWheel.serial = updatedWheel.wheelSerialData.inner ||
         updatedWheel.wheelSerialData.outer;
 
+    syncWheelStageSnapshot(updatedWheel);
+
     return updatedWheel;
 }
 
@@ -786,7 +795,7 @@ export function advanceWheelStage(wheel) {
 
     const normalizedWheel = normalizeWheel(wheel);
 
-    return {
+    const updatedWheel = {
         ...wheel,
         process: advanceResult.process,
         stageTiming: completeStageTiming(
@@ -802,6 +811,10 @@ export function advanceWheelStage(wheel) {
             )
         ]
     };
+
+    syncWheelStageSnapshot(updatedWheel);
+
+    return updatedWheel;
 }
 
 function applyStageTimingAfterCompletion(wheel, completeResult) {
@@ -988,10 +1001,14 @@ export function completeWheelSubstage(wheel, stageName, substageName) {
         );
     }
 
-    return {
+    const updatedWheel = {
         ...wheel,
         process: completeResult.process,
         stageTiming: applyStageTimingAfterCompletion(wheel, completeResult),
         historial
     };
+
+    syncWheelStageSnapshot(updatedWheel);
+
+    return updatedWheel;
 }
