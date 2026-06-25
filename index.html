@@ -89,146 +89,27 @@
 
     <main class="container-fluid py-2">
 
-        <!-- LEYENDA -->
+        <!-- LEYENDA DEL FLUJO DEL TALLER -->
 
-        <div class="card shadow-sm border-0 rounded-4 mb-2 legend-card">
+        <div class="card shadow-sm border-0 rounded-4 mb-2 legend-card workshop-flow-legend-card">
 
             <div class="card-body">
 
-                <div class="row align-items-center gy-3">
+                <div class="workshop-flow-legend-header">
 
-                    <div class="col-auto">
+                    <i class="fa-solid fa-diagram-project text-orange fs-4 me-2"></i>
 
-                        <div class="d-flex align-items-center">
+                    <strong class="legend-title">
 
-                            <i class="fa-solid fa-circle-info text-orange fs-3 me-2"></i>
+                        LEYENDA DEL FLUJO DEL TALLER (EN TIEMPO REAL)
 
-                            <strong class="legend-title">
+                    </strong>
 
-                                Leyenda de estados
+                </div>
 
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col">
-
-                        <div class="row gy-3">
-
-                            <div class="col-lg col-md-4 col-6">
-
-                                <div class="legend-item">
-
-                                    <span class="dot bg-success"></span>
-
-                                    <div>
-
-                                        <strong>En proceso</strong>
-
-                                        <small>Trabajo en ejecución</small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg col-md-4 col-6">
-
-                                <div class="legend-item">
-
-                                    <span class="dot bg-warning"></span>
-
-                                    <div>
-
-                                        <strong>Esperando material</strong>
-
-                                        <small>Pendiente de partes</small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg col-md-4 col-6">
-
-                                <div class="legend-item">
-
-                                    <span class="dot bg-primary"></span>
-
-                                    <div>
-
-                                        <strong>Esperando NDT</strong>
-
-                                        <small>Pendiente inspección</small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg col-md-4 col-6">
-
-                                <div class="legend-item">
-
-                                    <span class="dot bg-danger"></span>
-
-                                    <div>
-
-                                        <strong>Bloqueada</strong>
-
-                                        <small>Intervención requerida</small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg col-md-4 col-6">
-
-                                <div class="legend-item">
-
-                                    <span class="dot bg-purple"></span>
-
-                                    <div>
-
-                                        <strong>Lista para liberar</strong>
-
-                                        <small>Aprobada por inspector</small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg col-md-4 col-6">
-
-                                <div class="legend-item">
-
-                                    <span class="dot bg-secondary"></span>
-
-                                    <div>
-
-                                        <strong>Entregada a almacén</strong>
-
-                                        <small>Proceso completado</small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
+                <div
+                    id="workshopFlowLegend"
+                    class="workshop-flow-legend-grid">
                 </div>
 
             </div>

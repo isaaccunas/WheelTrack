@@ -14,6 +14,7 @@ import {
 } from "./ui/searchFilterView.js";
 import { renderWheelList } from "./ui/wheelListView.js";
 import { initializeTvMonitor, refreshTvMonitorIfOpen } from "./ui/tvMonitorView.js";
+import { renderWorkshopFlowLegend } from "./ui/workshopFlowLegendView.js";
 import { renderWorkshopMonitor } from "./ui/workshopMonitorView.js";
 
 // ==========================================
@@ -46,6 +47,8 @@ function renderWheels() {
     renderWheelListView();
 
     renderProcessedHistoryView();
+
+    renderWorkshopFlowLegend(allWheels);
 
     renderKpis(getDashboardKpis(allWheels));
 
