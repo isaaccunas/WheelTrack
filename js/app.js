@@ -2,6 +2,7 @@ import * as wheelRepository from "./data/wheelRepository.js";
 import { getDashboardKpis } from "./domain/kpiCalculator.js";
 import { isWheelActive } from "./domain/wheelModel.js";
 import { initializeEvents } from "./ui/events.js";
+import { initializeRouteSheetView } from "./ui/routeSheetView.js";
 import { renderKpis } from "./ui/kpiView.js";
 import { renderProcessedWheelHistory } from "./ui/processedHistoryView.js";
 import {
@@ -60,5 +61,7 @@ initializeSearchFilters(() => {
 });
 
 initializeEvents(renderWheels);
+
+initializeRouteSheetView();
 
 initializeTvMonitor(() => wheelRepository.getAll());

@@ -1610,7 +1610,216 @@ main.container-fluid{
     text-align: center;
 }
 
+.route-sheet-modal-body{
+    background: #fafafa;
+}
+
+.route-sheet-table-wrap{
+    overflow-x: auto;
+}
+
+.route-sheet-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+
+.route-sheet-table th,
+.route-sheet-table td{
+    border: 1px solid #e5e5e5;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.route-sheet-table th{
+    background: #fff5ee;
+    color: #333;
+    font-weight: 700;
+}
+
+.route-sheet-status-badge{
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.route-sheet-status-completed{
+    background: #e8f8ef;
+    color: #1e8449;
+}
+
+.route-sheet-status-active{
+    background: #fff3e8;
+    color: #ff6a00;
+}
+
+.route-sheet-status-pending{
+    background: #f4f4f4;
+    color: #888;
+}
+
+.route-sheet-status-blocked{
+    background: #fdecea;
+    color: #c0392b;
+}
+
+.route-sheet-charts-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.route-sheet-chart-card{
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    padding: 14px;
+    background: #fff;
+}
+
+.route-sheet-chart-title{
+    margin: 0 0 12px;
+    font-size: 0.92rem;
+    color: #333;
+}
+
+.route-sheet-chart-body{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.route-sheet-bar-row{
+    display: grid;
+    grid-template-columns: minmax(110px, 28%) 1fr minmax(72px, auto);
+    gap: 10px;
+    align-items: center;
+}
+
+.route-sheet-bar-label{
+    font-size: 0.74rem;
+    color: #555;
+}
+
+.route-sheet-bar-track{
+    height: 14px;
+    background: #f2f2f2;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.route-sheet-bar-fill{
+    height: 100%;
+    background: linear-gradient(90deg, #ff8a33 0%, #ff6a00 100%);
+    border-radius: 999px;
+}
+
+.route-sheet-bar-value{
+    font-size: 0.72rem;
+    color: #666;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.route-sheet-split-bar{
+    display: flex;
+    width: 100%;
+    min-height: 34px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f2f2f2;
+}
+
+.route-sheet-split-segment{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 6px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+}
+
+.route-sheet-split-work{
+    background: #ff6a00;
+}
+
+.route-sheet-split-wait{
+    background: #7f8c8d;
+}
+
+.route-sheet-split-legend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.route-sheet-legend-item{
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.route-sheet-legend-work{
+    color: #d95a00;
+}
+
+.route-sheet-legend-wait{
+    color: #566573;
+}
+
 @media print{
+
+    body *{
+        visibility: hidden;
+    }
+
+    #routeSheetPrintArea,
+    #routeSheetPrintArea *{
+        visibility: visible;
+    }
+
+    #routeSheetPrintArea{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    .modal-backdrop,
+    .no-print-route-sheet{
+        display: none !important;
+    }
+
+    #modalRouteSheet{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+    }
+
+    #modalRouteSheet .modal-dialog{
+        max-width: none;
+        margin: 0;
+    }
+
+    #modalRouteSheet .modal-content{
+        border: none;
+        box-shadow: none;
+        background: #fff;
+    }
+
+    #modalRouteSheet .modal-body{
+        padding: 0;
+        background: #fff;
+    }
 
     .route-sheet-document{
         padding: 0;
@@ -1620,8 +1829,9 @@ main.container-fluid{
         max-width: none;
     }
 
-    .route-sheet-stages{
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+    .route-sheet-section{
+        break-inside: avoid-page;
+        page-break-inside: avoid;
     }
 }
 
@@ -1630,6 +1840,15 @@ main.container-fluid{
     .route-sheet-grid,
     .route-sheet-stages{
         grid-template-columns: 1fr;
+    }
+
+    .route-sheet-bar-row{
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    .route-sheet-bar-value{
+        text-align: left;
     }
 
     .route-sheet-header{
