@@ -5,6 +5,7 @@ import {
     PROCESS_STAGES
 } from "../domain/processModel.js";
 import {
+    formatBoxLabel,
     getWheelTypeLabel,
     hasInspectorData,
     hasPressureData,
@@ -798,6 +799,10 @@ function renderDetailContent(wheel) {
 
             <div class="col-md-6">
                 <strong>Tipo de rueda:</strong> ${getWheelTypeLabel(wheel.wheelType)}
+            </div>
+
+            <div class="col-md-6">
+                <strong>Caja:</strong> ${formatBoxLabel(wheel.boxData)}
             </div>
 
             <div class="col-md-12">

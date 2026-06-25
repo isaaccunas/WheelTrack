@@ -57,6 +57,167 @@ export function normalizeWheelWheelType(wheel) {
 }
 
 // ==========================================
+// CAJAS INTELIGENTES
+// ==========================================
+
+export const TOTAL_BOXES = 20;
+
+const ALMACEN_STAGE = "Almacén";
+
+const COMPLETED_STAGE_STATUS = "Completada";
+
+export function createBoxData() {
+
+    return {
+        boxNumber: null,
+        assignedDate: null
+    };
+}
+
+export function normalizeBoxData(boxData) {
+
+    if (!boxData || typeof boxData !== "object") {
+        return createBoxData();
+    }
+
+    if (boxData.boxNumber === null || boxData.boxNumber === undefined || boxData.boxNumber === "") {
+        return {
+            boxNumber: null,
+            assignedDate: boxData.assignedDate ?? null
+        };
+    }
+
+    const boxNumber = Number(boxData.boxNumber);
+
+    if (
+        Number.isNaN(boxNumber) ||
+        boxNumber < 1 ||
+        boxNumber > TOTAL_BOXES
+    ) {
+        return createBoxData();
+    }
+
+    return {
+        boxNumber,
+        assignedDate: boxData.assignedDate ?? null
+    };
+}
+
+export function hasBoxData(boxData) {
+
+    return normalizeBoxData(boxData).boxNumber !== null;
+}
+
+export function formatBoxLabel(boxData) {
+
+    const normalizedBox = normalizeBoxData(boxData);
+
+    if (!hasBoxData(normalizedBox)) {
+        return "Sin caja";
+    }
+
+    return `CAJA ${normalizedBox.boxNumber}`;
+}
+
+export function normalizeWheelBoxData(wheel) {
+
+    return {
+        ...wheel,
+        boxData: normalizeBoxData(wheel.boxData)
+    };
+}
+
+export function isAlmacenStageCompleted(process) {
+
+    const normalizedProcess = normalizeProcessState(process);
+    const almacenStage = normalizedProcess.stages.find(
+        (stageState) => stageState.stage === ALMACEN_STAGE
+    );
+
+    return almacenStage?.status === COMPLETED_STAGE_STATUS;
+}
+
+export function isWheelOccupyingBox(wheel) {
+
+    if (!hasBoxData(wheel.boxData)) {
+        return false;
+    }
+
+    return !isAlmacenStageCompleted(wheel.process);
+}
+
+export function getOccupiedBoxNumbers(wheels, excludeWheelIndex = null) {
+
+    return wheels.flatMap((wheel, index) => {
+
+        if (excludeWheelIndex !== null && index === excludeWheelIndex) {
+            return [];
+        }
+
+        if (!isWheelOccupyingBox(wheel)) {
+            return [];
+        }
+
+        return [normalizeBoxData(wheel.boxData).boxNumber];
+    });
+}
+
+export function getAvailableBoxNumbers(wheels, excludeWheelIndex = null) {
+
+    const occupiedBoxes = new Set(getOccupiedBoxNumbers(wheels, excludeWheelIndex));
+
+    return Array.from(
+        { length: TOTAL_BOXES },
+        (_, index) => index + 1
+    ).filter((boxNumber) => !occupiedBoxes.has(boxNumber));
+}
+
+export function validateBoxAssignment(wheels, boxNumber, excludeWheelIndex = null) {
+
+    const normalizedBoxNumber = Number(boxNumber);
+
+    if (
+        Number.isNaN(normalizedBoxNumber) ||
+        normalizedBoxNumber < 1 ||
+        normalizedBoxNumber > TOTAL_BOXES
+    ) {
+        return false;
+    }
+
+    return getAvailableBoxNumbers(wheels, excludeWheelIndex).includes(normalizedBoxNumber);
+}
+
+function buildBoxDataFromForm(data, existingBoxData = null) {
+
+    const normalizedExisting = normalizeBoxData(existingBoxData);
+    const normalizedBoxNumber = Number(data.boxNumber);
+    const boxNumber = (
+        Number.isNaN(normalizedBoxNumber) ||
+        normalizedBoxNumber < 1 ||
+        normalizedBoxNumber > TOTAL_BOXES
+    )
+        ? null
+        : normalizedBoxNumber;
+
+    let assignedDate = normalizedExisting.assignedDate;
+
+    if (boxNumber !== null && boxNumber !== normalizedExisting.boxNumber) {
+
+        assignedDate = data.fechaRecepcion || new Date().toISOString().slice(0, 10);
+    }
+
+    if (boxNumber !== null && !assignedDate) {
+
+        assignedDate = data.fechaRecepcion || new Date().toISOString().slice(0, 10);
+    }
+
+    return {
+        boxNumber,
+        assignedDate
+    };
+}
+
+// ==========================================
 // NORMALIZACIÓN DE DATOS
 // ==========================================
 
@@ -77,6 +238,7 @@ export function normalizeFormData(raw) {
         estacion: (raw.estacion ?? "").trim(),
         ciclos: (raw.ciclos ?? "").trim(),
         wheelType: raw.wheelType ?? "",
+        boxNumber: raw.boxNumber ?? "",
         estado: raw.estado ?? ""
     };
 }
@@ -101,6 +263,9 @@ export function validateWheel(data) {
         data.estacion &&
         data.ciclos &&
         (data.wheelType === "NW" || data.wheelType === "MW") &&
+        data.boxNumber &&
+        Number(data.boxNumber) >= 1 &&
+        Number(data.boxNumber) <= TOTAL_BOXES &&
         data.estado
     );
 }
@@ -365,6 +530,7 @@ export function createWheel(data) {
     wheel.pressureData = createPressureData();
     wheel.inspectorData = createInspectorData();
     wheel.serviceableData = createServiceableData();
+    wheel.boxData = buildBoxDataFromForm(data);
 
     return appendCreationHistory(wheel);
 }
@@ -389,6 +555,9 @@ export function updateWheel(existingWheel, data) {
     );
     updatedWheel.serviceableData = normalizeServiceableData(
         existingWheel.serviceableData
+    );
+    updatedWheel.boxData = normalizeBoxData(
+        buildBoxDataFromForm(data, existingWheel.boxData)
     );
 
     return updatedWheel;

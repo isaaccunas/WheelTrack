@@ -1,5 +1,5 @@
 import { getCurrentStage, PROCESS_STAGES } from "../domain/processModel.js";
-import { normalizeWheelType } from "../domain/wheelModel.js";
+import { formatBoxLabel, normalizeWheelType } from "../domain/wheelModel.js";
 
 // ==========================================
 // AGRUPACIÓN POR ETAPA ACTUAL
@@ -47,6 +47,10 @@ function renderMonitorCard({ wheel, index }) {
 
             <span class="monitor-card-type monitor-card-type-${wheelType.toLowerCase()}">
                 ${wheelType}
+            </span>
+
+            <span class="monitor-card-box">
+                ${formatBoxLabel(wheel.boxData)}
             </span>
 
         </button>

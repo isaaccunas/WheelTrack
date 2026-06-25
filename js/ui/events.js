@@ -8,6 +8,7 @@ import {
     updateWheelPressureData,
     updateWheelServiceableData,
     updateWheelTireAssignment,
+    validateBoxAssignment,
     validateWheel
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
@@ -18,6 +19,7 @@ import {
 import {
     closeWheelModal,
     openWheelModal,
+    populateBoxOptions,
     populateWheelForm,
     resetWheelForm
 } from "./wheelFormView.js";
@@ -39,6 +41,8 @@ export function initializeEvents(renderWheels) {
         editIndex = null;
 
         resetWheelForm();
+
+        populateBoxOptions(wheelRepository.getAll(), null);
 
         openWheelModal();
     });
@@ -64,12 +68,24 @@ export function initializeEvents(renderWheels) {
             estacion: document.getElementById("estacion").value,
             ciclos: document.getElementById("ciclos").value,
             wheelType: document.getElementById("wheelType").value,
+            boxNumber: document.getElementById("boxNumber").value,
             estado: document.getElementById("estado").value
         });
 
         if (!validateWheel(formData)) {
 
             alert("Debes completar todos los campos obligatorios.");
+
+            return;
+        }
+
+        if (!validateBoxAssignment(
+            wheelRepository.getAll(),
+            formData.boxNumber,
+            editIndex
+        )) {
+
+            alert("La caja seleccionada no está disponible.");
 
             return;
         }
@@ -108,6 +124,8 @@ export function initializeEvents(renderWheels) {
         const wheel = wheelRepository.getById(index);
 
         editIndex = index;
+
+        populateBoxOptions(wheelRepository.getAll(), index);
 
         populateWheelForm(wheel);
 

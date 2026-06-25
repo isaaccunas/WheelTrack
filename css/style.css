@@ -1167,6 +1167,13 @@ main.container-fluid{
     color: #d95a00;
 }
 
+.monitor-card-box{
+    color: #444;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
 @media (min-width: 1600px){
 
     .workshop-monitor-board{
