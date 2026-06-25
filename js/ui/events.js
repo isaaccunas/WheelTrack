@@ -31,6 +31,7 @@ import {
     populateWheelForm,
     resetWheelForm
 } from "./wheelFormView.js";
+import { showWheelFormValidationErrors } from "./wheelFormValidationView.js";
 
 import { refs } from "./domRefs.js";
 
@@ -85,6 +86,8 @@ export function initializeEvents(renderWheels) {
         });
 
         if (!validateWheel(formData)) {
+
+            showWheelFormValidationErrors(formData);
 
             alert("Debes completar todos los campos obligatorios.");
 

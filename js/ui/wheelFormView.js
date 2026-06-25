@@ -5,6 +5,7 @@ import {
     normalizeWheelSerialData
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
+import { clearWheelFormValidationErrors } from "./wheelFormValidationView.js";
 
 // ==========================================
 // MODAL DE FORMULARIO
@@ -27,6 +28,7 @@ export function closeWheelModal() {
 export function resetWheelForm() {
 
     document.getElementById("formNuevaRueda").reset();
+    clearWheelFormValidationErrors();
 }
 
 export function populateBoxOptions(wheels, editIndex = null) {
@@ -64,6 +66,8 @@ export function populateBoxOptions(wheels, editIndex = null) {
 }
 
 export function populateWheelForm(wheel) {
+
+    clearWheelFormValidationErrors();
 
     document.getElementById("numeroRueda").value = wheel.numeroRueda || "";
     document.getElementById("fechaRecepcion").value = wheel.fechaRecepcion || "";
