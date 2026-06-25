@@ -434,8 +434,27 @@ main.container-fluid{
 /* Panel de ruedas */
 
 .process-panel{
-    height: 540px;
+    display: flex;
+    flex-direction: column;
+    height: clamp(360px, 52vh, 540px);
+    max-height: clamp(360px, 52vh, 540px);
     overflow: hidden;
+}
+
+.process-panel > .card-body{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.process-panel > .card-body > .d-flex{
+    flex-shrink: 0;
+}
+
+.process-panel .search-filter-bar{
+    flex-shrink: 0;
 }
 
 /* Barra de desplazamiento */
@@ -577,7 +596,9 @@ main.container-fluid{
 ========================================== */
 
 #wheelList{
-    max-height: 430px;
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 8px;
