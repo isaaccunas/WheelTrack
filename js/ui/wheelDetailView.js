@@ -17,6 +17,7 @@ import {
     normalizeTireAssignment
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
+import { printRouteSheet } from "./routeSheetView.js";
 
 // ==========================================
 // UTILIDADES DE RENDER
@@ -753,6 +754,21 @@ function renderDetailContent(wheel) {
 
         <div class="row g-3">
 
+            <div class="col-12 route-sheet-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-warning route-sheet-btn"
+                    id="generateRouteSheetBtn">
+
+                    <i class="fa-solid fa-print me-2"></i>
+
+                    Generar Hoja de Ruta
+
+                </button>
+
+            </div>
+
             <div class="col-md-6">
                 <strong>Nº:</strong> ${wheel.numeroRueda || "-"}
             </div>
@@ -888,6 +904,20 @@ function readOperationalFormData(sectionKey) {
     return data;
 }
 
+function bindRouteSheetButton(wheel) {
+
+    const button = document.getElementById("generateRouteSheetBtn");
+
+    if (!button || !wheel) {
+        return;
+    }
+
+    button.addEventListener("click", () => {
+
+        printRouteSheet(wheel);
+    });
+}
+
 function bindOperationalPanelInteractions(callbacks) {
 
     const {
@@ -941,7 +971,7 @@ function bindOperationalPanelInteractions(callbacks) {
 
 function bindDetailInteractions(callbacks) {
 
-    const { onCompleteSubstage } = callbacks || {};
+    const { onCompleteSubstage, wheel } = callbacks || {};
 
     if (onCompleteSubstage) {
 
@@ -962,6 +992,7 @@ function bindDetailInteractions(callbacks) {
     }
 
     bindOperationalPanelInteractions(callbacks);
+    bindRouteSheetButton(wheel);
 }
 
 // ==========================================
