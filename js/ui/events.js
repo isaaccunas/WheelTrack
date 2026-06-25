@@ -1,7 +1,10 @@
 import * as wheelRepository from "../data/wheelRepository.js";
 import {
+    closeWheelOrder,
     completeWheelSubstage,
     createWheel,
+    isAlmacenStageCompleted,
+    isWheelActive,
     normalizeFormData,
     updateWheel,
     updateWheelInspectorData,
@@ -171,6 +174,27 @@ export function initializeEvents(renderWheels) {
             }
 
             wheelRepository.update(index, updatedWheel);
+
+            const almacenJustCompleted = (
+                isWheelActive(updatedWheel) &&
+                !isAlmacenStageCompleted(currentWheel.process) &&
+                isAlmacenStageCompleted(updatedWheel.process)
+            );
+
+            if (almacenJustCompleted) {
+
+                const shouldClose = confirm(
+                    "¿Desea cerrar esta orden y moverla al historial de ruedas procesadas?"
+                );
+
+                if (shouldClose) {
+
+                    wheelRepository.update(
+                        index,
+                        closeWheelOrder(wheelRepository.getById(index))
+                    );
+                }
+            }
 
             renderWheels();
 

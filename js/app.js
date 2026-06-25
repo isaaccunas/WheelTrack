@@ -1,7 +1,9 @@
 import * as wheelRepository from "./data/wheelRepository.js";
 import { getDashboardKpis } from "./domain/kpiCalculator.js";
+import { isWheelActive } from "./domain/wheelModel.js";
 import { initializeEvents } from "./ui/events.js";
 import { renderKpis } from "./ui/kpiView.js";
+import { renderProcessedWheelHistory } from "./ui/processedHistoryView.js";
 import {
     filterWheels,
     getCurrentFilters,
@@ -20,11 +22,18 @@ wheelRepository.load();
 function renderWheelListView(filters = getCurrentFilters()) {
 
     const allWheels = wheelRepository.getAll();
+    const activeEntries = filterWheels(allWheels, filters)
+        .filter(({ wheel }) => isWheelActive(wheel));
 
     renderWheelList(
-        filterWheels(allWheels, filters),
+        activeEntries,
         { persist: isFullListVisible(filters) }
     );
+}
+
+function renderProcessedHistoryView() {
+
+    renderProcessedWheelHistory(wheelRepository.getAll());
 }
 
 function renderWheels() {
@@ -32,6 +41,8 @@ function renderWheels() {
     const allWheels = wheelRepository.getAll();
 
     renderWheelListView();
+
+    renderProcessedHistoryView();
 
     renderKpis(getDashboardKpis(allWheels));
 

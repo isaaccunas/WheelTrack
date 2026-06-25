@@ -218,6 +218,91 @@ function buildBoxDataFromForm(data, existingBoxData = null) {
 }
 
 // ==========================================
+// ESTADO OPERACIONAL DE ÓRDENES
+// ==========================================
+
+export function createOperationalStatus() {
+
+    return {
+        active: true,
+        closedAt: null
+    };
+}
+
+export function normalizeOperationalStatus(operationalStatus) {
+
+    if (!operationalStatus || typeof operationalStatus !== "object") {
+        return createOperationalStatus();
+    }
+
+    const active = operationalStatus.active !== false;
+
+    return {
+        active,
+        closedAt: operationalStatus.closedAt ?? null
+    };
+}
+
+export function normalizeWheelOperationalStatus(wheel) {
+
+    return {
+        ...wheel,
+        operationalStatus: normalizeOperationalStatus(wheel.operationalStatus)
+    };
+}
+
+export function isWheelActive(wheel) {
+
+    return normalizeOperationalStatus(wheel.operationalStatus).active;
+}
+
+export function closeWheelOrder(wheel) {
+
+    return {
+        ...wheel,
+        operationalStatus: {
+            active: false,
+            closedAt: new Date().toISOString()
+        }
+    };
+}
+
+export function getWheelTotalProcessMinutes(wheel) {
+
+    const stageTiming = normalizeStageTiming(wheel.stageTiming);
+    const completedDurations = stageTiming
+        .map((entry) => entry.durationMinutes)
+        .filter((duration) => duration !== null && duration !== undefined);
+
+    if (completedDurations.length === 0) {
+        return null;
+    }
+
+    return completedDurations.reduce(
+        (total, duration) => total + duration,
+        0
+    );
+}
+
+export function formatClosedDate(closedAt) {
+
+    if (!closedAt) {
+        return "-";
+    }
+
+    const date = new Date(closedAt);
+
+    if (Number.isNaN(date.getTime())) {
+        return closedAt;
+    }
+
+    return date.toLocaleString("es-EC", {
+        dateStyle: "short",
+        timeStyle: "short"
+    });
+}
+
+// ==========================================
 // NORMALIZACIÓN DE DATOS
 // ==========================================
 
@@ -531,6 +616,7 @@ export function createWheel(data) {
     wheel.inspectorData = createInspectorData();
     wheel.serviceableData = createServiceableData();
     wheel.boxData = buildBoxDataFromForm(data);
+    wheel.operationalStatus = createOperationalStatus();
 
     return appendCreationHistory(wheel);
 }
@@ -558,6 +644,9 @@ export function updateWheel(existingWheel, data) {
     );
     updatedWheel.boxData = normalizeBoxData(
         buildBoxDataFromForm(data, existingWheel.boxData)
+    );
+    updatedWheel.operationalStatus = normalizeOperationalStatus(
+        existingWheel.operationalStatus
     );
 
     return updatedWheel;
