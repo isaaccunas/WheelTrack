@@ -867,29 +867,29 @@
 
     <div class="modal fade" id="modalRueda" tabindex="-1">
 
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable wheel-form-modal-dialog">
 
-            <div class="modal-content rounded-4">
+            <div class="modal-content rounded-4 wheel-form-modal-content">
 
-                <div class="modal-header">
+                <form id="formNuevaRueda" class="wheel-form-modal-form">
 
-                    <h5 class="modal-title">
+                    <div class="modal-header">
 
-                        Nueva rueda
+                        <h5 class="modal-title">
 
-                    </h5>
+                            Nueva rueda
 
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                    </button>
+                        </h5>
 
-                </div>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                        </button>
 
-                <form id="formNuevaRueda">
+                    </div>
 
-                    <div class="modal-body">
+                    <div class="modal-body wheel-form-modal-body">
 
                         <div class="row g-3">
 
@@ -1043,29 +1043,29 @@
 
                     </div>
 
+                    <div class="modal-footer wheel-form-modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+
+                            Cancelar
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            id="guardarRueda">
+
+                            Guardar
+
+                        </button>
+
+                    </div>
+
                 </form>
-
-                <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-
-                        Cancelar
-
-                    </button>
-
-                    <button
-                        type="button"
-                        class="btn btn-warning"
-                        id="guardarRueda">
-
-                        Guardar
-
-                    </button>
-
-                </div>
 
             </div>
 

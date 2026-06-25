@@ -641,6 +641,38 @@ main.container-fluid{
     border-top: 4px solid #ff6a00;
 }
 
+.wheel-form-modal-dialog{
+    max-height: calc(100% - 1rem);
+}
+
+.wheel-form-modal-content{
+    max-height: calc(100vh - 2rem);
+    overflow: hidden;
+}
+
+.wheel-form-modal-form{
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 2rem);
+    min-height: 0;
+}
+
+.wheel-form-modal-form .modal-header{
+    flex-shrink: 0;
+}
+
+.wheel-form-modal-body{
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.wheel-form-modal-footer{
+    flex-shrink: 0;
+    border-top: 1px solid #dee2e6;
+    background: #fff;
+}
+
 .maintenix-section{
     margin-bottom: 20px;
 }
