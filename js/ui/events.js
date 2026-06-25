@@ -17,6 +17,10 @@ import {
 } from "../domain/wheelModel.js";
 import { showMaintenixPanel } from "./maintenixPanelView.js";
 import {
+    downloadRouteSheetPdf,
+    printRouteSheet
+} from "./routeSheetView.js";
+import {
     refreshWheelDetail,
     showWheelDetail as showWheelDetailView
 } from "./wheelDetailView.js";
@@ -286,8 +290,20 @@ export function initializeEvents(renderWheels) {
         showMaintenixPanel(wheelRepository.getById(index));
     }
 
+    function printProcessedRouteSheet(index) {
+
+        printRouteSheet(wheelRepository.getById(index));
+    }
+
+    async function downloadProcessedRouteSheetPdf(index) {
+
+        await downloadRouteSheetPdf(wheelRepository.getById(index));
+    }
+
     window.editWheel = editWheel;
     window.deleteWheel = deleteWheel;
     window.showWheelDetail = showWheelDetail;
     window.showMaintenixPanel = openMaintenixPanelForWheel;
+    window.printProcessedRouteSheet = printProcessedRouteSheet;
+    window.downloadProcessedRouteSheetPdf = downloadProcessedRouteSheetPdf;
 }

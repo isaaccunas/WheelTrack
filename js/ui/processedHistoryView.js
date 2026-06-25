@@ -57,33 +57,68 @@ export function renderProcessedWheelHistory(wheels) {
 
     container.innerHTML = processedEntries.map(({ wheel, index }) => `
 
-        <button
-            type="button"
-            class="processed-history-row"
-            onclick="showWheelDetail(${index})">
+        <div class="processed-history-row">
 
-            <div class="processed-history-main">
+            <div class="processed-history-content">
 
-                <strong class="processed-history-number">
-                    Nº ${wheel.numeroRueda || "-"}
-                </strong>
+                <div class="processed-history-main">
 
-                <span class="processed-history-aircraft">
-                    ${wheel.avion || "-"}
-                </span>
+                    <strong class="processed-history-number">
+                        Nº ${wheel.numeroRueda || "-"}
+                    </strong>
+
+                    <span class="processed-history-aircraft">
+                        ${wheel.avion || "-"}
+                    </span>
+
+                </div>
+
+                <div class="processed-history-meta">
+
+                    <span>${getWheelTypeLabel(wheel.wheelType)}</span>
+                    <span>${formatBoxLabel(wheel.boxData)}</span>
+                    <span>Cierre: ${formatClosedDate(normalizeOperationalStatus(wheel.operationalStatus).closedAt)}</span>
+                    <span>Tiempo: ${formatDurationMinutes(getWheelTotalProcessMinutes(wheel))}</span>
+
+                </div>
 
             </div>
 
-            <div class="processed-history-meta">
+            <div class="processed-history-actions">
 
-                <span>${getWheelTypeLabel(wheel.wheelType)}</span>
-                <span>${formatBoxLabel(wheel.boxData)}</span>
-                <span>Cierre: ${formatClosedDate(normalizeOperationalStatus(wheel.operationalStatus).closedAt)}</span>
-                <span>Tiempo: ${formatDurationMinutes(getWheelTotalProcessMinutes(wheel))}</span>
+                <button
+                    type="button"
+                    class="processed-history-action-btn"
+                    title="Ver detalle"
+                    onclick="showWheelDetail(${index})">
+
+                    👁
+
+                </button>
+
+                <button
+                    type="button"
+                    class="processed-history-action-btn"
+                    title="Imprimir hoja"
+                    onclick="printProcessedRouteSheet(${index})">
+
+                    🖨
+
+                </button>
+
+                <button
+                    type="button"
+                    class="processed-history-action-btn"
+                    title="Descargar PDF"
+                    onclick="downloadProcessedRouteSheetPdf(${index})">
+
+                    📥
+
+                </button>
 
             </div>
 
-        </button>
+        </div>
 
     `).join("");
 }

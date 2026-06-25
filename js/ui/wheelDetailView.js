@@ -19,7 +19,6 @@ import {
     normalizeWheelSerialData
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
-import { downloadRouteSheetPdf, printRouteSheet } from "./routeSheetView.js";
 
 // ==========================================
 // UTILIDADES DE RENDER
@@ -756,32 +755,6 @@ function renderDetailContent(wheel) {
 
         <div class="row g-3">
 
-            <div class="col-12 route-sheet-actions">
-
-                <button
-                    type="button"
-                    class="btn btn-warning route-sheet-btn"
-                    id="generateRouteSheetBtn">
-
-                    <i class="fa-solid fa-print me-2"></i>
-
-                    Generar Hoja de Ruta
-
-                </button>
-
-                <button
-                    type="button"
-                    class="btn btn-outline-warning route-sheet-btn"
-                    id="downloadRouteSheetPdfBtn">
-
-                    <i class="fa-solid fa-file-pdf me-2"></i>
-
-                    Descargar PDF
-
-                </button>
-
-            </div>
-
             <div class="col-md-6">
                 <strong>Nº:</strong> ${wheel.numeroRueda || "-"}
             </div>
@@ -921,41 +894,6 @@ function readOperationalFormData(sectionKey) {
     return data;
 }
 
-function bindRouteSheetButtons(wheel) {
-
-    const printButton = document.getElementById("generateRouteSheetBtn");
-    const pdfButton = document.getElementById("downloadRouteSheetPdfBtn");
-
-    if (!wheel) {
-        return;
-    }
-
-    if (printButton) {
-
-        printButton.addEventListener("click", () => {
-
-            printRouteSheet(wheel);
-        });
-    }
-
-    if (pdfButton) {
-
-        pdfButton.addEventListener("click", async () => {
-
-            pdfButton.disabled = true;
-
-            try {
-
-                await downloadRouteSheetPdf(wheel);
-
-            } finally {
-
-                pdfButton.disabled = false;
-            }
-        });
-    }
-}
-
 function bindOperationalPanelInteractions(callbacks) {
 
     const {
@@ -1030,7 +968,6 @@ function bindDetailInteractions(callbacks) {
     }
 
     bindOperationalPanelInteractions(callbacks);
-    bindRouteSheetButtons(wheel);
 }
 
 // ==========================================

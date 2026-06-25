@@ -1,20 +1,25 @@
+import { formatDurationMinutes } from "../domain/kpiCalculator.js";
 import { normalizeWheel } from "../domain/historyModel.js";
-import { normalizeProcessState, PROCESS_STAGES } from "../domain/processModel.js";
+import { normalizeProcessState, normalizeStageTiming, PROCESS_STAGES } from "../domain/processModel.js";
 import {
     formatBoxLabel,
+    formatClosedDate,
     getWheelSerialSummary,
+    getWheelTotalProcessMinutes,
     getWheelTypeLabel,
     hasInspectorData,
     hasPressureData,
     hasServiceableData,
+    hasTireOffData,
     hasValidTireAssignment,
     normalizeInspectorData,
+    normalizeOperationalStatus,
     normalizePressureData,
     normalizeServiceableData,
-    normalizeTireAssignment
+    normalizeTireAssignment,
+    normalizeTireOffData,
+    normalizeWheelSerialData
 } from "../domain/wheelModel.js";
-
-const MAX_HISTORY_EVENTS = 10;
 
 // ==========================================
 // UTILIDADES DE FORMATO
@@ -77,6 +82,12 @@ function getStageIndicatorSymbol(status) {
 
 function renderGeneralDataSection(wheel) {
 
+    const wheelSerialData = normalizeWheelSerialData(
+        wheel.wheelSerialData,
+        wheel.serial
+    );
+    const operationalStatus = normalizeOperationalStatus(wheel.operationalStatus);
+
     return `
         <section class="route-sheet-section">
 
@@ -95,7 +106,7 @@ function renderGeneralDataSection(wheel) {
                 </div>
 
                 <div class="route-sheet-field">
-                    <span class="route-sheet-label">Caja asignada</span>
+                    <span class="route-sheet-label">Caja utilizada</span>
                     <span class="route-sheet-value">${formatBoxLabel(wheel.boxData)}</span>
                 </div>
 
@@ -105,7 +116,17 @@ function renderGeneralDataSection(wheel) {
                 </div>
 
                 <div class="route-sheet-field">
-                    <span class="route-sheet-label">Serial</span>
+                    <span class="route-sheet-label">S/N INNER</span>
+                    <span class="route-sheet-value">${wheelSerialData.inner || "-"}</span>
+                </div>
+
+                <div class="route-sheet-field">
+                    <span class="route-sheet-label">S/N OUTER</span>
+                    <span class="route-sheet-value">${wheelSerialData.outer || "-"}</span>
+                </div>
+
+                <div class="route-sheet-field">
+                    <span class="route-sheet-label">Serial resumido</span>
                     <span class="route-sheet-value">${getWheelSerialSummary(wheel)}</span>
                 </div>
 
@@ -117,6 +138,11 @@ function renderGeneralDataSection(wheel) {
                 <div class="route-sheet-field">
                     <span class="route-sheet-label">Shop Visit</span>
                     <span class="route-sheet-value">${wheel.shopVisit || "-"}</span>
+                </div>
+
+                <div class="route-sheet-field">
+                    <span class="route-sheet-label">Tire Change</span>
+                    <span class="route-sheet-value">${wheel.tireChange || "-"}</span>
                 </div>
 
                 <div class="route-sheet-field">
@@ -134,9 +160,56 @@ function renderGeneralDataSection(wheel) {
                     <span class="route-sheet-value">${wheel.ciclos || "-"}</span>
                 </div>
 
+                <div class="route-sheet-field">
+                    <span class="route-sheet-label">Fecha de ingreso</span>
+                    <span class="route-sheet-value">${wheel.fechaIngreso || "-"}</span>
+                </div>
+
+                <div class="route-sheet-field">
+                    <span class="route-sheet-label">Fecha de cierre</span>
+                    <span class="route-sheet-value">${formatClosedDate(operationalStatus.closedAt)}</span>
+                </div>
+
+                <div class="route-sheet-field">
+                    <span class="route-sheet-label">Tiempo total del proceso</span>
+                    <span class="route-sheet-value">${formatDurationMinutes(getWheelTotalProcessMinutes(wheel))}</span>
+                </div>
+
             </div>
 
         </section>
+    `;
+}
+
+function renderTireOffSection(wheel) {
+
+    const tireOffData = normalizeTireOffData(wheel.tireOffData);
+
+    if (!hasTireOffData(tireOffData)) {
+
+        return `
+            <div class="route-sheet-subsection">
+                <h3 class="route-sheet-subtitle">Tire OFF</h3>
+                <p class="route-sheet-empty">Tire OFF no registrado</p>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="route-sheet-subsection">
+
+            <h3 class="route-sheet-subtitle">Tire OFF</h3>
+
+            <div class="route-sheet-grid">
+
+                <div class="route-sheet-field">
+                    <span class="route-sheet-label">S/N</span>
+                    <span class="route-sheet-value">${tireOffData.serialNumber || "-"}</span>
+                </div>
+
+            </div>
+
+        </div>
     `;
 }
 
@@ -148,7 +221,7 @@ function renderTireSection(wheel) {
 
         return `
             <div class="route-sheet-subsection">
-                <h3 class="route-sheet-subtitle">Caucho asignado</h3>
+                <h3 class="route-sheet-subtitle">Tire ON (caucho asignado)</h3>
                 <p class="route-sheet-empty">Caucho no asignado</p>
             </div>
         `;
@@ -157,7 +230,7 @@ function renderTireSection(wheel) {
     return `
         <div class="route-sheet-subsection">
 
-            <h3 class="route-sheet-subtitle">Caucho asignado</h3>
+            <h3 class="route-sheet-subtitle">Tire ON (caucho asignado)</h3>
 
             <div class="route-sheet-grid">
 
@@ -325,6 +398,7 @@ function renderOperationalDataSection(wheel) {
 
             <h2 class="route-sheet-section-title">Datos operacionales</h2>
 
+            ${renderTireOffSection(wheel)}
             ${renderTireSection(wheel)}
             ${renderPressureSection(wheel)}
             ${renderInspectorSection(wheel)}
@@ -337,6 +411,7 @@ function renderOperationalDataSection(wheel) {
 function renderProcessSection(wheel) {
 
     const process = normalizeProcessState(wheel.process);
+    const stageTiming = normalizeStageTiming(wheel.stageTiming);
 
     const stageItems = PROCESS_STAGES.map((stageName) => {
 
@@ -345,6 +420,14 @@ function renderProcessSection(wheel) {
         ) ?? {
             stage: stageName,
             status: "Pendiente"
+        };
+
+        const timingEntry = stageTiming.find(
+            (entry) => entry.stage === stageName
+        ) ?? {
+            startedAt: null,
+            finishedAt: null,
+            durationMinutes: null
         };
 
         return `
@@ -360,6 +443,12 @@ function renderProcessSection(wheel) {
 
                     <span class="route-sheet-stage-status">${stageState.status}</span>
 
+                    <span class="route-sheet-stage-timing">
+                        Inicio: ${formatSheetDate(timingEntry.startedAt)}
+                        · Fin: ${formatSheetDate(timingEntry.finishedAt)}
+                        · Duración: ${formatDurationMinutes(timingEntry.durationMinutes)}
+                    </span>
+
                 </div>
 
             </div>
@@ -369,7 +458,7 @@ function renderProcessSection(wheel) {
     return `
         <section class="route-sheet-section">
 
-            <h2 class="route-sheet-section-title">Proceso del taller</h2>
+            <h2 class="route-sheet-section-title">Timeline del proceso</h2>
 
             <div class="route-sheet-stages">
                 ${stageItems}
@@ -383,15 +472,14 @@ function renderHistorySection(wheel) {
 
     const historial = normalizeWheel(wheel).historial;
     const sortedEvents = [...historial]
-        .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-        .slice(0, MAX_HISTORY_EVENTS);
+        .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     if (sortedEvents.length === 0) {
 
         return `
             <section class="route-sheet-section">
 
-                <h2 class="route-sheet-section-title">Historial resumido</h2>
+                <h2 class="route-sheet-section-title">Historial de eventos</h2>
 
                 <p class="route-sheet-empty">Sin eventos registrados.</p>
 
@@ -427,11 +515,11 @@ function renderHistorySection(wheel) {
         <section class="route-sheet-section">
 
             <h2 class="route-sheet-section-title">
-                Historial resumido
+                Historial de eventos
             </h2>
 
             <p class="route-sheet-note">
-                Últimos ${sortedEvents.length} evento(s) registrados.
+                ${sortedEvents.length} evento(s) registrados.
             </p>
 
             <div class="route-sheet-history">
