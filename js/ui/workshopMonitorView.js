@@ -1,5 +1,9 @@
 import { getCurrentStage, PROCESS_STAGES } from "../domain/processModel.js";
-import { formatBoxLabel, normalizeWheelType } from "../domain/wheelModel.js";
+import {
+    formatBoxLabel,
+    normalizeWheelSerialData,
+    normalizeWheelType
+} from "../domain/wheelModel.js";
 
 // ==========================================
 // AGRUPACIÓN POR ETAPA ACTUAL
@@ -27,6 +31,28 @@ export function groupWheelsByCurrentStage(wheels) {
     return grouped;
 }
 
+function getMonitorCardSerialLabel(wheel) {
+
+    const wheelSerialData = normalizeWheelSerialData(
+        wheel.wheelSerialData,
+        wheel.serial
+    );
+
+    if (wheelSerialData.inner && wheelSerialData.outer) {
+
+        return `S/N: ${wheelSerialData.inner} / ${wheelSerialData.outer}`;
+    }
+
+    const singleSerial = wheelSerialData.inner || wheelSerialData.outer;
+
+    if (singleSerial) {
+
+        return `S/N: ${singleSerial}`;
+    }
+
+    return "S/N: NO ASIGNADO";
+}
+
 function renderMonitorCard({ wheel, index }) {
 
     const wheelType = normalizeWheelType(wheel.wheelType);
@@ -41,8 +67,8 @@ function renderMonitorCard({ wheel, index }) {
                 Nº ${wheel.numeroRueda || "-"}
             </span>
 
-            <span class="monitor-card-aircraft">
-                ${wheel.avion || "-"}
+            <span class="monitor-card-serial">
+                ${getMonitorCardSerialLabel(wheel)}
             </span>
 
             <span class="monitor-card-type monitor-card-type-${wheelType.toLowerCase()}">
