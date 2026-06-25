@@ -2,6 +2,7 @@ import { normalizeWheel } from "../domain/historyModel.js";
 import { normalizeProcessState, PROCESS_STAGES } from "../domain/processModel.js";
 import {
     formatBoxLabel,
+    getWheelSerialSummary,
     getWheelTypeLabel,
     hasInspectorData,
     hasPressureData,
@@ -105,7 +106,7 @@ function renderGeneralDataSection(wheel) {
 
                 <div class="route-sheet-field">
                     <span class="route-sheet-label">Serial</span>
-                    <span class="route-sheet-value">${wheel.serial || "-"}</span>
+                    <span class="route-sheet-value">${getWheelSerialSummary(wheel)}</span>
                 </div>
 
                 <div class="route-sheet-field">

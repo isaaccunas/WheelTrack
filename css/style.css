@@ -598,6 +598,68 @@ main.container-fluid{
     color: #e74c3c;
 }
 
+.maintenix-btn{
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
+.maintenix-modal{
+    border-top: 4px solid #ff6a00;
+}
+
+.maintenix-section{
+    margin-bottom: 20px;
+}
+
+.maintenix-section-title{
+    color: #ff6a00;
+    font-size: 1rem;
+    font-weight: 700;
+    border-bottom: 1px solid #f0d4bc;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+}
+
+.maintenix-grid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.maintenix-field{
+    background: #fff8f2;
+    border: 1px solid #f0d4bc;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.maintenix-label{
+    color: #666;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.maintenix-value{
+    color: #222;
+    font-size: 0.95rem;
+    word-break: break-word;
+}
+
+.maintenix-value-empty{
+    color: #c0392b;
+}
+
+@media (max-width: 768px){
+
+    .maintenix-grid{
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ==========================================
    HISTORIAL EN DETALLE
 ========================================== */

@@ -7,6 +7,7 @@ import {
 import {
     formatBoxLabel,
     getWheelTypeLabel,
+    getWheelSerialSummary,
     hasInspectorData,
     hasPressureData,
     hasServiceableData,
@@ -14,7 +15,8 @@ import {
     normalizeInspectorData,
     normalizePressureData,
     normalizeServiceableData,
-    normalizeTireAssignment
+    normalizeTireAssignment,
+    normalizeWheelSerialData
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
 import { downloadRouteSheetPdf, printRouteSheet } from "./routeSheetView.js";
@@ -793,7 +795,11 @@ function renderDetailContent(wheel) {
             </div>
 
             <div class="col-md-6">
-                <strong>S/N:</strong> ${wheel.serial || "-"}
+                <strong>S/N INNER:</strong> ${normalizeWheelSerialData(wheel.wheelSerialData, wheel.serial).inner || "-"}
+            </div>
+
+            <div class="col-md-6">
+                <strong>S/N OUTER:</strong> ${normalizeWheelSerialData(wheel.wheelSerialData, wheel.serial).outer || "-"}
             </div>
 
             <div class="col-md-6">

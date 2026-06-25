@@ -790,17 +790,27 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label">4. S/N *</label>
-                                <input type="text" class="form-control" id="serial" placeholder="Ej: C3445">
+                                <label class="form-label">4. S/N INNER *</label>
+                                <input type="text" class="form-control" id="serialInner" placeholder="Ej: C3445">
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label">5. Ingreso al taller *</label>
+                                <label class="form-label">5. S/N OUTER *</label>
+                                <input type="text" class="form-control" id="serialOuter" placeholder="Ej: C3446">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">TIRE OFF</label>
+                                <input type="text" class="form-control" id="tireOffSerial" placeholder="S/N caucho retirado">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">6. Ingreso al taller *</label>
                                 <input type="date" class="form-control" id="fechaIngreso">
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label">6. Detalle *</label>
+                                <label class="form-label">7. Detalle *</label>
                                 <input type="text" class="form-control" id="detalle" placeholder="Ej: Guayaquil / Condición de la rueda">
                             </div>
 
@@ -922,6 +932,51 @@
                         id="guardarRueda">
 
                         Guardar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL MAINTENIX -->
+
+    <div class="modal fade" id="modalMaintenixPanel" tabindex="-1">
+
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+
+            <div class="modal-content rounded-4 maintenix-modal">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="maintenixPanelTitle">
+
+                        Panel Maintenix
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body" id="maintenixPanelBody"></div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-warning fw-bold"
+                        id="copyMaintenixBtn">
+
+                        COPIAR PARA MAINTENIX
 
                     </button>
 

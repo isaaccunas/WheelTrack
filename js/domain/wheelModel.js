@@ -303,6 +303,115 @@ export function formatClosedDate(closedAt) {
 }
 
 // ==========================================
+// SERIAL INNER / OUTER
+// ==========================================
+
+export function createWheelSerialData() {
+
+    return {
+        inner: "",
+        outer: ""
+    };
+}
+
+export function normalizeWheelSerialData(wheelSerialData, legacySerial = "") {
+
+    if (wheelSerialData && typeof wheelSerialData === "object") {
+
+        return {
+            inner: (wheelSerialData.inner ?? "").trim(),
+            outer: (wheelSerialData.outer ?? "").trim()
+        };
+    }
+
+    const normalizedLegacy = (legacySerial ?? "").trim();
+
+    return {
+        inner: normalizedLegacy,
+        outer: ""
+    };
+}
+
+export function normalizeWheelWheelSerialData(wheel) {
+
+    const wheelSerialData = normalizeWheelSerialData(
+        wheel.wheelSerialData,
+        wheel.serial
+    );
+
+    return {
+        ...wheel,
+        wheelSerialData,
+        serial: wheelSerialData.inner || wheelSerialData.outer || (wheel.serial ?? "")
+    };
+}
+
+export function getWheelSerialSummary(wheel) {
+
+    const wheelSerialData = normalizeWheelSerialData(
+        wheel.wheelSerialData,
+        wheel.serial
+    );
+
+    if (wheelSerialData.inner && wheelSerialData.outer) {
+
+        return `${wheelSerialData.inner} / ${wheelSerialData.outer}`;
+    }
+
+    return wheelSerialData.inner || wheelSerialData.outer || "-";
+}
+
+function buildWheelSerialDataFromForm(data) {
+
+    return {
+        inner: (data.serialInner ?? "").trim(),
+        outer: (data.serialOuter ?? "").trim()
+    };
+}
+
+// ==========================================
+// TIRE OFF
+// ==========================================
+
+export function createTireOffData() {
+
+    return {
+        serialNumber: ""
+    };
+}
+
+export function normalizeTireOffData(tireOffData) {
+
+    if (!tireOffData || typeof tireOffData !== "object") {
+        return createTireOffData();
+    }
+
+    return {
+        serialNumber: (tireOffData.serialNumber ?? "").trim()
+    };
+}
+
+export function hasTireOffData(tireOffData) {
+
+    return !!normalizeTireOffData(tireOffData).serialNumber;
+}
+
+export function normalizeWheelTireOffData(wheel) {
+
+    return {
+        ...wheel,
+        tireOffData: normalizeTireOffData(wheel.tireOffData)
+    };
+}
+
+function buildTireOffDataFromForm(data) {
+
+    return {
+        serialNumber: (data.tireOffSerial ?? "").trim()
+    };
+}
+
+// ==========================================
 // NORMALIZACIÓN DE DATOS
 // ==========================================
 
@@ -313,7 +422,9 @@ export function normalizeFormData(raw) {
         numeroRueda: (raw.numeroRueda ?? "").trim(),
         fechaRecepcion: raw.fechaRecepcion ?? "",
         avion: (raw.avion ?? "").trim(),
-        serial: (raw.serial ?? "").trim(),
+        serialInner: (raw.serialInner ?? "").trim(),
+        serialOuter: (raw.serialOuter ?? "").trim(),
+        tireOffSerial: (raw.tireOffSerial ?? "").trim(),
         fechaIngreso: raw.fechaIngreso ?? "",
         detalle: (raw.detalle ?? "").trim(),
         wp: (raw.wp ?? "").trim(),
@@ -338,7 +449,8 @@ export function validateWheel(data) {
         data.numeroRueda &&
         data.fechaRecepcion &&
         data.avion &&
-        data.serial &&
+        data.serialInner &&
+        data.serialOuter &&
         data.fechaIngreso &&
         data.detalle &&
         data.wp &&
@@ -585,12 +697,16 @@ export function normalizeWheelServiceableData(wheel) {
 
 function buildWheelFromData(data) {
 
+    const wheelSerialData = buildWheelSerialDataFromForm(data);
+
     return {
 
         numeroRueda: data.numeroRueda,
         fechaRecepcion: data.fechaRecepcion,
         avion: data.avion,
-        serial: data.serial,
+        serial: wheelSerialData.inner || wheelSerialData.outer,
+        wheelSerialData,
+        tireOffData: buildTireOffDataFromForm(data),
         fechaIngreso: data.fechaIngreso,
         detalle: data.detalle,
         wp: data.wp,
@@ -648,6 +764,14 @@ export function updateWheel(existingWheel, data) {
     updatedWheel.operationalStatus = normalizeOperationalStatus(
         existingWheel.operationalStatus
     );
+    updatedWheel.wheelSerialData = normalizeWheelSerialData(
+        buildWheelSerialDataFromForm(data)
+    );
+    updatedWheel.tireOffData = normalizeTireOffData(
+        buildTireOffDataFromForm(data)
+    );
+    updatedWheel.serial = updatedWheel.wheelSerialData.inner ||
+        updatedWheel.wheelSerialData.outer;
 
     return updatedWheel;
 }

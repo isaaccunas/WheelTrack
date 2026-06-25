@@ -3,6 +3,7 @@ import {
     closeWheelOrder,
     completeWheelSubstage,
     createWheel,
+    getWheelSerialSummary,
     isAlmacenStageCompleted,
     isWheelActive,
     normalizeFormData,
@@ -14,7 +15,7 @@ import {
     validateBoxAssignment,
     validateWheel
 } from "../domain/wheelModel.js";
-import { refs } from "./domRefs.js";
+import { showMaintenixPanel } from "./maintenixPanelView.js";
 import {
     refreshWheelDetail,
     showWheelDetail as showWheelDetailView
@@ -26,6 +27,8 @@ import {
     populateWheelForm,
     resetWheelForm
 } from "./wheelFormView.js";
+
+import { refs } from "./domRefs.js";
 
 // ==========================================
 // INICIALIZAR EVENTOS
@@ -61,7 +64,9 @@ export function initializeEvents(renderWheels) {
             numeroRueda: document.getElementById("numeroRueda").value,
             fechaRecepcion: document.getElementById("fechaRecepcion").value,
             avion: document.getElementById("avion").value,
-            serial: document.getElementById("serial").value,
+            serialInner: document.getElementById("serialInner").value,
+            serialOuter: document.getElementById("serialOuter").value,
+            tireOffSerial: document.getElementById("tireOffSerial").value,
             fechaIngreso: document.getElementById("fechaIngreso").value,
             detalle: document.getElementById("detalle").value,
             wp: document.getElementById("wp").value,
@@ -144,7 +149,7 @@ export function initializeEvents(renderWheels) {
         const wheel = wheelRepository.getById(index);
 
         const confirmar = confirm(
-            `¿Deseas eliminar la rueda S/N: ${wheel.serial}?`
+            `¿Deseas eliminar la rueda S/N: ${getWheelSerialSummary(wheel)}?`
         );
 
         if (!confirmar) return;
@@ -276,7 +281,13 @@ export function initializeEvents(renderWheels) {
         showWheelDetailView(createWheelDetailCallbacks(index));
     }
 
+    function openMaintenixPanelForWheel(index) {
+
+        showMaintenixPanel(wheelRepository.getById(index));
+    }
+
     window.editWheel = editWheel;
     window.deleteWheel = deleteWheel;
     window.showWheelDetail = showWheelDetail;
+    window.showMaintenixPanel = openMaintenixPanelForWheel;
 }

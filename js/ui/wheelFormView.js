@@ -1,6 +1,8 @@
 import {
     getAvailableBoxNumbers,
-    normalizeBoxData
+    normalizeBoxData,
+    normalizeTireOffData,
+    normalizeWheelSerialData
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
 
@@ -66,7 +68,16 @@ export function populateWheelForm(wheel) {
     document.getElementById("numeroRueda").value = wheel.numeroRueda || "";
     document.getElementById("fechaRecepcion").value = wheel.fechaRecepcion || "";
     document.getElementById("avion").value = wheel.avion || "";
-    document.getElementById("serial").value = wheel.serial || "";
+
+    const wheelSerialData = normalizeWheelSerialData(
+        wheel.wheelSerialData,
+        wheel.serial
+    );
+    const tireOffData = normalizeTireOffData(wheel.tireOffData);
+
+    document.getElementById("serialInner").value = wheelSerialData.inner || "";
+    document.getElementById("serialOuter").value = wheelSerialData.outer || "";
+    document.getElementById("tireOffSerial").value = tireOffData.serialNumber || "";
     document.getElementById("fechaIngreso").value = wheel.fechaIngreso || "";
     document.getElementById("detalle").value = wheel.detalle || "";
     document.getElementById("wp").value = wheel.wp || "";

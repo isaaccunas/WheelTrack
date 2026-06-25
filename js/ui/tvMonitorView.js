@@ -1,6 +1,7 @@
 import { getCurrentStage, normalizeProcessState, PROCESS_STAGES } from "../domain/processModel.js";
 import {
     formatBoxLabel,
+    getWheelSerialSummary,
     getWheelTypeLabel,
     hasInspectorData,
     hasValidTireAssignment,
@@ -200,7 +201,7 @@ function renderTvWheelContent({ wheel, index }, position, total) {
                         <span class="tv-priority-label">Serial Number (S/N)</span>
 
                         <strong class="tv-priority-value">
-                            ${wheel.serial || "-"}
+                            ${getWheelSerialSummary(wheel)}
                         </strong>
 
                     </article>

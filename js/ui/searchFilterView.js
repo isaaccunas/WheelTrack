@@ -1,4 +1,4 @@
-import { normalizeWheelType } from "../domain/wheelModel.js";
+import { normalizeWheelType, getWheelSerialSummary } from "../domain/wheelModel.js";
 
 // ==========================================
 // FILTROS DE ESTADO
@@ -80,6 +80,9 @@ function matchesSearch(wheel, searchText) {
     const fields = [
         wheel.numeroRueda,
         wheel.serial,
+        getWheelSerialSummary(wheel),
+        wheel.wheelSerialData?.inner,
+        wheel.wheelSerialData?.outer,
         wheel.avion
     ];
 

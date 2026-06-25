@@ -1,4 +1,5 @@
 import { saveWheels } from "../data/storage.js";
+import { getWheelSerialSummary } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
 
 // ==========================================
@@ -35,7 +36,7 @@ export function renderWheelList(entries, options = {}) {
 
                     <strong>
                         Nº: ${wheel.numeroRueda || "-"}
-                        | S/N: ${wheel.serial}
+                        | S/N: ${getWheelSerialSummary(wheel)}
                     </strong>
 
                     <div>${wheel.avion || "-"}</div>
@@ -45,6 +46,15 @@ export function renderWheelList(entries, options = {}) {
                 </div>
 
                 <div class="wheel-actions">
+
+                    <button
+                        type="button"
+                        class="action-btn maintenix-btn"
+                        title="Maintenix"
+                        onclick="event.stopPropagation(); showMaintenixPanel(${index})"
+                    >
+                        📋
+                    </button>
 
                     <button
                         type="button"
