@@ -1968,6 +1968,52 @@ body.tv-monitor-open{
     }
 }
 
+.historical-dashboard .historical-card{
+    min-height: 120px;
+}
+
+.historical-summary-card{
+    min-height: auto;
+}
+
+.historical-metric-highlight{
+    color: #ff6a00;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.historical-empty{
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.historical-metric-card,
+.historical-stage-card{
+    background: #fff;
+    border: 1px solid #f0d4bc;
+    border-left: 4px solid #ff6a00;
+    border-radius: 10px;
+    padding: 12px;
+    min-height: 78px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.historical-metric-name,
+.historical-stage-name{
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.historical-metric-value,
+.historical-stage-time{
+    color: #d95a00;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
 /* ==========================================
    EVITAR QUE EL PANEL INFERIOR SE PIERDA
 ========================================== */

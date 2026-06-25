@@ -4,7 +4,7 @@ import {
     normalizeStageTiming,
     PROCESS_STAGES
 } from "./processModel.js";
-import { normalizeWheelType } from "./wheelModel.js";
+import { normalizeWheelType, normalizeBoxData, normalizeOperationalStatus, isWheelActive } from "./wheelModel.js";
 
 // ==========================================
 // CONSTANTES DE NEGOCIO
@@ -273,6 +273,174 @@ export function getFlowMetrics(wheels) {
 }
 
 // ==========================================
+// KPIs HISTÓRICOS
+// ==========================================
+
+export function getClosedWheels(wheels) {
+
+    return wheels.filter((wheel) => !isWheelActive(wheel));
+}
+
+function averageTotalTimeByWheelType(wheels, wheelType) {
+
+    const filteredWheels = wheels.filter(
+        (wheel) => normalizeWheelType(wheel.wheelType) === wheelType
+    );
+
+    return averageWheelProcessingTime(filteredWheels);
+}
+
+export function getAverageTotalTimeByMw(wheels) {
+
+    return averageTotalTimeByWheelType(getClosedWheels(wheels), "MW");
+}
+
+export function getAverageTotalTimeByNw(wheels) {
+
+    return averageTotalTimeByWheelType(getClosedWheels(wheels), "NW");
+}
+
+export function getProcessedWheelsByMonth(wheels) {
+
+    const closedWheels = getClosedWheels(wheels);
+    const countsByMonth = {};
+
+    closedWheels.forEach((wheel) => {
+
+        const closedAt = normalizeOperationalStatus(wheel.operationalStatus).closedAt;
+
+        if (!closedAt) {
+            return;
+        }
+
+        const date = new Date(closedAt);
+
+        if (Number.isNaN(date.getTime())) {
+            return;
+        }
+
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+        countsByMonth[monthKey] = (countsByMonth[monthKey] ?? 0) + 1;
+    });
+
+    return Object.entries(countsByMonth)
+        .sort(([monthA], [monthB]) => monthB.localeCompare(monthA))
+        .map(([month, count]) => ({ month, count }));
+}
+
+export function getHistoricalBoxUtilization(wheels) {
+
+    const closedWheels = getClosedWheels(wheels);
+    const boxCounts = {};
+
+    closedWheels.forEach((wheel) => {
+
+        const boxNumber = normalizeBoxData(wheel.boxData).boxNumber;
+
+        if (boxNumber === null) {
+            return;
+        }
+
+        boxCounts[boxNumber] = (boxCounts[boxNumber] ?? 0) + 1;
+    });
+
+    return Object.entries(boxCounts)
+        .map(([boxNumber, count]) => ({
+            boxNumber: Number(boxNumber),
+            count
+        }))
+        .sort((boxA, boxB) => boxB.count - boxA.count);
+}
+
+export function getHistoricalAverageStageTime(wheels, stageName) {
+
+    return averageStageTime(getClosedWheels(wheels), stageName);
+}
+
+export function getHistoricalAverageStageTimes(wheels) {
+
+    const closedWheels = getClosedWheels(wheels);
+
+    return PROCESS_STAGES.reduce((stageAverages, stageName) => {
+
+        stageAverages[stageName] = averageStageTime(closedWheels, stageName);
+
+        return stageAverages;
+    }, {});
+}
+
+export function getHistoricallySlowestStage(wheels) {
+
+    const closedWheels = getClosedWheels(wheels);
+    let slowestStageName = null;
+    let slowestAverage = null;
+
+    PROCESS_STAGES.forEach((stageName) => {
+
+        const stageAverage = averageStageTime(closedWheels, stageName);
+
+        if (
+            stageAverage !== null &&
+            (slowestAverage === null || stageAverage > slowestAverage)
+        ) {
+
+            slowestAverage = stageAverage;
+            slowestStageName = stageName;
+        }
+    });
+
+    if (slowestStageName === null) {
+        return null;
+    }
+
+    return {
+        stage: slowestStageName,
+        averageMinutes: slowestAverage
+    };
+}
+
+function getWheelTimingCompletionRate(wheel) {
+
+    const stageTiming = normalizeStageTiming(wheel.stageTiming);
+    const recordedStages = stageTiming.filter(
+        (entry) => entry.durationMinutes !== null && entry.durationMinutes !== undefined
+    ).length;
+
+    return recordedStages / PROCESS_STAGES.length;
+}
+
+export function getGeneralHistoricalEfficiency(wheels) {
+
+    const closedWheels = getClosedWheels(wheels);
+
+    if (closedWheels.length === 0) {
+        return null;
+    }
+
+    const averageCompletionRate = closedWheels.reduce(
+        (total, wheel) => total + getWheelTimingCompletionRate(wheel),
+        0
+    ) / closedWheels.length;
+
+    return Math.round(averageCompletionRate * 100);
+}
+
+export function getHistoricalMetrics(wheels) {
+
+    return {
+        averageTotalTimeMw: getAverageTotalTimeByMw(wheels),
+        averageTotalTimeNw: getAverageTotalTimeByNw(wheels),
+        processedWheelsByMonth: getProcessedWheelsByMonth(wheels),
+        boxUtilization: getHistoricalBoxUtilization(wheels),
+        stageAverages: getHistoricalAverageStageTimes(wheels),
+        slowestStage: getHistoricallySlowestStage(wheels),
+        generalEfficiency: getGeneralHistoricalEfficiency(wheels),
+        closedWheelCount: getClosedWheels(wheels).length
+    };
+}
+
+// ==========================================
 // KPIs GENERALES
 // ==========================================
 
@@ -357,6 +525,7 @@ export function getDashboardKpis(wheels, referenceDate = new Date()) {
         nwCount: distribution.nw,
         mwCount: distribution.mw,
         operational: getOperationalMetrics(wheels),
-        flow: getFlowMetrics(wheels)
+        flow: getFlowMetrics(wheels),
+        historical: getHistoricalMetrics(wheels)
     };
 }

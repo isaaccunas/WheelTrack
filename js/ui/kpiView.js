@@ -117,6 +117,173 @@ function renderFlowMetrics(flow) {
         .join("");
 }
 
+function formatMonthLabel(monthKey) {
+
+    const [year, month] = monthKey.split("-");
+    const date = new Date(Number(year), Number(month) - 1, 1);
+
+    if (Number.isNaN(date.getTime())) {
+        return monthKey;
+    }
+
+    return date.toLocaleDateString("es-EC", {
+        month: "long",
+        year: "numeric"
+    });
+}
+
+function renderHistoricalMetrics(historical) {
+
+    const avgMwElement = document.getElementById("historicalAvgMw");
+    const avgNwElement = document.getElementById("historicalAvgNw");
+    const slowestStageElement = document.getElementById("historicalSlowestStage");
+    const efficiencyElement = document.getElementById("historicalGeneralEfficiency");
+    const monthlyGrid = document.getElementById("historicalMonthlyGrid");
+    const boxGrid = document.getElementById("historicalBoxGrid");
+    const stageGrid = document.getElementById("historicalStageGrid");
+    const closedCountElement = document.getElementById("historicalClosedCount");
+
+    if (closedCountElement) {
+
+        closedCountElement.textContent =
+            `${historical.closedWheelCount} rueda(s) cerrada(s) analizadas`;
+    }
+
+    if (avgMwElement) {
+
+        avgMwElement.textContent = formatDurationMinutes(
+            historical.averageTotalTimeMw
+        );
+    }
+
+    if (avgNwElement) {
+
+        avgNwElement.textContent = formatDurationMinutes(
+            historical.averageTotalTimeNw
+        );
+    }
+
+    if (slowestStageElement) {
+
+        if (!historical.slowestStage) {
+
+            slowestStageElement.textContent = "Sin datos";
+
+        } else {
+
+            slowestStageElement.textContent =
+                `${historical.slowestStage.stage} (${formatDurationMinutes(
+                    historical.slowestStage.averageMinutes
+                )})`;
+        }
+    }
+
+    if (efficiencyElement) {
+
+        efficiencyElement.textContent = historical.generalEfficiency === null
+            ? "Sin datos"
+            : `${historical.generalEfficiency}%`;
+    }
+
+    if (monthlyGrid) {
+
+        if (historical.processedWheelsByMonth.length === 0) {
+
+            monthlyGrid.innerHTML = `
+                <div class="col-12">
+                    <p class="historical-empty mb-0">Sin datos</p>
+                </div>
+            `;
+
+        } else {
+
+            monthlyGrid.innerHTML = historical.processedWheelsByMonth
+                .map(({ month, count }) => `
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+
+                        <div class="historical-metric-card">
+
+                            <span class="historical-metric-name">
+                                ${formatMonthLabel(month)}
+                            </span>
+
+                            <strong class="historical-metric-value">
+                                ${count}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                `)
+                .join("");
+        }
+    }
+
+    if (boxGrid) {
+
+        if (historical.boxUtilization.length === 0) {
+
+            boxGrid.innerHTML = `
+                <div class="col-12">
+                    <p class="historical-empty mb-0">Sin datos</p>
+                </div>
+            `;
+
+        } else {
+
+            boxGrid.innerHTML = historical.boxUtilization
+                .slice(0, 8)
+                .map(({ boxNumber, count }) => `
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+
+                        <div class="historical-metric-card">
+
+                            <span class="historical-metric-name">
+                                CAJA ${boxNumber}
+                            </span>
+
+                            <strong class="historical-metric-value">
+                                ${count} usos
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                `)
+                .join("");
+        }
+    }
+
+    if (stageGrid) {
+
+        stageGrid.innerHTML = Object.entries(historical.stageAverages)
+            .map(([stageName, averageMinutes]) => `
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+
+                    <div class="historical-stage-card">
+
+                        <span class="historical-stage-name">
+                            ${stageName}
+                        </span>
+
+                        <strong class="historical-stage-time">
+                            ${formatDurationMinutes(averageMinutes)}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            `)
+            .join("");
+    }
+}
+
 export function renderKpis(kpis) {
 
     document.getElementById("totalProcesadas").textContent = kpis.totalProcessed;
@@ -139,5 +306,10 @@ export function renderKpis(kpis) {
     if (kpis.flow) {
 
         renderFlowMetrics(kpis.flow);
+    }
+
+    if (kpis.historical) {
+
+        renderHistoricalMetrics(kpis.historical);
     }
 }

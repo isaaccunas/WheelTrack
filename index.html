@@ -639,6 +639,136 @@
 
         </div>
 
+        <!-- DASHBOARD HISTÓRICO -->
+
+        <div class="row g-4 mt-1 historical-dashboard">
+
+            <div class="col-12">
+
+                <div class="summary-card summary-light historical-summary-card">
+
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+
+                        <div>
+
+                            <h3 class="summary-title mb-0">
+
+                                <i class="fa-solid fa-chart-column text-orange me-2"></i>
+
+                                Dashboard Histórico
+
+                            </h3>
+
+                            <p class="summary-text mb-0">
+
+                                Métricas basadas en ruedas cerradas
+
+                            </p>
+
+                        </div>
+
+                        <p class="summary-text mb-0" id="historicalClosedCount"></p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-light historical-card">
+
+                    <h3 class="summary-title">Tiempo promedio MW</h3>
+
+                    <p class="historical-metric-highlight mb-0" id="historicalAvgMw">
+                        Sin datos
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-dark historical-card">
+
+                    <h3 class="summary-title">Tiempo promedio NW</h3>
+
+                    <p class="historical-metric-highlight mb-0" id="historicalAvgNw">
+                        Sin datos
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="summary-card summary-light historical-card">
+
+                    <h3 class="summary-title">Eficiencia general del taller</h3>
+
+                    <p class="historical-metric-highlight mb-0" id="historicalGeneralEfficiency">
+                        Sin datos
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <div class="summary-card summary-light historical-card">
+
+                    <h3 class="summary-title">Etapa históricamente más lenta</h3>
+
+                    <p class="historical-metric-highlight mb-0" id="historicalSlowestStage">
+                        Sin datos
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-12">
+
+                <div class="summary-card summary-light historical-card">
+
+                    <h3 class="summary-title mb-3">Ruedas procesadas por mes</h3>
+
+                    <div class="row g-3" id="historicalMonthlyGrid"></div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12">
+
+                <div class="summary-card summary-light historical-card">
+
+                    <h3 class="summary-title mb-3">Cajas más utilizadas</h3>
+
+                    <div class="row g-3" id="historicalBoxGrid"></div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12">
+
+                <div class="summary-card summary-light historical-card">
+
+                    <h3 class="summary-title mb-3">Tiempo promedio histórico por etapa</h3>
+
+                    <div class="row g-3" id="historicalStageGrid"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
         <!-- MONITOR DEL TALLER -->
 
         <div class="row g-3 mt-1 workshop-monitor-section">
