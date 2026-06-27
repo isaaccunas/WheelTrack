@@ -810,6 +810,91 @@ export function buildRouteSheetHtml(wheel) {
     `;
 }
 
+function logRouteSheetPrintAreaContent(contextLabel) {
+
+    const printArea = document.getElementById("routeSheetPrintArea");
+    const htmlContent = printArea?.innerHTML?.trim() ?? "";
+
+    console.log(
+        `[WheelTrack] ${contextLabel} - routeSheetPrintArea HTML length:`,
+        htmlContent.length
+    );
+    console.log(
+        `[WheelTrack] ${contextLabel} - routeSheetPrintArea has content:`,
+        htmlContent.length > 0
+    );
+
+    return printArea;
+}
+
+function isRouteSheetModalOpen() {
+
+    const modalElement = document.getElementById("modalRouteSheet");
+
+    return modalElement?.classList.contains("show") ?? false;
+}
+
+function populateRouteSheetPrintArea(wheel) {
+
+    const printArea = logRouteSheetPrintAreaContent("populateRouteSheetPrintArea");
+
+    if (!printArea) {
+        return null;
+    }
+
+    printArea.innerHTML = buildRouteSheetHtml(wheel);
+
+    logRouteSheetPrintAreaContent("after populateRouteSheetPrintArea");
+
+    return printArea;
+}
+
+function triggerRouteSheetPrint() {
+
+    logRouteSheetPrintAreaContent("before print");
+
+    document.body.classList.add("printing-route-sheet");
+
+    const cleanupPrintMode = () => {
+
+        document.body.classList.remove("printing-route-sheet");
+        window.removeEventListener("afterprint", cleanupPrintMode);
+    };
+
+    window.addEventListener("afterprint", cleanupPrintMode);
+
+    window.print();
+}
+
+function setRouteSheetPdfCaptureMode(enabled) {
+
+    document.body.classList.toggle("route-sheet-pdf-capture-mode", enabled);
+}
+
+function setRouteSheetModalVisibleForCapture(visible) {
+
+    const modalElement = document.getElementById("modalRouteSheet");
+
+    if (!modalElement) {
+        return;
+    }
+
+    if (visible) {
+
+        modalElement.classList.add("show");
+        modalElement.style.display = "block";
+        modalElement.setAttribute("aria-modal", "true");
+        modalElement.removeAttribute("aria-hidden");
+
+        return;
+    }
+
+    modalElement.classList.remove("show");
+    modalElement.style.display = "";
+    modalElement.setAttribute("aria-hidden", "true");
+    modalElement.removeAttribute("aria-modal");
+}
+
 function getRouteSheetModalInstance() {
 
     const modalElement = document.getElementById("modalRouteSheet");
@@ -832,25 +917,22 @@ export function initializeRouteSheetView() {
     if (printButton) {
 
         printButton.addEventListener("click", () => {
-            window.print();
+            triggerRouteSheetPrint();
         });
     }
 }
 
 export function printRouteSheet(wheel) {
 
-    const printArea = document.getElementById("routeSheetPrintArea");
     const titleElement = document.getElementById("routeSheetPreviewTitle");
     const modal = getRouteSheetModalInstance();
 
-    if (!printArea || !modal) {
+    if (!populateRouteSheetPrintArea(wheel) || !modal) {
 
         alert("No se pudo abrir la vista previa de la hoja de ruta.");
 
         return;
     }
-
-    printArea.innerHTML = buildRouteSheetHtml(wheel);
 
     if (titleElement) {
 
@@ -869,16 +951,6 @@ export function buildRouteSheetFilename(wheel) {
     return `Hoja-Ruta-Rueda-${wheelNumber}.pdf`;
 }
 
-function createRouteSheetPdfContainer(wheel) {
-
-    const container = document.createElement("div");
-
-    container.className = "route-sheet-document route-sheet-pdf-source";
-    container.innerHTML = buildRouteSheetHtml(wheel);
-
-    return container;
-}
-
 export async function downloadRouteSheetPdf(wheel) {
 
     const html2pdf = window.html2pdf;
@@ -890,9 +962,22 @@ export async function downloadRouteSheetPdf(wheel) {
         return;
     }
 
-    const container = createRouteSheetPdfContainer(wheel);
+    const printArea = populateRouteSheetPrintArea(wheel);
 
-    document.body.appendChild(container);
+    if (!printArea) {
+
+        alert("No se pudo preparar la hoja de ruta para PDF.");
+
+        return;
+    }
+
+    const modalWasOpen = isRouteSheetModalOpen();
+
+    setRouteSheetPdfCaptureMode(true);
+
+    if (!modalWasOpen) {
+        setRouteSheetModalVisibleForCapture(true);
+    }
 
     try {
 
@@ -918,7 +1003,7 @@ export async function downloadRouteSheetPdf(wheel) {
                     mode: ["avoid-all", "css", "legacy"]
                 }
             })
-            .from(container)
+            .from(printArea)
             .save();
 
     } catch (error) {
@@ -929,6 +1014,10 @@ export async function downloadRouteSheetPdf(wheel) {
 
     } finally {
 
-        container.remove();
+        if (!modalWasOpen) {
+            setRouteSheetModalVisibleForCapture(false);
+        }
+
+        setRouteSheetPdfCaptureMode(false);
     }
 }

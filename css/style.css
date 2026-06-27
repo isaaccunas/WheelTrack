@@ -1911,65 +1911,99 @@ main.container-fluid{
 
 @media print{
 
-    body *{
-        visibility: hidden;
-    }
-
-    #routeSheetPrintArea,
-    #routeSheetPrintArea *{
-        visibility: visible;
-    }
-
-    #routeSheetPrintArea{
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-    }
-
-    .modal-backdrop,
-    .no-print-route-sheet{
+    body.printing-route-sheet > *:not(#modalRouteSheet){
         display: none !important;
     }
 
-    #modalRouteSheet{
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: visible;
+    body.printing-route-sheet #modalRouteSheet{
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
     }
 
-    #modalRouteSheet .modal-dialog{
+    body.printing-route-sheet #modalRouteSheet .modal-dialog{
         max-width: none;
         margin: 0;
     }
 
-    #modalRouteSheet .modal-content{
+    body.printing-route-sheet #modalRouteSheet .modal-content{
         border: none;
         box-shadow: none;
         background: #fff;
     }
 
-    #modalRouteSheet .modal-body{
+    body.printing-route-sheet #modalRouteSheet .modal-body{
         padding: 0;
         background: #fff;
+        overflow: visible !important;
     }
 
-    .route-sheet-document{
+    body.printing-route-sheet .modal-backdrop,
+    body.printing-route-sheet .no-print-route-sheet{
+        display: none !important;
+    }
+
+    body.printing-route-sheet #routeSheetPrintArea{
+        display: block !important;
+        overflow: visible !important;
+        position: static !important;
+        width: 100%;
+    }
+
+    body.printing-route-sheet .route-sheet-document{
         padding: 0;
     }
 
-    .route-sheet{
+    body.printing-route-sheet .route-sheet{
         max-width: none;
     }
 
-    .route-sheet-section{
+    body.printing-route-sheet .route-sheet-section{
         break-inside: avoid-page;
         page-break-inside: avoid;
     }
+}
+
+body.route-sheet-pdf-capture-mode > *:not(#modalRouteSheet){
+    visibility: hidden;
+}
+
+body.route-sheet-pdf-capture-mode #modalRouteSheet{
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 10000 !important;
+    overflow: visible !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+body.route-sheet-pdf-capture-mode #modalRouteSheet .modal-dialog{
+    margin: 0;
+    max-width: none;
+}
+
+body.route-sheet-pdf-capture-mode #modalRouteSheet .modal-content,
+body.route-sheet-pdf-capture-mode #modalRouteSheet .modal-body{
+    overflow: visible !important;
+    background: #fff;
+}
+
+body.route-sheet-pdf-capture-mode .no-print-route-sheet,
+body.route-sheet-pdf-capture-mode .modal-backdrop{
+    display: none !important;
+}
+
+body.route-sheet-pdf-capture-mode #routeSheetPrintArea{
+    display: block !important;
+    overflow: visible !important;
+    position: static !important;
+    width: 900px;
+    max-width: 100%;
+    background: #fff;
 }
 
 @media (max-width: 768px){
