@@ -1,5 +1,6 @@
 import { formatDurationMinutes } from "../domain/kpiCalculator.js";
 import { normalizeWheel } from "../domain/historyModel.js";
+import { generateRouteSheetPdfDocument } from "./routeSheetPdfView.js";
 import { normalizeProcessState, normalizeStageTiming, PROCESS_STAGES } from "../domain/processModel.js";
 import {
     formatBoxLabel,
@@ -827,13 +828,6 @@ function logRouteSheetPrintAreaContent(contextLabel) {
     return printArea;
 }
 
-function isRouteSheetModalOpen() {
-
-    const modalElement = document.getElementById("modalRouteSheet");
-
-    return modalElement?.classList.contains("show") ?? false;
-}
-
 function populateRouteSheetPrintArea(wheel) {
 
     const printArea = logRouteSheetPrintAreaContent("populateRouteSheetPrintArea");
@@ -864,35 +858,6 @@ function triggerRouteSheetPrint() {
     window.addEventListener("afterprint", cleanupPrintMode);
 
     window.print();
-}
-
-function setRouteSheetPdfCaptureMode(enabled) {
-
-    document.body.classList.toggle("route-sheet-pdf-capture-mode", enabled);
-}
-
-function setRouteSheetModalVisibleForCapture(visible) {
-
-    const modalElement = document.getElementById("modalRouteSheet");
-
-    if (!modalElement) {
-        return;
-    }
-
-    if (visible) {
-
-        modalElement.classList.add("show");
-        modalElement.style.display = "block";
-        modalElement.setAttribute("aria-modal", "true");
-        modalElement.removeAttribute("aria-hidden");
-
-        return;
-    }
-
-    modalElement.classList.remove("show");
-    modalElement.style.display = "";
-    modalElement.setAttribute("aria-hidden", "true");
-    modalElement.removeAttribute("aria-modal");
 }
 
 function getRouteSheetModalInstance() {
@@ -951,73 +916,25 @@ export function buildRouteSheetFilename(wheel) {
     return `Hoja-Ruta-Rueda-${wheelNumber}.pdf`;
 }
 
-export async function downloadRouteSheetPdf(wheel) {
+export function downloadRouteSheetPdf(wheel) {
 
-    const html2pdf = window.html2pdf;
+    const pdfDocument = generateRouteSheetPdfDocument(wheel);
 
-    if (typeof html2pdf !== "function") {
+    if (!pdfDocument) {
 
-        alert("No se pudo cargar la librería de PDF. Recarga la página e intenta de nuevo.");
-
-        return;
-    }
-
-    const printArea = populateRouteSheetPrintArea(wheel);
-
-    if (!printArea) {
-
-        alert("No se pudo preparar la hoja de ruta para PDF.");
+        alert("No se pudo cargar jsPDF. Recarga la página e intenta de nuevo.");
 
         return;
-    }
-
-    const modalWasOpen = isRouteSheetModalOpen();
-
-    setRouteSheetPdfCaptureMode(true);
-
-    if (!modalWasOpen) {
-        setRouteSheetModalVisibleForCapture(true);
     }
 
     try {
 
-        await html2pdf()
-            .set({
-                margin: [10, 10, 10, 10],
-                filename: buildRouteSheetFilename(wheel),
-                image: {
-                    type: "jpeg",
-                    quality: 0.98
-                },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false
-                },
-                jsPDF: {
-                    unit: "mm",
-                    format: "a4",
-                    orientation: "portrait"
-                },
-                pagebreak: {
-                    mode: ["avoid-all", "css", "legacy"]
-                }
-            })
-            .from(printArea)
-            .save();
+        pdfDocument.save(buildRouteSheetFilename(wheel));
 
     } catch (error) {
 
         console.error(error);
 
         alert("No se pudo generar el PDF. Intenta nuevamente.");
-
-    } finally {
-
-        if (!modalWasOpen) {
-            setRouteSheetModalVisibleForCapture(false);
-        }
-
-        setRouteSheetPdfCaptureMode(false);
     }
 }

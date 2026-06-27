@@ -1967,45 +1967,6 @@ main.container-fluid{
     }
 }
 
-body.route-sheet-pdf-capture-mode > *:not(#modalRouteSheet){
-    visibility: hidden;
-}
-
-body.route-sheet-pdf-capture-mode #modalRouteSheet{
-    display: block !important;
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 10000 !important;
-    overflow: visible !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-body.route-sheet-pdf-capture-mode #modalRouteSheet .modal-dialog{
-    margin: 0;
-    max-width: none;
-}
-
-body.route-sheet-pdf-capture-mode #modalRouteSheet .modal-content,
-body.route-sheet-pdf-capture-mode #modalRouteSheet .modal-body{
-    overflow: visible !important;
-    background: #fff;
-}
-
-body.route-sheet-pdf-capture-mode .no-print-route-sheet,
-body.route-sheet-pdf-capture-mode .modal-backdrop{
-    display: none !important;
-}
-
-body.route-sheet-pdf-capture-mode #routeSheetPrintArea{
-    display: block !important;
-    overflow: visible !important;
-    position: static !important;
-    width: 900px;
-    max-width: 100%;
-    background: #fff;
-}
-
 @media (max-width: 768px){
 
     .route-sheet-grid,
