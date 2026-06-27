@@ -4,7 +4,7 @@ import {
     normalizeStageTiming,
     PROCESS_STAGES
 } from "./processModel.js";
-import { normalizeWheelType, normalizeBoxData, normalizeOperationalStatus, isWheelActive } from "./wheelModel.js";
+import { normalizeWheelType, normalizeBoxData, normalizeOperationalStatus, isWheelClosed } from "./wheelModel.js";
 
 // ==========================================
 // CONSTANTES DE NEGOCIO
@@ -278,7 +278,7 @@ export function getFlowMetrics(wheels) {
 
 export function getClosedWheels(wheels) {
 
-    return wheels.filter((wheel) => !isWheelActive(wheel));
+    return wheels.filter((wheel) => isWheelClosed(wheel));
 }
 
 function averageTotalTimeByWheelType(wheels, wheelType) {
@@ -474,9 +474,7 @@ export function getPendingWheels(wheels) {
 
 export function getTotalProcessed(wheels) {
 
-    return wheels.filter(
-        (wheel) => wheel.estado === DELIVERED_STATE
-    ).length;
+    return getClosedWheels(wheels).length;
 }
 
 export function getWeeklyCount(wheels, referenceDate = new Date()) {

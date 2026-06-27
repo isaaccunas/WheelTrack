@@ -4,7 +4,7 @@ import {
     formatClosedDate,
     getWheelTotalProcessMinutes,
     getWheelTypeLabel,
-    isWheelActive,
+    isWheelClosed,
     normalizeOperationalStatus
 } from "../domain/wheelModel.js";
 
@@ -16,7 +16,7 @@ export function getProcessedWheelEntries(wheels) {
 
     return wheels
         .map((wheel, index) => ({ wheel, index }))
-        .filter(({ wheel }) => !isWheelActive(wheel))
+        .filter(({ wheel }) => isWheelClosed(wheel))
         .sort((entryA, entryB) => {
 
             const closedAtA = normalizeOperationalStatus(

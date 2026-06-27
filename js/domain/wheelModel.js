@@ -236,10 +236,16 @@ export function normalizeOperationalStatus(operationalStatus) {
         return createOperationalStatus();
     }
 
-    const active = operationalStatus.active !== false;
+    if (operationalStatus.active === false) {
+
+        return {
+            active: false,
+            closedAt: operationalStatus.closedAt ?? null
+        };
+    }
 
     return {
-        active,
+        active: true,
         closedAt: operationalStatus.closedAt ?? null
     };
 }
@@ -252,9 +258,14 @@ export function normalizeWheelOperationalStatus(wheel) {
     };
 }
 
+export function isWheelClosed(wheel) {
+
+    return normalizeOperationalStatus(wheel.operationalStatus).active === false;
+}
+
 export function isWheelActive(wheel) {
 
-    return normalizeOperationalStatus(wheel.operationalStatus).active;
+    return !isWheelClosed(wheel);
 }
 
 export function closeWheelOrder(wheel) {

@@ -1,4 +1,3 @@
-import { saveWheels } from "../data/storage.js";
 import { getWheelListStageDisplay } from "../domain/processModel.js";
 import { getWheelSerialSummary } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
@@ -7,9 +6,7 @@ import { refs } from "./domRefs.js";
 // RENDERIZAR LISTA DE RUEDAS
 // ==========================================
 
-export function renderWheelList(entries, options = {}) {
-
-    const { persist = true } = options;
+export function renderWheelList(entries) {
 
     refs.wheelList.innerHTML = "";
 
@@ -85,9 +82,4 @@ export function renderWheelList(entries, options = {}) {
 
         `;
     });
-
-    if (persist) {
-
-        saveWheels(entries.map(({ wheel }) => wheel));
-    }
 }

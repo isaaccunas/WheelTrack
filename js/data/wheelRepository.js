@@ -10,7 +10,9 @@ import {
     normalizeWheelTireAssignment,
     normalizeWheelTireOffData,
     normalizeWheelWheelSerialData,
-    normalizeWheelWheelType
+    normalizeWheelWheelType,
+    isWheelActive,
+    isWheelClosed
 } from "../domain/wheelModel.js";
 import { loadWheels, saveWheels } from "./storage.js";
 
@@ -19,6 +21,32 @@ import { loadWheels, saveWheels } from "./storage.js";
 // ==========================================
 
 let wheels = [];
+
+function logWheelOperationalSnapshot(contextLabel) {
+
+    const activeWheels = wheels.filter((wheel) => isWheelActive(wheel));
+    const closedWheels = wheels.filter((wheel) => isWheelClosed(wheel));
+
+    console.log(`[WheelTrack][${contextLabel}] ruedas activas:`, activeWheels.length);
+    console.log(`[WheelTrack][${contextLabel}] ruedas cerradas:`, closedWheels.length);
+    console.log(
+        `[WheelTrack][${contextLabel}] operationalStatus:`,
+        wheels.map((wheel, index) => ({
+            index,
+            numeroRueda: wheel.numeroRueda,
+            operationalStatus: wheel.operationalStatus
+        }))
+    );
+}
+
+function persistWheels(contextLabel) {
+
+    logWheelOperationalSnapshot(`antes de persistir (${contextLabel})`);
+
+    saveWheels(wheels);
+
+    logWheelOperationalSnapshot(`después de persistir (${contextLabel})`);
+}
 
 // ==========================================
 // CARGA INICIAL
@@ -39,6 +67,8 @@ export function load() {
         .map(normalizeWheelOperationalStatus)
         .map(normalizeWheelWheelSerialData)
         .map(normalizeWheelTireOffData);
+
+    logWheelOperationalSnapshot("después de cargar localStorage (F5)");
 }
 
 // ==========================================
@@ -63,19 +93,19 @@ export function add(wheel) {
 
     wheels.push(wheel);
 
-    saveWheels(wheels);
+    persistWheels("add");
 }
 
 export function update(id, wheel) {
 
     wheels[id] = wheel;
 
-    saveWheels(wheels);
+    persistWheels("update");
 }
 
 export function remove(id) {
 
     wheels.splice(id, 1);
 
-    saveWheels(wheels);
+    persistWheels("remove");
 }
