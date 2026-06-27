@@ -5,6 +5,7 @@ import {
     createWheel,
     getWheelSerialSummary,
     isAlmacenStageCompleted,
+    isServiceableSubstageBlocked,
     isWheelActive,
     normalizeFormData,
     updateWheel,
@@ -174,6 +175,17 @@ export function initializeEvents(renderWheels) {
         const handleCompleteSubstage = (stageName, substageName) => {
 
             const currentWheel = wheelRepository.getById(index);
+
+            if (isServiceableSubstageBlocked(currentWheel, substageName)) {
+
+                alert(
+                    "No se puede completar la subetapa 'Serviciable recibido'.\n\n" +
+                    "Debe registrar primero el documento de serviciable."
+                );
+
+                return;
+            }
+
             const updatedWheel = completeWheelSubstage(
                 currentWheel,
                 stageName,

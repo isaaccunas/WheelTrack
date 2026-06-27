@@ -693,6 +693,12 @@ export function hasServiceableData(serviceableData) {
     );
 }
 
+export function isServiceableSubstageBlocked(wheel, substageName) {
+
+    return substageName === "Serviciable recibido" &&
+        !hasServiceableData(wheel.serviceableData);
+}
+
 export function normalizeWheelServiceableData(wheel) {
 
     return {
@@ -984,6 +990,10 @@ export function updateWheelServiceableData(wheel, data) {
 }
 
 export function completeWheelSubstage(wheel, stageName, substageName) {
+
+    if (isServiceableSubstageBlocked(wheel, substageName)) {
+        return null;
+    }
 
     const completeResult = completeSubstage(
         wheel.process,
