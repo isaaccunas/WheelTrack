@@ -2152,8 +2152,8 @@ body.tv-monitor-open{
     background: linear-gradient(180deg, #fff 0%, #fff8f2 100%);
     color: #111;
     border-radius: 12px;
-    padding: 12px 14px;
-    min-height: 88px;
+    padding: 13px 15px;
+    min-height: 95px;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
     flex-shrink: 0;
 }
@@ -2162,13 +2162,13 @@ body.tv-monitor-open{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    gap: 5px;
     min-width: 0;
-    min-height: 68px;
+    min-height: 75px;
     background: #fff;
     border: 1px solid #f0d4bc;
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 11px 13px;
 }
 
 .tv-compact-header-item-wheel{
@@ -2191,12 +2191,12 @@ body.tv-monitor-open{
 
 .tv-compact-header-item-warning .tv-compact-header-value{
     color: #c0392b;
-    font-size: 0.92rem;
+    font-size: 1rem;
 }
 
 .tv-compact-header-label{
     color: #777;
-    font-size: 0.74rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -2205,7 +2205,7 @@ body.tv-monitor-open{
 
 .tv-compact-header-value{
     color: #111;
-    font-size: 1.12rem;
+    font-size: 1.22rem;
     font-weight: 800;
     line-height: 1.15;
     white-space: nowrap;
@@ -2214,7 +2214,7 @@ body.tv-monitor-open{
 }
 
 .tv-compact-header-item-wheel .tv-compact-header-value{
-    font-size: 1.58rem;
+    font-size: 1.74rem;
     color: #d95a00;
 }
 
@@ -2232,6 +2232,7 @@ body.tv-monitor-open{
     gap: 12px;
     min-height: 0;
     height: 100%;
+    align-self: stretch;
     align-content: stretch;
 }
 
@@ -2434,8 +2435,7 @@ body.tv-monitor-open{
     gap: 10px;
     flex: 1;
     min-height: 0;
-    height: 100%;
-    align-items: stretch;
+    align-items: start;
 }
 
 .tv-secondary-flow-column{
@@ -2443,8 +2443,8 @@ body.tv-monitor-open{
     flex-direction: column;
     gap: 8px;
     min-width: 0;
-    min-height: 0;
-    height: 100%;
+    height: auto;
+    align-self: start;
 }
 
 .tv-substages-panel{
@@ -2452,10 +2452,13 @@ body.tv-monitor-open{
     border: 1px solid #2d2d33;
     border-radius: 12px;
     padding: 10px;
-    flex: 1;
-    min-height: 0;
+    flex: none;
+    height: fit-content;
+    min-height: 220px;
+    max-height: 420px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 }
 
 .tv-substages-title{
@@ -2498,16 +2501,15 @@ body.tv-monitor-open{
     display: flex;
     flex-direction: column;
     gap: 6px;
-    flex: 1;
-    min-height: 0;
+    flex: none;
 }
 
 .tv-substage-item{
     background: #101014;
     border: 1px solid #2d2d33;
     border-radius: 8px;
-    padding: 9px 10px;
-    font-size: 0.82rem;
+    padding: 10px 11px;
+    font-size: 0.84rem;
 }
 
 .tv-substage-item .tv-substage-icon{
@@ -2595,11 +2597,16 @@ body.tv-monitor-open{
     flex-shrink: 0;
 }
 
+.tv-secondary-block.tv-secondary-timeline{
+    padding: 14px 12px 12px;
+    min-height: 118px;
+}
+
 .tv-secondary-title{
     color: #ff6a00;
     font-size: 0.78rem;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .tv-secondary-details{
@@ -2636,7 +2643,7 @@ body.tv-monitor-open{
     align-items: flex-start;
     overflow-x: auto;
     gap: 0;
-    padding-bottom: 8px;
+    padding-bottom: 10px;
 }
 
 .tv-timeline-step{
@@ -2654,13 +2661,13 @@ body.tv-monitor-open{
 }
 
 .tv-timeline-node{
-    width: 26px;
-    height: 26px;
+    width: 29px;
+    height: 29px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     flex-shrink: 0;
 }
 
@@ -2701,22 +2708,24 @@ body.tv-monitor-open{
 }
 
 .tv-timeline-step-body{
-    margin-top: 6px;
+    margin-top: 8px;
     text-align: center;
 }
 
 .tv-timeline-stage-name{
     display: block;
     color: #ddd;
-    font-size: 0.62rem;
+    font-size: 0.68rem;
     font-weight: 700;
+    line-height: 1.25;
 }
 
 .tv-timeline-stage-status{
     display: block;
     color: #888;
-    font-size: 0.58rem;
-    margin-top: 2px;
+    font-size: 0.64rem;
+    margin-top: 4px;
+    line-height: 1.25;
 }
 
 .tv-monitor-empty{
