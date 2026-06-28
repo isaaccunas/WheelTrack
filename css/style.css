@@ -2154,6 +2154,21 @@ body.tv-monitor-open{
     font-weight: 700;
 }
 
+.tv-priority-identity-row{
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.tv-priority-card-serial{
+    border-color: #1a5276;
+}
+
+.tv-priority-card-aircraft{
+    border-color: #d95a00;
+}
+
 .tv-priority-grid{
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2173,7 +2188,6 @@ body.tv-monitor-open{
 }
 
 .tv-priority-card-main{
-    grid-column: span 2;
     border-color: #ff6a00;
     background: linear-gradient(135deg, #fff7ef 0%, #fff 100%);
 }
@@ -2228,6 +2242,149 @@ body.tv-monitor-open{
     grid-template-columns: 2fr 1fr;
     gap: 20px;
     flex: 1;
+}
+
+.tv-secondary-flow-column{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.tv-substages-panel{
+    background: #18181d;
+    border: 1px solid #2d2d33;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.tv-substages-title{
+    color: #ff6a00;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.tv-substages-empty{
+    color: #888;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.tv-substages-header,
+.tv-substage-item{
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) 0.9fr 0.7fr 0.8fr;
+    gap: 12px;
+    align-items: center;
+}
+
+.tv-substages-header{
+    color: #777;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0 14px 10px;
+    border-bottom: 1px solid #2d2d33;
+    margin-bottom: 8px;
+}
+
+.tv-substages-header span:first-child,
+.tv-substage-item .tv-substage-name{
+    grid-column: auto;
+}
+
+.tv-substages-list{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tv-substage-item{
+    background: #101014;
+    border: 1px solid #2d2d33;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+}
+
+.tv-substage-item .tv-substage-icon{
+    display: none;
+}
+
+.tv-substage-name{
+    color: #fff;
+    font-weight: 600;
+    min-width: 0;
+}
+
+.tv-substage-name::before{
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+.tv-substage-completed .tv-substage-name::before{
+    content: "✓";
+    color: #2ecc71;
+}
+
+.tv-substage-active .tv-substage-name::before{
+    content: "◉";
+    color: #ff6a00;
+}
+
+.tv-substage-pending .tv-substage-name::before{
+    content: "○";
+    color: #888;
+}
+
+.tv-substage-blocked .tv-substage-name::before{
+    content: "🔒";
+}
+
+.tv-substage-status{
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.tv-substage-completed .tv-substage-status{
+    color: #2ecc71;
+}
+
+.tv-substage-active .tv-substage-status{
+    color: #ff6a00;
+}
+
+.tv-substage-pending .tv-substage-status{
+    color: #888;
+}
+
+.tv-substage-blocked{
+    border-color: rgba(192, 57, 43, 0.45);
+    background: rgba(192, 57, 43, 0.08);
+}
+
+.tv-substage-blocked .tv-substage-status{
+    color: #e57373;
+}
+
+.tv-substage-time,
+.tv-substage-operator{
+    color: #ccc;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.tv-substage-pending .tv-substage-time,
+.tv-substage-pending .tv-substage-operator,
+.tv-substage-blocked .tv-substage-time,
+.tv-substage-blocked .tv-substage-operator{
+    color: #666;
 }
 
 .tv-secondary-block,
@@ -2380,11 +2537,18 @@ body.tv-monitor-open{
 
 @media (max-width: 1200px){
 
+    .tv-priority-identity-row{
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .tv-priority-identity-row .tv-priority-card-main{
+        grid-column: span 2;
+    }
+
     .tv-priority-grid{
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .tv-priority-card-main,
     .tv-priority-card-tire{
         grid-column: span 2;
     }
@@ -2396,17 +2560,36 @@ body.tv-monitor-open{
 
 @media (max-width: 768px){
 
+    .tv-priority-identity-row{
+        grid-template-columns: 1fr;
+    }
+
+    .tv-priority-identity-row .tv-priority-card-main{
+        grid-column: span 1;
+    }
+
     .tv-priority-grid{
         grid-template-columns: 1fr;
     }
 
-    .tv-priority-card-main,
     .tv-priority-card-tire{
         grid-column: span 1;
     }
 
     .tv-priority-value-xl{
         font-size: 2.2rem;
+    }
+
+    .tv-substages-header,
+    .tv-substage-item{
+        grid-template-columns: minmax(0, 1.4fr) 0.8fr;
+        row-gap: 4px;
+    }
+
+    .tv-substages-header span:nth-child(n + 3),
+    .tv-substage-time,
+    .tv-substage-operator{
+        display: none;
     }
 }
 

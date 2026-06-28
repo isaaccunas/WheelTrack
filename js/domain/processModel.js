@@ -530,6 +530,20 @@ export function getActiveStageState(process) {
     ) ?? null;
 }
 
+export function getCurrentStageSubstages(process) {
+
+    const activeStage = getActiveStageState(process);
+
+    if (!activeStage || !Array.isArray(activeStage.substages)) {
+        return [];
+    }
+
+    return activeStage.substages.map((substage) => ({
+        name: substage.name,
+        completed: substage.completed === true
+    }));
+}
+
 export function canAdvanceProcess(process) {
 
     const normalizedProcess = normalizeProcessState(process);

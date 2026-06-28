@@ -1,10 +1,17 @@
-import { getCurrentStage, normalizeProcessState, PROCESS_STAGES } from "../domain/processModel.js";
+import {
+    getCurrentStage,
+    getCurrentStageSubstages,
+    normalizeProcessState,
+    normalizeStageTiming,
+    PROCESS_STAGES
+} from "../domain/processModel.js";
 import {
     formatBoxLabel,
     getWheelSerialSummary,
     getWheelTypeLabel,
     hasInspectorData,
     hasValidTireAssignment,
+    isCriticalSubstageBlocked,
     isWheelActive,
     normalizeInspectorData,
     normalizePressureData,
@@ -102,6 +109,140 @@ function renderInspectorLabel(wheel) {
     return `${inspectorData.inspectorName || "-"}${dateText}`;
 }
 
+function formatTvSubstageTime(isoDate) {
+
+    if (!isoDate) {
+        return "—";
+    }
+
+    const date = new Date(isoDate);
+
+    if (Number.isNaN(date.getTime())) {
+        return "—";
+    }
+
+    return date.toLocaleTimeString("es-EC", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+function getTvSubstageDisplayState(wheel, stageName, substages, substage, index) {
+
+    if (substage.completed) {
+
+        return {
+            statusLabel: "Completada",
+            statusClass: "tv-substage-completed",
+            time: "—",
+            operator: "—"
+        };
+    }
+
+    if (isCriticalSubstageBlocked(wheel, stageName, substage.name)) {
+
+        return {
+            statusLabel: "Bloqueada",
+            statusClass: "tv-substage-blocked",
+            time: "—",
+            operator: "—"
+        };
+    }
+
+    const firstIncompleteIndex = substages.findIndex((item) => !item.completed);
+
+    if (index === firstIncompleteIndex) {
+
+        const stageTiming = normalizeStageTiming(wheel.stageTiming);
+        const stageEntry = stageTiming.find((entry) => entry.stage === stageName);
+
+        return {
+            statusLabel: "En proceso",
+            statusClass: "tv-substage-active",
+            time: formatTvSubstageTime(stageEntry?.startedAt),
+            operator: "—"
+        };
+    }
+
+    return {
+        statusLabel: "Pendiente",
+        statusClass: "tv-substage-pending",
+        time: "—",
+        operator: "—"
+    };
+}
+
+function renderTvSubstagesPanel(wheel) {
+
+    const activeStage = getCurrentStage(wheel.process);
+    const substages = getCurrentStageSubstages(wheel.process);
+
+    if (!activeStage || substages.length === 0) {
+
+        return `
+            <section class="tv-substages-panel">
+
+                <h3 class="tv-substages-title">Subetapas de la etapa actual</h3>
+
+                <p class="tv-substages-empty">Sin subetapas activas.</p>
+
+            </section>
+        `;
+    }
+
+    const substageItems = substages.map((substage, index) => {
+
+        const displayState = getTvSubstageDisplayState(
+            wheel,
+            activeStage,
+            substages,
+            substage,
+            index
+        );
+
+        return `
+            <div class="tv-substage-item ${displayState.statusClass}">
+
+                <span class="tv-substage-name">
+                    ${substage.name}
+                </span>
+
+                <span class="tv-substage-status">
+                    ${displayState.statusLabel}
+                </span>
+
+                <span class="tv-substage-time">
+                    ${displayState.time}
+                </span>
+
+                <span class="tv-substage-operator">
+                    ${displayState.operator}
+                </span>
+
+            </div>
+        `;
+    }).join("");
+
+    return `
+        <section class="tv-substages-panel">
+
+            <h3 class="tv-substages-title">Subetapas de la etapa actual</h3>
+
+            <div class="tv-substages-header">
+                <span>Subetapa</span>
+                <span>Estado</span>
+                <span>Hora</span>
+                <span>Operador</span>
+            </div>
+
+            <div class="tv-substages-list">
+                ${substageItems}
+            </div>
+
+        </section>
+    `;
+}
+
 function renderTvTimeline(wheel) {
 
     const process = normalizeProcessState(wheel.process);
@@ -174,7 +315,7 @@ function renderTvWheelContent({ wheel, index }, position, total) {
 
                 </div>
 
-                <div class="tv-priority-grid">
+                <div class="tv-priority-identity-row">
 
                     <article class="tv-priority-card tv-priority-card-main">
 
@@ -186,7 +327,17 @@ function renderTvWheelContent({ wheel, index }, position, total) {
 
                     </article>
 
-                    <article class="tv-priority-card">
+                    <article class="tv-priority-card tv-priority-card-serial">
+
+                        <span class="tv-priority-label">Serial Number (S/N)</span>
+
+                        <strong class="tv-priority-value">
+                            ${getWheelSerialSummary(wheel)}
+                        </strong>
+
+                    </article>
+
+                    <article class="tv-priority-card tv-priority-card-aircraft">
 
                         <span class="tv-priority-label">Aeronave</span>
 
@@ -196,15 +347,9 @@ function renderTvWheelContent({ wheel, index }, position, total) {
 
                     </article>
 
-                    <article class="tv-priority-card">
+                </div>
 
-                        <span class="tv-priority-label">Serial Number (S/N)</span>
-
-                        <strong class="tv-priority-value">
-                            ${getWheelSerialSummary(wheel)}
-                        </strong>
-
-                    </article>
+                <div class="tv-priority-grid">
 
                     <article class="tv-priority-card tv-priority-card-type-${wheelType.toLowerCase()}">
 
@@ -252,11 +397,17 @@ function renderTvWheelContent({ wheel, index }, position, total) {
 
             <section class="tv-secondary-zone">
 
-                <div class="tv-secondary-block tv-secondary-timeline">
+                <div class="tv-secondary-flow-column">
 
-                    <h3 class="tv-secondary-title">Proceso del taller</h3>
+                    <div class="tv-secondary-block tv-secondary-timeline">
 
-                    ${renderTvTimeline(wheel)}
+                        <h3 class="tv-secondary-title">Proceso del taller</h3>
+
+                        ${renderTvTimeline(wheel)}
+
+                    </div>
+
+                    ${renderTvSubstagesPanel(wheel)}
 
                 </div>
 
