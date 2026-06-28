@@ -726,10 +726,70 @@ export function hasServiceableData(serviceableData) {
     );
 }
 
+const CRITICAL_SUBSTAGE_DEFINITIONS = [
+    {
+        stageName: "Ensamblaje",
+        substageName: "Caucho asignado",
+        registerSection: "tire",
+        isRequirementMet(wheel) {
+            const tireAssignment = normalizeTireAssignment(wheel.tireAssignment);
+            return !!(tireAssignment.serial && tireAssignment.partNumber);
+        }
+    },
+    {
+        stageName: "Liberación",
+        substageName: "Presión final",
+        registerSection: "pressure",
+        isRequirementMet(wheel) {
+            return normalizePressureData(wheel.pressureData).finalPressure !== null;
+        }
+    },
+    {
+        stageName: "Liberación",
+        substageName: "Inspector presente solicitado",
+        registerSection: "inspector",
+        isRequirementMet(wheel) {
+            return !!normalizeInspectorData(wheel.inspectorData).inspectorName;
+        }
+    },
+    {
+        stageName: "Almacén",
+        substageName: "Serviciable recibido",
+        registerSection: "serviceable",
+        isRequirementMet(wheel) {
+            return hasServiceableData(wheel.serviceableData);
+        }
+    }
+];
+
+function findCriticalSubstageDefinition(stageName, substageName) {
+
+    return CRITICAL_SUBSTAGE_DEFINITIONS.find(
+        (definition) =>
+            definition.stageName === stageName &&
+            definition.substageName === substageName
+    ) ?? null;
+}
+
+export function isCriticalSubstageBlocked(wheel, stageName, substageName) {
+
+    const definition = findCriticalSubstageDefinition(stageName, substageName);
+
+    if (!definition) {
+        return false;
+    }
+
+    return !definition.isRequirementMet(wheel);
+}
+
+export function getCriticalSubstageRegisterSection(stageName, substageName) {
+
+    return findCriticalSubstageDefinition(stageName, substageName)?.registerSection ?? null;
+}
+
 export function isServiceableSubstageBlocked(wheel, substageName) {
 
-    return substageName === "Serviciable recibido" &&
-        !hasServiceableData(wheel.serviceableData);
+    return isCriticalSubstageBlocked(wheel, "Almacén", substageName);
 }
 
 export function normalizeWheelServiceableData(wheel) {
@@ -1024,7 +1084,7 @@ export function updateWheelServiceableData(wheel, data) {
 
 export function completeWheelSubstage(wheel, stageName, substageName) {
 
-    if (isServiceableSubstageBlocked(wheel, substageName)) {
+    if (isCriticalSubstageBlocked(wheel, stageName, substageName)) {
         return null;
     }
 

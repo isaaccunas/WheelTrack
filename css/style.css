@@ -1137,13 +1137,62 @@ main.container-fluid{
 .substage-item{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
     background: #fff;
     border: 1px solid #f0d4bc;
     border-radius: 8px;
     padding: 8px 10px;
     margin: 0;
+}
+
+.substage-item-completed{
     cursor: pointer;
+}
+
+.substage-item-control{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.substage-item-blocked .substage-item-control{
+    cursor: default;
+}
+
+.substage-lock-icon{
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.substage-register-btn{
+    flex-shrink: 0;
+    border: 1px solid #ff6a00;
+    background: #fff;
+    color: #ff6a00;
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.substage-register-btn:hover{
+    background: #fff5ee;
+}
+
+.substage-registered-badge{
+    flex-shrink: 0;
+    color: #198754;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .substage-name{

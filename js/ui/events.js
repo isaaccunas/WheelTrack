@@ -5,7 +5,6 @@ import {
     createWheel,
     getWheelSerialSummary,
     isAlmacenStageCompleted,
-    isServiceableSubstageBlocked,
     isWheelActive,
     normalizeFormData,
     updateWheel,
@@ -23,6 +22,7 @@ import {
     printRouteSheet
 } from "./routeSheetView.js";
 import {
+    openOperationalSection,
     refreshWheelDetail,
     showWheelDetail as showWheelDetailView
 } from "./wheelDetailView.js";
@@ -177,16 +177,6 @@ export function initializeEvents(renderWheels) {
 
             const currentWheel = wheelRepository.getById(index);
 
-            if (isServiceableSubstageBlocked(currentWheel, substageName)) {
-
-                alert(
-                    "No se puede completar la subetapa 'Serviciable recibido'.\n\n" +
-                    "Debe registrar primero el documento de serviciable."
-                );
-
-                return;
-            }
-
             const updatedWheel = completeWheelSubstage(
                 currentWheel,
                 stageName,
@@ -308,7 +298,8 @@ export function initializeEvents(renderWheels) {
             onSaveTireAssignment: handleSaveTireAssignment,
             onSavePressureData: handleSavePressureData,
             onSaveInspectorData: handleSaveInspectorData,
-            onSaveServiceableData: handleSaveServiceableData
+            onSaveServiceableData: handleSaveServiceableData,
+            onOpenOperationalSection: openOperationalSection
         };
     }
 

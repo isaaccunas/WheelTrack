@@ -16,7 +16,9 @@ import {
     normalizePressureData,
     normalizeServiceableData,
     normalizeTireAssignment,
-    normalizeWheelSerialData
+    normalizeWheelSerialData,
+    getCriticalSubstageRegisterSection,
+    isCriticalSubstageBlocked
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
 
@@ -240,6 +242,83 @@ function renderProcessTimeline(wheel) {
     `;
 }
 
+function renderSubstageItem(wheel, stageName, substage) {
+
+    if (substage.completed) {
+
+        return `
+            <label class="substage-item substage-item-completed">
+
+                <input
+                    type="checkbox"
+                    class="form-check-input substage-checkbox"
+                    data-stage="${stageName}"
+                    data-substage="${substage.name}"
+                    checked
+                    disabled
+                >
+
+                <span class="substage-name substage-completed">
+                    ${substage.name}
+                </span>
+
+            </label>
+        `;
+    }
+
+    const registerSection = getCriticalSubstageRegisterSection(stageName, substage.name);
+    const isCritical = registerSection !== null;
+    const isBlocked = isCritical &&
+        isCriticalSubstageBlocked(wheel, stageName, substage.name);
+    const isRegistered = isCritical && !isBlocked;
+
+    const lockIconHtml = isBlocked
+        ? `<span class="substage-lock-icon" aria-hidden="true">🔒</span>`
+        : "";
+
+    const registerButtonHtml = isBlocked
+        ? `
+            <button
+                type="button"
+                class="substage-register-btn"
+                data-section="${registerSection}">
+                Registrar
+            </button>
+        `
+        : "";
+
+    const registeredBadgeHtml = isRegistered
+        ? `<span class="substage-registered-badge">✓ Registrado</span>`
+        : "";
+
+    return `
+        <div class="substage-item ${isBlocked ? "substage-item-blocked" : ""}">
+
+            <label class="substage-item-control">
+
+                ${lockIconHtml}
+
+                <input
+                    type="checkbox"
+                    class="form-check-input substage-checkbox"
+                    data-stage="${stageName}"
+                    data-substage="${substage.name}"
+                    ${isBlocked ? "disabled" : ""}
+                >
+
+                <span class="substage-name">
+                    ${substage.name}
+                </span>
+
+            </label>
+
+            ${registerButtonHtml}
+            ${registeredBadgeHtml}
+
+        </div>
+    `;
+}
+
 function renderActiveSubstagesSection(wheel) {
 
     const activeStage = getActiveStageState(wheel.process);
@@ -259,25 +338,9 @@ function renderActiveSubstagesSection(wheel) {
         `;
     }
 
-    const substageItems = activeStage.substages.map((substage) => `
-
-        <label class="substage-item">
-
-            <input
-                type="checkbox"
-                class="form-check-input substage-checkbox"
-                data-stage="${activeStage.stage}"
-                data-substage="${substage.name}"
-                ${substage.completed ? "checked disabled" : ""}
-            >
-
-            <span class="substage-name ${substage.completed ? "substage-completed" : ""}">
-                ${substage.name}
-            </span>
-
-        </label>
-
-    `).join("");
+    const substageItems = activeStage.substages.map((substage) =>
+        renderSubstageItem(wheel, activeStage.stage, substage)
+    ).join("");
 
     return `
         <div class="active-substages mt-3">
@@ -857,6 +920,16 @@ function showOperationalForm(sectionKey) {
     section.querySelector(".operational-edit-btn")?.classList.add("d-none");
 }
 
+export function openOperationalSection(sectionKey) {
+
+    showOperationalForm(sectionKey);
+
+    getSectionContainer(sectionKey)?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
 function hideOperationalForm(sectionKey) {
 
     const section = getSectionContainer(sectionKey);
@@ -947,7 +1020,7 @@ function bindOperationalPanelInteractions(callbacks) {
 
 function bindDetailInteractions(callbacks) {
 
-    const { onCompleteSubstage, wheel } = callbacks || {};
+    const { onCompleteSubstage, onOpenOperationalSection } = callbacks || {};
 
     if (onCompleteSubstage) {
 
@@ -966,6 +1039,19 @@ function bindDetailInteractions(callbacks) {
             });
         });
     }
+
+    document.querySelectorAll(".substage-register-btn").forEach((button) => {
+
+        button.addEventListener("click", (event) => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (onOpenOperationalSection) {
+                onOpenOperationalSection(button.dataset.section);
+            }
+        });
+    });
 
     bindOperationalPanelInteractions(callbacks);
 }
