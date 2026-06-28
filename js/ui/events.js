@@ -14,7 +14,8 @@ import {
     updateWheelServiceableData,
     updateWheelTireAssignment,
     validateBoxAssignment,
-    validateWheel
+    validateWheel,
+    validateWheelClosure
 } from "../domain/wheelModel.js";
 import { showMaintenixPanel } from "./maintenixPanelView.js";
 import {
@@ -212,10 +213,27 @@ export function initializeEvents(renderWheels) {
 
                 if (shouldClose) {
 
-                    wheelRepository.update(
-                        index,
-                        closeWheelOrder(wheelRepository.getById(index))
-                    );
+                    const wheelToClose = wheelRepository.getById(index);
+                    const closureValidation = validateWheelClosure(wheelToClose);
+
+                    if (!closureValidation.valid) {
+
+                        alert(
+                            "No se puede cerrar la orden.\n\n" +
+                            "Faltan los siguientes datos:\n\n" +
+                            closureValidation.missingFields
+                                .map((field) => `• ${field}`)
+                                .join("\n") +
+                            "\n\nComplete la información antes de cerrar la rueda."
+                        );
+
+                    } else {
+
+                        wheelRepository.update(
+                            index,
+                            closeWheelOrder(wheelToClose)
+                        );
+                    }
                 }
             }
 

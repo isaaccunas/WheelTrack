@@ -279,6 +279,39 @@ export function closeWheelOrder(wheel) {
     };
 }
 
+export function validateWheelClosure(wheel) {
+
+    const missingFields = [];
+    const tireAssignment = normalizeTireAssignment(wheel.tireAssignment);
+    const pressureData = normalizePressureData(wheel.pressureData);
+    const inspectorData = normalizeInspectorData(wheel.inspectorData);
+
+    if (!tireAssignment.serial || !tireAssignment.partNumber) {
+        missingFields.push("Caucho asignado");
+    }
+
+    if (pressureData.initialPressure === null) {
+        missingFields.push("Presión inicial");
+    }
+
+    if (pressureData.finalPressure === null) {
+        missingFields.push("Presión final");
+    }
+
+    if (!inspectorData.inspectorName) {
+        missingFields.push("Inspector responsable");
+    }
+
+    if (!hasServiceableData(wheel.serviceableData)) {
+        missingFields.push("Documento de serviciable");
+    }
+
+    return {
+        valid: missingFields.length === 0,
+        missingFields
+    };
+}
+
 export function getWheelTotalProcessMinutes(wheel) {
 
     const stageTiming = normalizeStageTiming(wheel.stageTiming);
