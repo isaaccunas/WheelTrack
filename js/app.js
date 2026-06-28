@@ -5,6 +5,7 @@ import { initializeEvents } from "./ui/events.js";
 import { initializeRouteSheetView } from "./ui/routeSheetView.js";
 import { initializeWheelFormValidation } from "./ui/wheelFormValidationView.js";
 import { renderKpis } from "./ui/kpiView.js";
+import { initializeProductivityCharts } from "./ui/productivityChartsModal.js";
 import { initializeProcessedHistoryModal } from "./ui/processedHistoryModal.js";
 import { renderProcessedWheelHistory } from "./ui/processedHistoryView.js";
 import {
@@ -70,3 +71,5 @@ initializeWheelFormValidation();
 initializeTvMonitor(() => wheelRepository.getAll());
 
 initializeProcessedHistoryModal(() => wheelRepository.getAll());
+
+initializeProductivityCharts(() => wheelRepository.getAll());

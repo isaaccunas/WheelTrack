@@ -719,6 +719,35 @@ main.container-fluid{
     border-radius: 10px;
 }
 
+.productivity-kpi-card{
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.productivity-kpi-card:hover,
+.productivity-kpi-card:focus{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 106, 0, 0.18);
+    outline: none;
+}
+
+.productivity-kpi-card:focus-visible{
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.35);
+}
+
+.productivity-chart-modal-dialog{
+    max-width: min(1140px, 96vw);
+}
+
+.productivity-chart-modal-body{
+    min-height: 0;
+}
+
+#productivityChartCanvas{
+    width: 100% !important;
+    max-height: 65vh;
+}
+
 /* ==========================================
    LISTA DE RUEDAS CON SCROLL
 ========================================== */

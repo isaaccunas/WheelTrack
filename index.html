@@ -359,7 +359,12 @@
 
             <div class="col-lg-4">
 
-                <div class="summary-card summary-light operational-card">
+                <div
+                    class="summary-card summary-light operational-card productivity-kpi-card"
+                    id="averageWheelTimeCard"
+                    role="button"
+                    tabindex="0"
+                    title="Ver gráfico de tiempo por rueda">
 
                     <i class="fa-solid fa-stopwatch summary-icon"></i>
 
@@ -381,7 +386,12 @@
 
             <div class="col-lg-4">
 
-                <div class="summary-card summary-dark operational-card">
+                <div
+                    class="summary-card summary-dark operational-card productivity-kpi-card"
+                    id="slowestStageCard"
+                    role="button"
+                    tabindex="0"
+                    title="Ver gráfico de etapa más lenta">
 
                     <i class="fa-solid fa-hourglass-half summary-icon"></i>
 
@@ -403,7 +413,12 @@
 
             <div class="col-lg-4">
 
-                <div class="summary-card summary-light operational-card">
+                <div
+                    class="summary-card summary-light operational-card productivity-kpi-card"
+                    id="stageAveragesCard"
+                    role="button"
+                    tabindex="0"
+                    title="Ver gráfico de promedios por etapa">
 
                     <i class="fa-solid fa-chart-line summary-icon"></i>
 
@@ -1099,6 +1114,46 @@
 
     </div>
 
+    </div>
+
+    <!-- MODAL GRÁFICOS DE PRODUCTIVIDAD -->
+
+    <div
+        class="modal fade"
+        id="productivityChartModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-xl productivity-chart-modal-dialog">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="productivityChartTitle"></h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body productivity-chart-modal-body">
+
+                    <canvas
+                        id="productivityChartCanvas"
+                        height="120">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
     <!-- MODAL DETALLE -->
 
     <div class="modal fade" id="modalDetalleRueda" tabindex="-1">
@@ -1144,6 +1199,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- JavaScript -->
 
