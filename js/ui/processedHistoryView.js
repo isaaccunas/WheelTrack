@@ -8,6 +8,8 @@ import {
     normalizeOperationalStatus
 } from "../domain/wheelModel.js";
 
+const DASHBOARD_PROCESSED_LIMIT = 3;
+
 // ==========================================
 // CONSULTAS
 // ==========================================
@@ -34,29 +36,9 @@ export function getProcessedWheelEntries(wheels) {
 // RENDER
 // ==========================================
 
-export function renderProcessedWheelHistory(wheels) {
+export function renderProcessedWheelCard({ wheel, index }) {
 
-    const container = document.getElementById("processedWheelList");
-
-    if (!container) {
-        return;
-    }
-
-    const processedEntries = getProcessedWheelEntries(wheels);
-
-    if (processedEntries.length === 0) {
-
-        container.innerHTML = `
-            <p class="processed-history-empty mb-0">
-                No hay ruedas procesadas cerradas.
-            </p>
-        `;
-
-        return;
-    }
-
-    container.innerHTML = processedEntries.map(({ wheel, index }) => `
-
+    return `
         <div class="processed-history-row">
 
             <div class="processed-history-content">
@@ -119,6 +101,35 @@ export function renderProcessedWheelHistory(wheels) {
             </div>
 
         </div>
+    `;
+}
 
-    `).join("");
+export function renderProcessedWheelCards(entries) {
+
+    return entries.map((entry) => renderProcessedWheelCard(entry)).join("");
+}
+
+export function renderProcessedWheelHistory(wheels) {
+
+    const container = document.getElementById("processedWheelList");
+
+    if (!container) {
+        return;
+    }
+
+    const processedEntries = getProcessedWheelEntries(wheels);
+    const recentProcessed = processedEntries.slice(0, DASHBOARD_PROCESSED_LIMIT);
+
+    if (recentProcessed.length === 0) {
+
+        container.innerHTML = `
+            <p class="processed-history-empty mb-0">
+                No hay ruedas procesadas cerradas.
+            </p>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = renderProcessedWheelCards(recentProcessed);
 }
