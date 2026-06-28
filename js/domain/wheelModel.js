@@ -737,6 +737,14 @@ const CRITICAL_SUBSTAGE_DEFINITIONS = [
         }
     },
     {
+        stageName: "Inflado",
+        substageName: "Presión inicial",
+        registerSection: "pressure",
+        isRequirementMet(wheel) {
+            return normalizePressureData(wheel.pressureData).initialPressure !== null;
+        }
+    },
+    {
         stageName: "Liberación",
         substageName: "Presión final",
         registerSection: "pressure",

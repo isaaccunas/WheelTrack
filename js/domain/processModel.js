@@ -57,7 +57,7 @@ export const PROCESS_SUBSTAGES = {
     ],
 
     "Inflado": [
-        "Inflado inicial",
+        "Presión inicial",
         "Liquid Test inicial",
         "Instalación de rodamientos",
         "Rack de espera"
@@ -96,11 +96,18 @@ const COMPLETED_STATUS = "Completada";
 function createStageSubstages(stageName, existingSubstages = []) {
 
     const catalog = PROCESS_SUBSTAGES[stageName] ?? [];
+    const legacySubstageNames = {
+        "Inflado inicial": "Presión inicial"
+    };
     const completedByName = new Map(
-        existingSubstages.map((substage) => [
-            substage.name,
-            substage.completed === true
-        ])
+        existingSubstages.map((substage) => {
+            const name = legacySubstageNames[substage.name] ?? substage.name;
+
+            return [
+                name,
+                substage.completed === true
+            ];
+        })
     );
 
     return catalog.map((name) => ({
