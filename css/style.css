@@ -2063,13 +2063,16 @@ body.tv-monitor-open{
     z-index: 2000;
     background: #101014;
     color: #fff;
+    overflow: hidden;
 }
 
 .tv-monitor-shell{
     display: flex;
     flex-direction: column;
     height: 100vh;
+    max-height: 100vh;
     width: 100vw;
+    overflow: hidden;
 }
 
 .tv-monitor-topbar{
@@ -2077,9 +2080,10 @@ body.tv-monitor-open{
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 10px 20px;
+    padding: clamp(8px, 1vh, 10px) clamp(14px, 1.5vw, 20px);
     background: linear-gradient(90deg, #1a1a1f 0%, #2a1608 100%);
     border-bottom: 3px solid #ff6a00;
+    flex-shrink: 0;
 }
 
 .tv-monitor-brand-block{
@@ -2090,7 +2094,7 @@ body.tv-monitor-open{
 
 .tv-monitor-brand{
     color: #ff6a00;
-    font-size: 1.4rem;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -2098,35 +2102,42 @@ body.tv-monitor-open{
 
 .tv-monitor-subbrand{
     color: #ccc;
-    font-size: 0.9rem;
+    font-size: clamp(0.78rem, 1vw, 0.9rem);
 }
 
 .tv-monitor-content{
     flex: 1;
     overflow: hidden;
-    padding: 10px 18px 6px;
+    padding: clamp(6px, 0.9vh, 10px) clamp(12px, 1.4vw, 18px) clamp(4px, 0.6vh, 6px);
     min-height: 0;
+    max-height: 100%;
 }
 
 .tv-monitor-footer{
-    padding: 8px 20px 10px;
+    padding: clamp(6px, 0.8vh, 8px) clamp(14px, 1.5vw, 20px) clamp(8px, 1vh, 10px);
     color: #aaa;
-    font-size: 0.82rem;
+    font-size: clamp(0.72rem, 0.85vw, 0.82rem);
     border-top: 1px solid #2d2d33;
     background: #141418;
+    flex-shrink: 0;
+}
+
+.tv-monitor-slide-compact{
+    gap: clamp(6px, 0.8vh, 8px);
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .tv-monitor-slide{
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    min-height: calc(100vh - 170px);
-}
-
-.tv-monitor-slide-compact{
-    gap: 8px;
+    gap: clamp(6px, 0.8vh, 8px);
     height: 100%;
+    max-height: 100%;
     min-height: 0;
+    overflow: hidden;
 }
 
 .tv-compact-meta{
@@ -2141,19 +2152,19 @@ body.tv-monitor-open{
 .tv-compact-header{
     display: grid;
     grid-template-columns:
-        1.1fr
-        1fr
-        1fr
-        0.8fr
-        0.7fr
-        0.7fr
-        1.8fr;
-    gap: 10px;
+        minmax(100px, 1fr)
+        minmax(140px, 1.3fr)
+        minmax(120px, 1fr)
+        minmax(80px, 0.8fr)
+        minmax(80px, 0.8fr)
+        minmax(90px, 0.8fr)
+        minmax(180px, 1.8fr);
+    gap: clamp(6px, 0.8vw, 10px);
     background: linear-gradient(180deg, #fff 0%, #fff8f2 100%);
     color: #111;
     border-radius: 12px;
-    padding: 13px 15px;
-    min-height: 95px;
+    padding: clamp(10px, 1.2vh, 13px) clamp(11px, 1.2vw, 15px);
+    min-height: clamp(82px, 9vh, 95px);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
     flex-shrink: 0;
 }
@@ -2162,13 +2173,13 @@ body.tv-monitor-open{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 5px;
+    gap: clamp(3px, 0.5vh, 5px);
     min-width: 0;
-    min-height: 75px;
+    min-height: clamp(62px, 7.5vh, 75px);
     background: #fff;
     border: 1px solid #f0d4bc;
     border-radius: 8px;
-    padding: 11px 13px;
+    padding: clamp(8px, 1vh, 11px) clamp(10px, 1.1vw, 13px);
 }
 
 .tv-compact-header-item-wheel{
@@ -2191,21 +2202,23 @@ body.tv-monitor-open{
 
 .tv-compact-header-item-warning .tv-compact-header-value{
     color: #c0392b;
-    font-size: 1rem;
+    font-size: clamp(0.82rem, 0.95vw, 1rem);
 }
 
 .tv-compact-header-label{
     color: #777;
-    font-size: 0.8rem;
+    font-size: clamp(0.68rem, 0.82vw, 0.8rem);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tv-compact-header-value{
     color: #111;
-    font-size: 1.22rem;
+    font-size: clamp(0.95rem, 1.15vw, 1.22rem);
     font-weight: 800;
     line-height: 1.15;
     white-space: nowrap;
@@ -2214,26 +2227,30 @@ body.tv-monitor-open{
 }
 
 .tv-compact-header-item-wheel .tv-compact-header-value{
-    font-size: 1.74rem;
+    font-size: clamp(1.35rem, 1.65vw, 1.74rem);
     color: #d95a00;
 }
 
 .tv-compact-body{
     flex: 1;
     min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
 .tv-critical-data-panel{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: repeat(3, minmax(0, 1fr));
-    gap: 12px;
+    gap: clamp(8px, 1vh, 12px);
     min-height: 0;
     height: 100%;
+    max-height: 100%;
     align-self: stretch;
     align-content: stretch;
+    overflow: hidden;
 }
 
 .tv-critical-card,
@@ -2241,13 +2258,15 @@ body.tv-monitor-open{
     background: #101014;
     border: 1px solid #2d2d33;
     border-radius: 10px;
-    padding: 12px 14px;
+    padding: clamp(8px, 1vh, 12px) clamp(10px, 1.1vw, 14px);
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    min-height: 125px;
+    gap: clamp(3px, 0.5vh, 5px);
+    min-height: clamp(90px, 12vh, 125px);
     height: 100%;
+    max-height: 100%;
     justify-content: flex-start;
+    overflow: hidden;
 }
 
 .tv-critical-card-registered{
@@ -2264,7 +2283,7 @@ body.tv-monitor-open{
 
 .tv-critical-card-title{
     color: #aaa;
-    font-size: 0.72rem;
+    font-size: clamp(0.62rem, 0.75vw, 0.72rem);
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -2272,13 +2291,13 @@ body.tv-monitor-open{
 
 .tv-critical-card-badge{
     color: #2ecc71;
-    font-size: 0.78rem;
+    font-size: clamp(0.68rem, 0.8vw, 0.78rem);
     font-weight: 700;
 }
 
 .tv-critical-card-value{
     color: #fff;
-    font-size: 1.05rem;
+    font-size: clamp(0.88rem, 1vw, 1.05rem);
     font-weight: 700;
     line-height: 1.2;
 }
@@ -2287,13 +2306,13 @@ body.tv-monitor-open{
 .tv-critical-card-responsible,
 .tv-critical-card-since{
     color: #999;
-    font-size: 0.78rem;
+    font-size: clamp(0.68rem, 0.8vw, 0.78rem);
     font-weight: 600;
 }
 
 .tv-critical-card-empty{
     color: #888;
-    font-size: 0.88rem;
+    font-size: clamp(0.78rem, 0.9vw, 0.88rem);
     font-weight: 600;
 }
 
@@ -2305,7 +2324,7 @@ body.tv-monitor-open{
     color: #ff6a00;
     border-radius: 6px;
     padding: 2px 10px;
-    font-size: 0.72rem;
+    font-size: clamp(0.64rem, 0.75vw, 0.72rem);
     font-weight: 700;
     cursor: pointer;
 }
@@ -2335,14 +2354,14 @@ body.tv-monitor-open{
     background: #ff6a00;
     color: #fff;
     font-weight: 700;
-    padding: 4px 10px;
+    padding: clamp(3px, 0.5vh, 4px) clamp(8px, 1vw, 10px);
     border-radius: 999px;
-    font-size: 0.78rem;
+    font-size: clamp(0.68rem, 0.8vw, 0.78rem);
 }
 
 .tv-priority-stage{
     color: #ff9f66;
-    font-size: 0.88rem;
+    font-size: clamp(0.78rem, 0.9vw, 0.88rem);
     font-weight: 700;
 }
 
@@ -2431,19 +2450,24 @@ body.tv-monitor-open{
 
 .tv-secondary-zone{
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 10px;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: clamp(8px, 1vh, 10px);
     flex: 1;
     min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
     align-items: start;
 }
 
 .tv-secondary-flow-column{
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: clamp(6px, 0.8vh, 8px);
     min-width: 0;
+    max-width: 100%;
     height: auto;
+    max-height: 100%;
+    overflow: hidden;
     align-self: start;
 }
 
@@ -2451,29 +2475,29 @@ body.tv-monitor-open{
     background: #18181d;
     border: 1px solid #2d2d33;
     border-radius: 12px;
-    padding: 10px;
+    padding: clamp(8px, 1vh, 10px);
     flex: none;
     height: fit-content;
-    min-height: 220px;
-    max-height: 420px;
+    min-height: clamp(140px, 20vh, 220px);
+    max-height: min(420px, 40vh);
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
 .tv-substages-title{
     color: #ff6a00;
-    font-size: 0.78rem;
+    font-size: clamp(0.68rem, 0.8vw, 0.78rem);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: clamp(4px, 0.6vh, 6px);
     flex-shrink: 0;
 }
 
 .tv-substages-empty{
     color: #888;
-    font-size: 0.95rem;
+    font-size: clamp(0.82rem, 0.95vw, 0.95rem);
     margin: 0;
 }
 
@@ -2487,29 +2511,32 @@ body.tv-monitor-open{
 
 .tv-substages-header{
     color: #777;
-    font-size: 0.65rem;
+    font-size: clamp(0.58rem, 0.68vw, 0.65rem);
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    padding: 0 10px 5px;
+    padding: 0 10px clamp(4px, 0.5vh, 5px);
     border-bottom: 1px solid #2d2d33;
-    margin-bottom: 5px;
+    margin-bottom: clamp(4px, 0.5vh, 5px);
     flex-shrink: 0;
 }
 
 .tv-substages-list{
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    flex: none;
+    gap: clamp(4px, 0.6vh, 6px);
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .tv-substage-item{
     background: #101014;
     border: 1px solid #2d2d33;
     border-radius: 8px;
-    padding: 10px 11px;
-    font-size: 0.84rem;
+    padding: clamp(7px, 0.9vh, 10px) clamp(8px, 1vw, 11px);
+    font-size: clamp(0.74rem, 0.88vw, 0.84rem);
 }
 
 .tv-substage-item .tv-substage-icon{
@@ -2524,7 +2551,7 @@ body.tv-monitor-open{
 
 .tv-substage-name::before{
     margin-right: 8px;
-    font-size: 0.9rem;
+    font-size: clamp(0.78rem, 0.9vw, 0.9rem);
 }
 
 .tv-substage-completed .tv-substage-name::before{
@@ -2547,7 +2574,7 @@ body.tv-monitor-open{
 }
 
 .tv-substage-status{
-    font-size: 0.82rem;
+    font-size: clamp(0.62rem, 0.72vw, 0.82rem);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -2577,7 +2604,7 @@ body.tv-monitor-open{
 .tv-substage-time,
 .tv-substage-operator{
     color: #ccc;
-    font-size: 0.88rem;
+    font-size: clamp(0.72rem, 0.82vw, 0.88rem);
     font-weight: 600;
 }
 
@@ -2598,15 +2625,17 @@ body.tv-monitor-open{
 }
 
 .tv-secondary-block.tv-secondary-timeline{
-    padding: 14px 12px 12px;
-    min-height: 118px;
+    padding: clamp(10px, 1.2vh, 14px) clamp(10px, 1.1vw, 12px) clamp(8px, 1vh, 12px);
+    min-height: clamp(96px, 12vh, 118px);
+    max-height: min(150px, 18vh);
+    overflow: hidden;
 }
 
 .tv-secondary-title{
     color: #ff6a00;
-    font-size: 0.78rem;
+    font-size: clamp(0.68rem, 0.8vw, 0.78rem);
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: clamp(6px, 0.8vh, 10px);
 }
 
 .tv-secondary-details{
@@ -2641,14 +2670,15 @@ body.tv-monitor-open{
 .tv-timeline-track{
     display: flex;
     align-items: flex-start;
-    overflow-x: auto;
+    overflow: hidden;
     gap: 0;
-    padding-bottom: 10px;
+    padding-bottom: clamp(6px, 0.8vh, 10px);
+    max-width: 100%;
 }
 
 .tv-timeline-step{
-    min-width: 72px;
-    flex: 1 0 72px;
+    min-width: 0;
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2661,13 +2691,13 @@ body.tv-monitor-open{
 }
 
 .tv-timeline-node{
-    width: 29px;
-    height: 29px;
+    width: clamp(24px, 2.2vw, 29px);
+    height: clamp(24px, 2.2vw, 29px);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: clamp(0.62rem, 0.75vw, 0.75rem);
     flex-shrink: 0;
 }
 
@@ -2715,33 +2745,83 @@ body.tv-monitor-open{
 .tv-timeline-stage-name{
     display: block;
     color: #ddd;
-    font-size: 0.68rem;
+    font-size: clamp(0.56rem, 0.68vw, 0.68rem);
     font-weight: 700;
     line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
 }
 
 .tv-timeline-stage-status{
     display: block;
     color: #888;
-    font-size: 0.64rem;
-    margin-top: 4px;
+    font-size: clamp(0.52rem, 0.62vw, 0.64rem);
+    margin-top: clamp(2px, 0.4vh, 4px);
     line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
 }
 
 .tv-monitor-empty{
-    min-height: calc(100vh - 170px);
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: #ccc;
+    overflow: hidden;
 }
 
 .tv-monitor-empty-icon{
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 5vw, 4rem);
     color: #ff6a00;
     margin-bottom: 16px;
+}
+
+@media (max-width: 1600px) and (min-width: 1201px){
+
+    .tv-compact-header{
+        grid-template-columns:
+            minmax(90px, 1fr)
+            minmax(120px, 1.2fr)
+            minmax(100px, 1fr)
+            minmax(70px, 0.8fr)
+            minmax(70px, 0.8fr)
+            minmax(80px, 0.8fr)
+            minmax(150px, 1.6fr);
+    }
+
+    .tv-critical-card,
+    .tv-tv-time-card{
+        min-height: clamp(82px, 11vh, 115px);
+    }
+}
+
+@media (max-width: 1366px) and (min-width: 1201px){
+
+    .tv-monitor-content{
+        padding: clamp(5px, 0.7vh, 8px) clamp(10px, 1.2vw, 14px) clamp(3px, 0.5vh, 5px);
+    }
+
+    .tv-compact-header{
+        min-height: clamp(76px, 8.5vh, 88px);
+    }
+
+    .tv-compact-header-item{
+        min-height: clamp(56px, 6.8vh, 68px);
+    }
+
+    .tv-substages-panel{
+        min-height: clamp(120px, 18vh, 180px);
+        max-height: min(360px, 38vh);
+    }
 }
 
 @media (max-width: 1200px){
