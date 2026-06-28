@@ -2104,7 +2104,7 @@ body.tv-monitor-open{
 .tv-monitor-content{
     flex: 1;
     overflow: hidden;
-    padding: 12px 20px 8px;
+    padding: 10px 18px 6px;
     min-height: 0;
 }
 
@@ -2124,7 +2124,7 @@ body.tv-monitor-open{
 }
 
 .tv-monitor-slide-compact{
-    gap: 10px;
+    gap: 8px;
     height: 100%;
     min-height: 0;
 }
@@ -2133,8 +2133,9 @@ body.tv-monitor-open{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 .tv-compact-header{
@@ -2147,24 +2148,27 @@ body.tv-monitor-open{
         0.7fr
         0.7fr
         1.8fr;
-    gap: 8px;
+    gap: 10px;
     background: linear-gradient(180deg, #fff 0%, #fff8f2 100%);
     color: #111;
     border-radius: 12px;
-    padding: 8px 10px;
+    padding: 12px 14px;
+    min-height: 88px;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+    flex-shrink: 0;
 }
 
 .tv-compact-header-item{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 2px;
+    gap: 4px;
     min-width: 0;
+    min-height: 68px;
     background: #fff;
     border: 1px solid #f0d4bc;
     border-radius: 8px;
-    padding: 6px 8px;
+    padding: 10px 12px;
 }
 
 .tv-compact-header-item-wheel{
@@ -2187,12 +2191,12 @@ body.tv-monitor-open{
 
 .tv-compact-header-item-warning .tv-compact-header-value{
     color: #c0392b;
-    font-size: 0.78rem;
+    font-size: 0.92rem;
 }
 
 .tv-compact-header-label{
     color: #777;
-    font-size: 0.62rem;
+    font-size: 0.74rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -2201,7 +2205,7 @@ body.tv-monitor-open{
 
 .tv-compact-header-value{
     color: #111;
-    font-size: 0.95rem;
+    font-size: 1.12rem;
     font-weight: 800;
     line-height: 1.15;
     white-space: nowrap;
@@ -2210,22 +2214,25 @@ body.tv-monitor-open{
 }
 
 .tv-compact-header-item-wheel .tv-compact-header-value{
-    font-size: 1.35rem;
+    font-size: 1.58rem;
     color: #d95a00;
 }
 
 .tv-compact-body{
     flex: 1;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .tv-critical-data-panel{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 12px;
     min-height: 0;
     height: 100%;
-    align-content: start;
+    align-content: stretch;
 }
 
 .tv-critical-card,
@@ -2233,11 +2240,12 @@ body.tv-monitor-open{
     background: #101014;
     border: 1px solid #2d2d33;
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    min-height: 140px;
+    gap: 5px;
+    min-height: 125px;
+    height: 100%;
     justify-content: flex-start;
 }
 
@@ -2255,7 +2263,7 @@ body.tv-monitor-open{
 
 .tv-critical-card-title{
     color: #aaa;
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -2263,13 +2271,13 @@ body.tv-monitor-open{
 
 .tv-critical-card-badge{
     color: #2ecc71;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
 .tv-critical-card-value{
     color: #fff;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     line-height: 1.2;
 }
@@ -2423,26 +2431,31 @@ body.tv-monitor-open{
 .tv-secondary-zone{
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 12px;
+    gap: 10px;
     flex: 1;
     min-height: 0;
+    height: 100%;
+    align-items: stretch;
 }
 
 .tv-secondary-flow-column{
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     min-width: 0;
     min-height: 0;
+    height: 100%;
 }
 
 .tv-substages-panel{
     background: #18181d;
     border: 1px solid #2d2d33;
     border-radius: 12px;
-    padding: 12px;
+    padding: 10px;
     flex: 1;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .tv-substages-title{
@@ -2451,7 +2464,8 @@ body.tv-monitor-open{
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    flex-shrink: 0;
 }
 
 .tv-substages-empty{
@@ -2474,28 +2488,26 @@ body.tv-monitor-open{
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    padding: 0 10px 6px;
+    padding: 0 10px 5px;
     border-bottom: 1px solid #2d2d33;
-    margin-bottom: 6px;
-}
-
-.tv-substages-header span:first-child,
-.tv-substage-item .tv-substage-name{
-    grid-column: auto;
+    margin-bottom: 5px;
+    flex-shrink: 0;
 }
 
 .tv-substages-list{
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
+    flex: 1;
+    min-height: 0;
 }
 
 .tv-substage-item{
     background: #101014;
     border: 1px solid #2d2d33;
     border-radius: 8px;
-    padding: 7px 10px;
-    font-size: 0.8rem;
+    padding: 9px 10px;
+    font-size: 0.82rem;
 }
 
 .tv-substage-item .tv-substage-icon{
@@ -2579,14 +2591,15 @@ body.tv-monitor-open{
     background: #18181d;
     border: 1px solid #2d2d33;
     border-radius: 12px;
-    padding: 12px;
+    padding: 10px;
+    flex-shrink: 0;
 }
 
 .tv-secondary-title{
     color: #ff6a00;
     font-size: 0.78rem;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .tv-secondary-details{
@@ -2750,6 +2763,13 @@ body.tv-monitor-open{
 
     .tv-critical-data-panel{
         grid-template-columns: 1fr;
+        grid-template-rows: none;
+        height: auto;
+    }
+
+    .tv-critical-card,
+    .tv-tv-time-card{
+        height: auto;
     }
 }
 
@@ -2781,6 +2801,13 @@ body.tv-monitor-open{
 
     .tv-critical-data-panel{
         grid-template-columns: 1fr;
+        grid-template-rows: none;
+        height: auto;
+    }
+
+    .tv-critical-card,
+    .tv-tv-time-card{
+        height: auto;
     }
 
     .tv-substages-header,
