@@ -2077,7 +2077,7 @@ body.tv-monitor-open{
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 16px 28px;
+    padding: 10px 20px;
     background: linear-gradient(90deg, #1a1a1f 0%, #2a1608 100%);
     border-bottom: 3px solid #ff6a00;
 }
@@ -2103,14 +2103,15 @@ body.tv-monitor-open{
 
 .tv-monitor-content{
     flex: 1;
-    overflow: auto;
-    padding: 24px 28px 12px;
+    overflow: hidden;
+    padding: 12px 20px 8px;
+    min-height: 0;
 }
 
 .tv-monitor-footer{
-    padding: 12px 28px 18px;
+    padding: 8px 20px 10px;
     color: #aaa;
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     border-top: 1px solid #2d2d33;
     background: #141418;
 }
@@ -2120,6 +2121,191 @@ body.tv-monitor-open{
     flex-direction: column;
     gap: 24px;
     min-height: calc(100vh - 170px);
+}
+
+.tv-monitor-slide-compact{
+    gap: 10px;
+    height: 100%;
+    min-height: 0;
+}
+
+.tv-compact-meta{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tv-compact-header{
+    display: grid;
+    grid-template-columns:
+        1.1fr
+        1fr
+        1fr
+        0.8fr
+        0.7fr
+        0.7fr
+        1.8fr;
+    gap: 8px;
+    background: linear-gradient(180deg, #fff 0%, #fff8f2 100%);
+    color: #111;
+    border-radius: 12px;
+    padding: 8px 10px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+}
+
+.tv-compact-header-item{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+    background: #fff;
+    border: 1px solid #f0d4bc;
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+
+.tv-compact-header-item-wheel{
+    border-color: #ff6a00;
+    background: linear-gradient(135deg, #fff7ef 0%, #fff 100%);
+}
+
+.tv-compact-header-item-type-nw{
+    border-color: #1a5276;
+}
+
+.tv-compact-header-item-type-mw{
+    border-color: #ff6a00;
+}
+
+.tv-compact-header-item-warning{
+    border-color: #c0392b;
+    background: #fff5f5;
+}
+
+.tv-compact-header-item-warning .tv-compact-header-value{
+    color: #c0392b;
+    font-size: 0.78rem;
+}
+
+.tv-compact-header-label{
+    color: #777;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.tv-compact-header-value{
+    color: #111;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tv-compact-header-item-wheel .tv-compact-header-value{
+    font-size: 1.35rem;
+    color: #d95a00;
+}
+
+.tv-compact-body{
+    flex: 1;
+    min-height: 0;
+}
+
+.tv-critical-data-panel{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    height: 100%;
+}
+
+.tv-critical-card,
+.tv-tv-time-card{
+    background: #101014;
+    border: 1px solid #2d2d33;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+}
+
+.tv-critical-card-registered{
+    border-left: 3px solid #2ecc71;
+}
+
+.tv-critical-card-pending{
+    border-left: 3px solid #666;
+}
+
+.tv-tv-time-card{
+    border-left: 3px solid #ff6a00;
+    margin-top: auto;
+}
+
+.tv-tv-time-card + .tv-tv-time-card{
+    margin-top: 0;
+}
+
+.tv-critical-card-title{
+    color: #aaa;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.tv-critical-card-badge{
+    color: #2ecc71;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.tv-critical-card-value{
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.tv-critical-card-date,
+.tv-critical-card-responsible,
+.tv-critical-card-since{
+    color: #999;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.tv-critical-card-empty{
+    color: #888;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.tv-critical-register-btn{
+    align-self: flex-start;
+    margin-top: 2px;
+    border: 1px solid #ff6a00;
+    background: transparent;
+    color: #ff6a00;
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tv-critical-register-btn:hover{
+    background: rgba(255, 106, 0, 0.12);
 }
 
 .tv-priority-zone{
@@ -2143,14 +2329,14 @@ body.tv-monitor-open{
     background: #ff6a00;
     color: #fff;
     font-weight: 700;
-    padding: 8px 14px;
+    padding: 4px 10px;
     border-radius: 999px;
-    font-size: 0.95rem;
+    font-size: 0.78rem;
 }
 
 .tv-priority-stage{
-    color: #d95a00;
-    font-size: 1.1rem;
+    color: #ff9f66;
+    font-size: 0.88rem;
     font-weight: 700;
 }
 
@@ -2240,31 +2426,35 @@ body.tv-monitor-open{
 .tv-secondary-zone{
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    gap: 12px;
     flex: 1;
+    min-height: 0;
 }
 
 .tv-secondary-flow-column{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
     min-width: 0;
+    min-height: 0;
 }
 
 .tv-substages-panel{
     background: #18181d;
     border: 1px solid #2d2d33;
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 12px;
+    flex: 1;
+    min-height: 0;
 }
 
 .tv-substages-title{
     color: #ff6a00;
-    font-size: 0.95rem;
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
 }
 
 .tv-substages-empty{
@@ -2277,19 +2467,19 @@ body.tv-monitor-open{
 .tv-substage-item{
     display: grid;
     grid-template-columns: minmax(0, 1.8fr) 0.9fr 0.7fr 0.8fr;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
 }
 
 .tv-substages-header{
     color: #777;
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    padding: 0 14px 10px;
+    padding: 0 10px 6px;
     border-bottom: 1px solid #2d2d33;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .tv-substages-header span:first-child,
@@ -2300,15 +2490,15 @@ body.tv-monitor-open{
 .tv-substages-list{
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
 }
 
 .tv-substage-item{
     background: #101014;
     border: 1px solid #2d2d33;
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 0.95rem;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 0.8rem;
 }
 
 .tv-substage-item .tv-substage-icon{
@@ -2391,15 +2581,15 @@ body.tv-monitor-open{
 .tv-secondary-details{
     background: #18181d;
     border: 1px solid #2d2d33;
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 12px;
 }
 
 .tv-secondary-title{
     color: #ff6a00;
-    font-size: 1rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 .tv-secondary-details{
@@ -2440,8 +2630,8 @@ body.tv-monitor-open{
 }
 
 .tv-timeline-step{
-    min-width: 96px;
-    flex: 1 0 96px;
+    min-width: 72px;
+    flex: 1 0 72px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2454,13 +2644,13 @@ body.tv-monitor-open{
 }
 
 .tv-timeline-node{
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     flex-shrink: 0;
 }
 
@@ -2501,21 +2691,21 @@ body.tv-monitor-open{
 }
 
 .tv-timeline-step-body{
-    margin-top: 10px;
+    margin-top: 6px;
     text-align: center;
 }
 
 .tv-timeline-stage-name{
     display: block;
     color: #ddd;
-    font-size: 0.72rem;
+    font-size: 0.62rem;
     font-weight: 700;
 }
 
 .tv-timeline-stage-status{
     display: block;
     color: #888;
-    font-size: 0.68rem;
+    font-size: 0.58rem;
     margin-top: 2px;
 }
 
@@ -2537,6 +2727,10 @@ body.tv-monitor-open{
 
 @media (max-width: 1200px){
 
+    .tv-compact-header{
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
     .tv-priority-identity-row{
         grid-template-columns: 1fr 1fr;
     }
@@ -2556,9 +2750,22 @@ body.tv-monitor-open{
     .tv-secondary-zone{
         grid-template-columns: 1fr;
     }
+
+    .tv-critical-data-panel{
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tv-tv-time-card{
+        margin-top: 0;
+    }
 }
 
 @media (max-width: 768px){
+
+    .tv-compact-header{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 
     .tv-priority-identity-row{
         grid-template-columns: 1fr;
@@ -2578,6 +2785,10 @@ body.tv-monitor-open{
 
     .tv-priority-value-xl{
         font-size: 2.2rem;
+    }
+
+    .tv-critical-data-panel{
+        grid-template-columns: 1fr;
     }
 
     .tv-substages-header,

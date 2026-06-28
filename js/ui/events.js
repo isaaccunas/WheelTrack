@@ -323,9 +323,16 @@ export function initializeEvents(renderWheels) {
         await downloadRouteSheetPdf(wheelRepository.getById(index));
     }
 
+    function openWheelOperationalSection(index, sectionKey) {
+
+        showWheelDetailView(createWheelDetailCallbacks(index));
+        openOperationalSection(sectionKey);
+    }
+
     window.editWheel = editWheel;
     window.deleteWheel = deleteWheel;
     window.showWheelDetail = showWheelDetail;
+    window.openWheelOperationalSection = openWheelOperationalSection;
     window.showMaintenixPanel = openMaintenixPanelForWheel;
     window.printProcessedRouteSheet = printProcessedRouteSheet;
     window.downloadProcessedRouteSheetPdf = downloadProcessedRouteSheetPdf;

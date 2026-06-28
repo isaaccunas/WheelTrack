@@ -1,3 +1,4 @@
+import { formatDurationMinutes } from "../domain/kpiCalculator.js";
 import {
     getCurrentStage,
     getCurrentStageSubstages,
@@ -10,11 +11,13 @@ import {
     getWheelSerialSummary,
     getWheelTypeLabel,
     hasInspectorData,
+    hasServiceableData,
     hasValidTireAssignment,
     isCriticalSubstageBlocked,
     isWheelActive,
     normalizeInspectorData,
     normalizePressureData,
+    normalizeServiceableData,
     normalizeTireAssignment,
     normalizeWheelType
 } from "../domain/wheelModel.js";
@@ -25,6 +28,7 @@ let tvRotationTimer = null;
 let tvCurrentIndex = 0;
 let tvActiveEntries = [];
 let tvGetWheels = null;
+let tvContentEventsBound = false;
 
 // ==========================================
 // CONSULTAS
@@ -79,34 +83,22 @@ function renderTireAssignedLabel(wheel) {
     return `S/N ${tireAssignment.serial || "-"} | P/N ${tireAssignment.partNumber || "-"}`;
 }
 
-function renderInitialPressureLabel(wheel) {
+function formatTvDateTime(isoDate) {
 
-    const pressureData = normalizePressureData(wheel.pressureData);
-
-    if (pressureData.initialPressure === null) {
-        return "Sin registrar";
+    if (!isoDate) {
+        return null;
     }
 
-    const dateText = pressureData.initialPressureDate
-        ? ` (${pressureData.initialPressureDate})`
-        : "";
+    const date = new Date(isoDate);
 
-    return `${pressureData.initialPressure} psi${dateText}`;
-}
-
-function renderInspectorLabel(wheel) {
-
-    const inspectorData = normalizeInspectorData(wheel.inspectorData);
-
-    if (!hasInspectorData(inspectorData)) {
-        return "Sin registrar";
+    if (Number.isNaN(date.getTime())) {
+        return isoDate;
     }
 
-    const dateText = inspectorData.attendedDate
-        ? ` | Atención: ${inspectorData.attendedDate}`
-        : "";
-
-    return `${inspectorData.inspectorName || "-"}${dateText}`;
+    return date.toLocaleString("es-EC", {
+        dateStyle: "short",
+        timeStyle: "short"
+    });
 }
 
 function formatTvSubstageTime(isoDate) {
@@ -125,6 +117,92 @@ function formatTvSubstageTime(isoDate) {
         hour: "2-digit",
         minute: "2-digit"
     });
+}
+
+function calculateElapsedMinutes(startedAt, finishedAt = null) {
+
+    if (!startedAt) {
+        return null;
+    }
+
+    const start = new Date(startedAt);
+
+    if (Number.isNaN(start.getTime())) {
+        return null;
+    }
+
+    const end = finishedAt ? new Date(finishedAt) : new Date();
+
+    if (Number.isNaN(end.getTime())) {
+        return null;
+    }
+
+    return Math.max(0, Math.round((end - start) / 60000));
+}
+
+function getCurrentStageTimingInfo(wheel) {
+
+    const currentStage = getCurrentStage(wheel.process);
+
+    if (!currentStage) {
+        return { minutes: null, startedAt: null };
+    }
+
+    const stageEntry = normalizeStageTiming(wheel.stageTiming).find(
+        (entry) => entry.stage === currentStage
+    );
+
+    if (!stageEntry) {
+        return { minutes: null, startedAt: null };
+    }
+
+    const minutes = stageEntry.durationMinutes !== null
+        ? stageEntry.durationMinutes
+        : calculateElapsedMinutes(stageEntry.startedAt, stageEntry.finishedAt);
+
+    return {
+        minutes,
+        startedAt: stageEntry.startedAt
+    };
+}
+
+function getTotalWorkshopTimingInfo(wheel) {
+
+    const stageTiming = normalizeStageTiming(wheel.stageTiming);
+    let total = 0;
+    let hasData = false;
+    let workshopStartedAt = null;
+
+    stageTiming.forEach((entry) => {
+
+        if (!workshopStartedAt && entry.startedAt) {
+            workshopStartedAt = entry.startedAt;
+        }
+
+        if (entry.durationMinutes !== null) {
+
+            total += entry.durationMinutes;
+            hasData = true;
+
+            return;
+        }
+
+        if (entry.startedAt) {
+
+            const elapsed = calculateElapsedMinutes(entry.startedAt, entry.finishedAt);
+
+            if (elapsed !== null) {
+
+                total += elapsed;
+                hasData = true;
+            }
+        }
+    });
+
+    return {
+        minutes: hasData ? total : null,
+        startedAt: workshopStartedAt ?? wheel.fechaIngreso ?? null
+    };
 }
 
 function getTvSubstageDisplayState(wheel, stageName, substages, substage, index) {
@@ -170,6 +248,222 @@ function getTvSubstageDisplayState(wheel, stageName, substages, substage, index)
         time: "—",
         operator: "—"
     };
+}
+
+function renderTvCompactHeaderItem(label, value, extraClass = "") {
+
+    return `
+        <div class="tv-compact-header-item ${extraClass}">
+
+            <span class="tv-compact-header-label">${label}</span>
+
+            <strong class="tv-compact-header-value">${value}</strong>
+
+        </div>
+    `;
+}
+
+function renderTvCompactHeader(wheel) {
+
+    const wheelType = normalizeWheelType(wheel.wheelType);
+    const tireLabel = renderTireAssignedLabel(wheel);
+    const tireWarningClass = tireLabel === "NO ASIGNADO"
+        ? "tv-compact-header-item-warning"
+        : "";
+
+    return `
+        <header class="tv-compact-header">
+
+            ${renderTvCompactHeaderItem(
+                "N° Rueda",
+                wheel.numeroRueda || "-",
+                "tv-compact-header-item-wheel"
+            )}
+
+            ${renderTvCompactHeaderItem(
+                "S/N",
+                getWheelSerialSummary(wheel)
+            )}
+
+            ${renderTvCompactHeaderItem(
+                "Aeronave",
+                wheel.avion || "-"
+            )}
+
+            ${renderTvCompactHeaderItem(
+                "Tipo",
+                getWheelTypeLabel(wheel.wheelType),
+                `tv-compact-header-item-type-${wheelType.toLowerCase()}`
+            )}
+
+            ${renderTvCompactHeaderItem(
+                "Caja",
+                formatBoxLabel(wheel.boxData)
+            )}
+
+            ${renderTvCompactHeaderItem(
+                "Tire Change",
+                wheel.tireChange || "-"
+            )}
+
+            ${renderTvCompactHeaderItem(
+                "Caucho asignado",
+                tireLabel,
+                tireWarningClass
+            )}
+
+        </header>
+    `;
+}
+
+function renderTvCriticalRegisteredContent(value, date, responsible = null) {
+
+    const responsibleHtml = responsible
+        ? `<span class="tv-critical-card-responsible">${responsible}</span>`
+        : "";
+
+    return `
+        <span class="tv-critical-card-badge">✓ Registrado</span>
+
+        <strong class="tv-critical-card-value">${value}</strong>
+
+        <span class="tv-critical-card-date">${date || "—"}</span>
+
+        ${responsibleHtml}
+    `;
+}
+
+function renderTvCriticalCard(title, sectionKey, wheelIndex, isRegistered, registeredContent) {
+
+    if (isRegistered) {
+
+        return `
+            <article class="tv-critical-card tv-critical-card-registered">
+
+                <span class="tv-critical-card-title">${title}</span>
+
+                ${registeredContent}
+
+            </article>
+        `;
+    }
+
+    return `
+        <article class="tv-critical-card tv-critical-card-pending">
+
+            <span class="tv-critical-card-title">${title}</span>
+
+            <span class="tv-critical-card-empty">Sin registrar</span>
+
+            <button
+                type="button"
+                class="tv-critical-register-btn"
+                data-section="${sectionKey}"
+                data-wheel-index="${wheelIndex}">
+
+                Registrar
+
+            </button>
+
+        </article>
+    `;
+}
+
+function renderTvTimeCard(title, minutes, startedAt) {
+
+    const sinceHtml = startedAt
+        ? `<span class="tv-critical-card-since">Desde: ${formatTvDateTime(startedAt)}</span>`
+        : "";
+
+    return `
+        <article class="tv-tv-time-card">
+
+            <span class="tv-critical-card-title">${title}</span>
+
+            <strong class="tv-critical-card-value">
+                ${formatDurationMinutes(minutes)}
+            </strong>
+
+            ${sinceHtml}
+
+        </article>
+    `;
+}
+
+function renderTvCriticalDataPanel(wheel, wheelIndex) {
+
+    const pressureData = normalizePressureData(wheel.pressureData);
+    const inspectorData = normalizeInspectorData(wheel.inspectorData);
+    const serviceableData = normalizeServiceableData(wheel.serviceableData);
+    const currentStageTiming = getCurrentStageTimingInfo(wheel);
+    const totalWorkshopTiming = getTotalWorkshopTimingInfo(wheel);
+
+    const initialRegistered = pressureData.initialPressure !== null;
+    const finalRegistered = pressureData.finalPressure !== null;
+    const inspectorRegistered = hasInspectorData(inspectorData);
+    const serviceableRegistered = hasServiceableData(serviceableData);
+
+    return `
+        <aside class="tv-critical-data-panel">
+
+            ${renderTvCriticalCard(
+                "Presión inicial",
+                "pressure",
+                wheelIndex,
+                initialRegistered,
+                renderTvCriticalRegisteredContent(
+                    `${pressureData.initialPressure} psi`,
+                    pressureData.initialPressureDate
+                )
+            )}
+
+            ${renderTvCriticalCard(
+                "Presión final",
+                "pressure",
+                wheelIndex,
+                finalRegistered,
+                renderTvCriticalRegisteredContent(
+                    `${pressureData.finalPressure} psi`,
+                    pressureData.finalPressureDate
+                )
+            )}
+
+            ${renderTvCriticalCard(
+                "Inspector",
+                "inspector",
+                wheelIndex,
+                inspectorRegistered,
+                renderTvCriticalRegisteredContent(
+                    inspectorData.inspectorName || "-",
+                    inspectorData.attendedDate || inspectorData.requestedDate
+                )
+            )}
+
+            ${renderTvCriticalCard(
+                "Serviciable",
+                "serviceable",
+                wheelIndex,
+                serviceableRegistered,
+                renderTvCriticalRegisteredContent(
+                    serviceableData.documentNumber || "-",
+                    serviceableData.receivedDate
+                )
+            )}
+
+            ${renderTvTimeCard(
+                "Tiempo en etapa actual",
+                currentStageTiming.minutes,
+                currentStageTiming.startedAt
+            )}
+
+            ${renderTvTimeCard(
+                "Tiempo total en taller",
+                totalWorkshopTiming.minutes,
+                totalWorkshopTiming.startedAt
+            )}
+
+        </aside>
+    `;
 }
 
 function renderTvSubstagesPanel(wheel) {
@@ -294,108 +588,26 @@ function renderTvTimeline(wheel) {
 
 function renderTvWheelContent({ wheel, index }, position, total) {
 
-    const wheelType = normalizeWheelType(wheel.wheelType);
     const currentStage = getCurrentStage(wheel.process) || "Sin etapa activa";
-    const tireLabel = renderTireAssignedLabel(wheel);
 
     return `
-        <div class="tv-monitor-slide">
+        <div class="tv-monitor-slide tv-monitor-slide-compact">
 
-            <section class="tv-priority-zone">
+            <div class="tv-compact-meta">
 
-                <div class="tv-priority-header">
+                <span class="tv-priority-badge">
+                    Rueda ${position} de ${total}
+                </span>
 
-                    <span class="tv-priority-badge">
-                        Rueda ${position} de ${total}
-                    </span>
+                <span class="tv-priority-stage">
+                    Etapa actual: ${currentStage}
+                </span>
 
-                    <span class="tv-priority-stage">
-                        Etapa actual: ${currentStage}
-                    </span>
+            </div>
 
-                </div>
+            ${renderTvCompactHeader(wheel)}
 
-                <div class="tv-priority-identity-row">
-
-                    <article class="tv-priority-card tv-priority-card-main">
-
-                        <span class="tv-priority-label">Número de rueda</span>
-
-                        <strong class="tv-priority-value tv-priority-value-xl">
-                            ${wheel.numeroRueda || "-"}
-                        </strong>
-
-                    </article>
-
-                    <article class="tv-priority-card tv-priority-card-serial">
-
-                        <span class="tv-priority-label">Serial Number (S/N)</span>
-
-                        <strong class="tv-priority-value">
-                            ${getWheelSerialSummary(wheel)}
-                        </strong>
-
-                    </article>
-
-                    <article class="tv-priority-card tv-priority-card-aircraft">
-
-                        <span class="tv-priority-label">Aeronave</span>
-
-                        <strong class="tv-priority-value">
-                            ${wheel.avion || "-"}
-                        </strong>
-
-                    </article>
-
-                </div>
-
-                <div class="tv-priority-grid">
-
-                    <article class="tv-priority-card tv-priority-card-type-${wheelType.toLowerCase()}">
-
-                        <span class="tv-priority-label">Tipo de rueda</span>
-
-                        <strong class="tv-priority-value">
-                            ${getWheelTypeLabel(wheel.wheelType)}
-                        </strong>
-
-                    </article>
-
-                    <article class="tv-priority-card tv-priority-card-box">
-
-                        <span class="tv-priority-label">Caja asignada</span>
-
-                        <strong class="tv-priority-value">
-                            ${formatBoxLabel(wheel.boxData)}
-                        </strong>
-
-                    </article>
-
-                    <article class="tv-priority-card">
-
-                        <span class="tv-priority-label">Tire Change</span>
-
-                        <strong class="tv-priority-value">
-                            ${wheel.tireChange || "-"}
-                        </strong>
-
-                    </article>
-
-                    <article class="tv-priority-card tv-priority-card-tire ${tireLabel === "NO ASIGNADO" ? "tv-priority-card-warning" : ""}">
-
-                        <span class="tv-priority-label">Caucho asignado</span>
-
-                        <strong class="tv-priority-value">
-                            ${tireLabel}
-                        </strong>
-
-                    </article>
-
-                </div>
-
-            </section>
-
-            <section class="tv-secondary-zone">
+            <section class="tv-secondary-zone tv-compact-body">
 
                 <div class="tv-secondary-flow-column">
 
@@ -411,29 +623,7 @@ function renderTvWheelContent({ wheel, index }, position, total) {
 
                 </div>
 
-                <div class="tv-secondary-details">
-
-                    <article class="tv-secondary-card">
-
-                        <span class="tv-secondary-label">Presión inicial</span>
-
-                        <strong class="tv-secondary-value">
-                            ${renderInitialPressureLabel(wheel)}
-                        </strong>
-
-                    </article>
-
-                    <article class="tv-secondary-card">
-
-                        <span class="tv-secondary-label">Inspector</span>
-
-                        <strong class="tv-secondary-value">
-                            ${renderInspectorLabel(wheel)}
-                        </strong>
-
-                    </article>
-
-                </div>
+                ${renderTvCriticalDataPanel(wheel, index)}
 
             </section>
 
@@ -454,6 +644,39 @@ function renderTvEmptyState() {
 
         </div>
     `;
+}
+
+function bindTvMonitorContentEvents() {
+
+    const content = document.getElementById("tvMonitorContent");
+
+    if (!content || tvContentEventsBound) {
+        return;
+    }
+
+    tvContentEventsBound = true;
+
+    content.addEventListener("click", (event) => {
+
+        const button = event.target.closest(".tv-critical-register-btn");
+
+        if (!button) {
+            return;
+        }
+
+        const wheelIndex = Number(button.dataset.wheelIndex);
+        const sectionKey = button.dataset.section;
+
+        if (
+            Number.isNaN(wheelIndex) ||
+            !sectionKey ||
+            typeof window.openWheelOperationalSection !== "function"
+        ) {
+            return;
+        }
+
+        window.openWheelOperationalSection(wheelIndex, sectionKey);
+    });
 }
 
 function renderCurrentTvSlide() {
@@ -557,6 +780,7 @@ export function openTvMonitor(getWheels) {
     overlay.classList.remove("d-none");
     document.body.classList.add("tv-monitor-open");
 
+    bindTvMonitorContentEvents();
     renderCurrentTvSlide();
     startTvRotation();
 
@@ -606,6 +830,8 @@ export function initializeTvMonitor(getWheels) {
     const openButton = document.getElementById("openTvMonitorBtn");
     const closeButton = document.getElementById("closeTvMonitorBtn");
     const overlay = document.getElementById("tvMonitorOverlay");
+
+    bindTvMonitorContentEvents();
 
     if (openButton) {
 
