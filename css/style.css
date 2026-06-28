@@ -2220,11 +2220,12 @@ body.tv-monitor-open{
 }
 
 .tv-critical-data-panel{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
     min-height: 0;
     height: 100%;
+    align-content: start;
 }
 
 .tv-critical-card,
@@ -2236,7 +2237,8 @@ body.tv-monitor-open{
     display: flex;
     flex-direction: column;
     gap: 4px;
-    min-height: 0;
+    min-height: 140px;
+    justify-content: flex-start;
 }
 
 .tv-critical-card-registered{
@@ -2249,11 +2251,6 @@ body.tv-monitor-open{
 
 .tv-tv-time-card{
     border-left: 3px solid #ff6a00;
-    margin-top: auto;
-}
-
-.tv-tv-time-card + .tv-tv-time-card{
-    margin-top: 0;
 }
 
 .tv-critical-card-title{
@@ -2752,12 +2749,7 @@ body.tv-monitor-open{
     }
 
     .tv-critical-data-panel{
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .tv-tv-time-card{
-        margin-top: 0;
+        grid-template-columns: 1fr;
     }
 }
 
