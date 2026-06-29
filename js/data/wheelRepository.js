@@ -3,6 +3,7 @@ import { normalizeWheel } from "../domain/historyModel.js";
 import { normalizeWheelProcess, normalizeWheelStageTiming } from "../domain/processModel.js";
 import {
     normalizeWheelBoxData,
+    normalizeWheelBoxAssignments,
     normalizeWheelInspectorData,
     normalizeWheelOperationalStatus,
     normalizeWheelPressureData,
@@ -64,6 +65,7 @@ export function load() {
         .map(normalizeWheelServiceableData)
         .map(normalizeWheelWheelType)
         .map(normalizeWheelBoxData)
+        .map(normalizeWheelBoxAssignments)
         .map(normalizeWheelOperationalStatus)
         .map(normalizeWheelWheelSerialData)
         .map(normalizeWheelTireOffData);

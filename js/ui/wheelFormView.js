@@ -1,11 +1,13 @@
+import { getAvailableBoxIds } from "../domain/boxResourceModel.js";
 import {
-    getAvailableBoxNumbers,
+    normalizeBoxAssignments,
     normalizeBoxData,
     normalizeTireOffData,
     normalizeWheelSerialData
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
 import { clearWheelFormValidationErrors } from "./wheelFormValidationView.js";
+import { refreshWheelFormPreview } from "./boxResourceView.js";
 
 // ==========================================
 // MODAL DE FORMULARIO
@@ -29,39 +31,57 @@ export function resetWheelForm() {
 
     document.getElementById("formNuevaRueda").reset();
     clearWheelFormValidationErrors();
+    refreshWheelFormPreview();
 }
 
-export function populateBoxOptions(wheels, editIndex = null) {
+function buildBoxSelectOptions(availableBoxes, currentValue = null) {
 
-    const boxSelect = document.getElementById("boxNumber");
+    let boxes = [...availableBoxes];
 
-    if (!boxSelect) {
-        return;
+    if (currentValue !== null && !boxes.includes(currentValue)) {
+        boxes = [...boxes, currentValue].sort((a, b) => a - b);
     }
 
-    const currentWheel = editIndex !== null ? wheels[editIndex] : null;
-    const currentBox = currentWheel
-        ? normalizeBoxData(currentWheel.boxData).boxNumber
-        : null;
-
-    let availableBoxes = getAvailableBoxNumbers(wheels, editIndex);
-
-    if (currentBox !== null && !availableBoxes.includes(currentBox)) {
-
-        availableBoxes = [...availableBoxes, currentBox].sort((a, b) => a - b);
-    }
-
-    boxSelect.innerHTML = `
+    return `
         <option value="">Seleccione caja</option>
-        ${availableBoxes.map((boxNumber) => `
+        ${boxes.map((boxNumber) => `
             <option value="${boxNumber}">
                 CAJA ${boxNumber}
             </option>
         `).join("")}
     `;
+}
 
-    if (currentBox !== null) {
-        boxSelect.value = String(currentBox);
+export function populateBoxOptions(wheels, editIndex = null) {
+
+    const primarySelect = document.getElementById("primaryBoxNumber");
+    const secondarySelect = document.getElementById("secondaryBoxNumber");
+
+    if (!primarySelect || !secondarySelect) {
+        return;
+    }
+
+    const currentWheel = editIndex !== null ? wheels[editIndex] : null;
+    const assignments = currentWheel
+        ? normalizeBoxAssignments(currentWheel.boxAssignments)
+        : normalizeBoxAssignments(null);
+    const legacyBox = currentWheel
+        ? normalizeBoxData(currentWheel.boxData).boxNumber
+        : null;
+
+    const currentPrimary = assignments.primaryBox?.id ?? legacyBox;
+    const currentSecondary = assignments.secondaryBox?.id ?? null;
+    const availableBoxes = getAvailableBoxIds(wheels, editIndex);
+
+    primarySelect.innerHTML = buildBoxSelectOptions(availableBoxes, currentPrimary);
+    secondarySelect.innerHTML = buildBoxSelectOptions(availableBoxes, currentSecondary);
+
+    if (currentPrimary !== null) {
+        primarySelect.value = String(currentPrimary);
+    }
+
+    if (currentSecondary !== null) {
+        secondarySelect.value = String(currentSecondary);
     }
 }
 
@@ -91,5 +111,14 @@ export function populateWheelForm(wheel) {
     document.getElementById("estacion").value = wheel.estacion || "";
     document.getElementById("ciclos").value = wheel.ciclos || "";
     document.getElementById("wheelType").value = wheel.wheelType || "";
-    document.getElementById("boxNumber").value = normalizeBoxData(wheel.boxData).boxNumber ?? "";
+
+    const assignments = normalizeBoxAssignments(wheel.boxAssignments);
+    const legacyBox = normalizeBoxData(wheel.boxData).boxNumber;
+
+    document.getElementById("primaryBoxNumber").value =
+        assignments.primaryBox?.id ?? legacyBox ?? "";
+    document.getElementById("secondaryBoxNumber").value =
+        assignments.secondaryBox?.id ?? "";
+
+    refreshWheelFormPreview();
 }

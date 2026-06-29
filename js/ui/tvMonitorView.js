@@ -6,8 +6,8 @@ import {
     normalizeStageTiming,
     PROCESS_STAGES
 } from "../domain/processModel.js";
+import { formatTvBoxesLabel } from "../domain/boxResourceModel.js";
 import {
-    formatBoxLabel,
     getWheelSerialSummary,
     getWheelTypeLabel,
     hasInspectorData,
@@ -297,8 +297,8 @@ function renderTvCompactHeader(wheel) {
             )}
 
             ${renderTvCompactHeaderItem(
-                "Caja",
-                formatBoxLabel(wheel.boxData)
+                "Cajas",
+                formatTvBoxesLabel(wheel)
             )}
 
             ${renderTvCompactHeaderItem(

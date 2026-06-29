@@ -10,11 +10,20 @@ const REQUIRED_FIELD_CONFIG = [
         validate: (data) => !!data.fechaRecepcion
     },
     {
-        id: "boxNumber",
+        id: "primaryBoxNumber",
         validate: (data) => !!(
-            data.boxNumber &&
-            Number(data.boxNumber) >= 1 &&
-            Number(data.boxNumber) <= TOTAL_BOXES
+            data.primaryBoxNumber &&
+            Number(data.primaryBoxNumber) >= 1 &&
+            Number(data.primaryBoxNumber) <= TOTAL_BOXES
+        )
+    },
+    {
+        id: "secondaryBoxNumber",
+        validate: (data) => !!(
+            data.secondaryBoxNumber &&
+            Number(data.secondaryBoxNumber) >= 1 &&
+            Number(data.secondaryBoxNumber) <= TOTAL_BOXES &&
+            Number(data.secondaryBoxNumber) !== Number(data.primaryBoxNumber)
         )
     },
     {
@@ -92,7 +101,8 @@ function readFormDataFromDom() {
         estacion: document.getElementById("estacion")?.value ?? "",
         ciclos: document.getElementById("ciclos")?.value ?? "",
         wheelType: document.getElementById("wheelType")?.value ?? "",
-        boxNumber: document.getElementById("boxNumber")?.value ?? ""
+        primaryBoxNumber: document.getElementById("primaryBoxNumber")?.value ?? "",
+        secondaryBoxNumber: document.getElementById("secondaryBoxNumber")?.value ?? ""
     });
 }
 

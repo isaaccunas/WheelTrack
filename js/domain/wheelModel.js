@@ -75,6 +75,116 @@ export function createBoxData() {
     };
 }
 
+export function createBoxAssignments() {
+
+    return {
+        primaryBox: null,
+        secondaryBox: null
+    };
+}
+
+export function normalizeBoxAssignmentEntry(entry, defaultUsage) {
+
+    if (!entry || typeof entry !== "object") {
+        return null;
+    }
+
+    const usage = entry.usage === "RODAMIENTOS" ? "RODAMIENTOS" : defaultUsage;
+    const normalizedId = Number(entry.id);
+
+    if (
+        Number.isNaN(normalizedId) ||
+        normalizedId < 1 ||
+        normalizedId > TOTAL_BOXES
+    ) {
+        return null;
+    }
+
+    return {
+        id: normalizedId,
+        usage,
+        released: entry.released === true
+    };
+}
+
+export function normalizeBoxAssignments(boxAssignments) {
+
+    if (!boxAssignments || typeof boxAssignments !== "object") {
+        return createBoxAssignments();
+    }
+
+    return {
+        primaryBox: normalizeBoxAssignmentEntry(
+            boxAssignments.primaryBox,
+            "PERNOS"
+        ),
+        secondaryBox: normalizeBoxAssignmentEntry(
+            boxAssignments.secondaryBox,
+            "RODAMIENTOS"
+        )
+    };
+}
+
+export function normalizeWheelBoxAssignments(wheel) {
+
+    return {
+        ...wheel,
+        boxAssignments: normalizeBoxAssignments(wheel.boxAssignments)
+    };
+}
+
+function buildBoxAssignmentsFromForm(data) {
+
+    return normalizeBoxAssignments({
+        primaryBox: {
+            id: data.primaryBoxNumber,
+            usage: "PERNOS",
+            released: false
+        },
+        secondaryBox: {
+            id: data.secondaryBoxNumber,
+            usage: "RODAMIENTOS",
+            released: false
+        }
+    });
+}
+
+function applyBoxReleaseOnSubstage(wheel, stageName, substageName) {
+
+    const assignments = normalizeBoxAssignments(wheel.boxAssignments);
+
+    if (!assignments.primaryBox && !assignments.secondaryBox) {
+        return assignments;
+    }
+
+    const nextAssignments = {
+        primaryBox: assignments.primaryBox
+            ? { ...assignments.primaryBox }
+            : null,
+        secondaryBox: assignments.secondaryBox
+            ? { ...assignments.secondaryBox }
+            : null
+    };
+
+    if (
+        stageName === "Ensamblaje" &&
+        substageName === "Premontaje" &&
+        nextAssignments.primaryBox
+    ) {
+        nextAssignments.primaryBox.released = true;
+    }
+
+    if (
+        stageName === "Inflado" &&
+        substageName === "Instalación de rodamientos" &&
+        nextAssignments.secondaryBox
+    ) {
+        nextAssignments.secondaryBox.released = true;
+    }
+
+    return nextAssignments;
+}
+
 export function normalizeBoxData(boxData) {
 
     if (!boxData || typeof boxData !== "object") {
@@ -147,6 +257,23 @@ export function isWheelOccupyingBox(wheel) {
     return !isAlmacenStageCompleted(wheel.process);
 }
 
+function isLegacyPrimaryBoxReleased(wheel) {
+
+    if (isAlmacenStageCompleted(wheel.process)) {
+        return true;
+    }
+
+    const normalizedProcess = normalizeProcessState(wheel.process);
+    const ensamblajeStage = normalizedProcess.stages.find(
+        (stageState) => stageState.stage === "Ensamblaje"
+    );
+    const premontaje = ensamblajeStage?.substages?.find(
+        (substage) => substage.name === "Premontaje"
+    );
+
+    return premontaje?.completed === true;
+}
+
 export function getOccupiedBoxNumbers(wheels, excludeWheelIndex = null) {
 
     return wheels.flatMap((wheel, index) => {
@@ -155,7 +282,20 @@ export function getOccupiedBoxNumbers(wheels, excludeWheelIndex = null) {
             return [];
         }
 
-        if (!isWheelOccupyingBox(wheel)) {
+        if (!isWheelActive(wheel)) {
+            return [];
+        }
+
+        const assignments = normalizeBoxAssignments(wheel.boxAssignments);
+
+        if (assignments.primaryBox || assignments.secondaryBox) {
+
+            return [assignments.primaryBox, assignments.secondaryBox]
+                .filter((boxEntry) => boxEntry && !boxEntry.released)
+                .map((boxEntry) => boxEntry.id);
+        }
+
+        if (!hasBoxData(wheel.boxData) || isLegacyPrimaryBoxReleased(wheel)) {
             return [];
         }
 
@@ -479,7 +619,9 @@ export function normalizeFormData(raw) {
         estacion: (raw.estacion ?? "").trim(),
         ciclos: (raw.ciclos ?? "").trim(),
         wheelType: raw.wheelType ?? "",
-        boxNumber: raw.boxNumber ?? ""
+        boxNumber: raw.boxNumber ?? "",
+        primaryBoxNumber: raw.primaryBoxNumber ?? raw.boxNumber ?? "",
+        secondaryBoxNumber: raw.secondaryBoxNumber ?? ""
     };
 }
 
@@ -504,9 +646,13 @@ export function validateWheel(data) {
         data.estacion &&
         data.ciclos &&
         (data.wheelType === "NW" || data.wheelType === "MW") &&
-        data.boxNumber &&
-        Number(data.boxNumber) >= 1 &&
-        Number(data.boxNumber) <= TOTAL_BOXES
+        data.primaryBoxNumber &&
+        data.secondaryBoxNumber &&
+        Number(data.primaryBoxNumber) >= 1 &&
+        Number(data.primaryBoxNumber) <= TOTAL_BOXES &&
+        Number(data.secondaryBoxNumber) >= 1 &&
+        Number(data.secondaryBoxNumber) <= TOTAL_BOXES &&
+        Number(data.primaryBoxNumber) !== Number(data.secondaryBoxNumber)
     );
 }
 
@@ -854,7 +1000,11 @@ export function createWheel(data) {
     wheel.pressureData = createPressureData();
     wheel.inspectorData = createInspectorData();
     wheel.serviceableData = createServiceableData();
-    wheel.boxData = buildBoxDataFromForm(data);
+    wheel.boxAssignments = buildBoxAssignmentsFromForm(data);
+    wheel.boxData = buildBoxDataFromForm({
+        ...data,
+        boxNumber: data.primaryBoxNumber
+    });
     wheel.operationalStatus = createOperationalStatus();
 
     syncWheelStageSnapshot(wheel);
@@ -883,8 +1033,15 @@ export function updateWheel(existingWheel, data) {
     updatedWheel.serviceableData = normalizeServiceableData(
         existingWheel.serviceableData
     );
+    updatedWheel.boxAssignments = buildBoxAssignmentsFromForm(data);
     updatedWheel.boxData = normalizeBoxData(
-        buildBoxDataFromForm(data, existingWheel.boxData)
+        buildBoxDataFromForm(
+            {
+                ...data,
+                boxNumber: data.primaryBoxNumber
+            },
+            existingWheel.boxData
+        )
     );
     updatedWheel.operationalStatus = normalizeOperationalStatus(
         existingWheel.operationalStatus
@@ -1127,6 +1284,11 @@ export function completeWheelSubstage(wheel, stageName, substageName) {
         ...wheel,
         process: completeResult.process,
         stageTiming: applyStageTimingAfterCompletion(wheel, completeResult),
+        boxAssignments: applyBoxReleaseOnSubstage(
+            wheel,
+            stageName,
+            substageName
+        ),
         historial
     };
 

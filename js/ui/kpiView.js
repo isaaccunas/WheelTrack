@@ -139,7 +139,6 @@ function renderHistoricalMetrics(historical) {
     const slowestStageElement = document.getElementById("historicalSlowestStage");
     const efficiencyElement = document.getElementById("historicalGeneralEfficiency");
     const monthlyGrid = document.getElementById("historicalMonthlyGrid");
-    const boxGrid = document.getElementById("historicalBoxGrid");
     const stageGrid = document.getElementById("historicalStageGrid");
     const closedCountElement = document.getElementById("historicalClosedCount");
 
@@ -210,43 +209,6 @@ function renderHistoricalMetrics(historical) {
 
                             <strong class="historical-metric-value">
                                 ${count}
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                `)
-                .join("");
-        }
-    }
-
-    if (boxGrid) {
-
-        if (historical.boxUtilization.length === 0) {
-
-            boxGrid.innerHTML = `
-                <div class="col-12">
-                    <p class="historical-empty mb-0">Sin datos</p>
-                </div>
-            `;
-
-        } else {
-
-            boxGrid.innerHTML = historical.boxUtilization
-                .slice(0, 8)
-                .map(({ boxNumber, count }) => `
-
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-
-                        <div class="historical-metric-card">
-
-                            <span class="historical-metric-name">
-                                CAJA ${boxNumber}
-                            </span>
-
-                            <strong class="historical-metric-value">
-                                ${count} usos
                             </strong>
 
                         </div>

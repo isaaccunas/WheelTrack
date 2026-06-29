@@ -668,9 +668,13 @@
 
                 <div class="summary-card summary-light historical-card">
 
-                    <h3 class="summary-title mb-3">Cajas más utilizadas</h3>
+                    <h3 class="summary-title mb-1">Cajas en uso</h3>
 
-                    <div class="row g-3" id="historicalBoxGrid"></div>
+                    <p class="summary-text mb-3">
+                        Estado operativo actual de las cajas del taller.
+                    </p>
+
+                    <div class="row g-3" id="workshopBoxesGrid"></div>
 
                 </div>
 
@@ -825,14 +829,29 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label">Número de caja <span class="required-star">*</span></label>
+                                <label class="form-label">Caja A (pernos) <span class="required-star">*</span></label>
 
-                                <select class="form-select" id="boxNumber">
+                                <select class="form-select" id="primaryBoxNumber">
 
                                     <option value="">Seleccione caja</option>
 
                                 </select>
 
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Caja B (rodamientos) <span class="required-star">*</span></label>
+
+                                <select class="form-select" id="secondaryBoxNumber">
+
+                                    <option value="">Seleccione caja</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="wheel-box-preview" id="wheelBoxAssignmentPreview"></div>
                             </div>
 
                             <div class="col-md-4">
@@ -1632,6 +1651,50 @@
                 <div class="modal-body">
 
                     <div id="detalleRuedaBody"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL DETALLE CAJA -->
+
+    <div
+        class="modal fade"
+        id="boxResourceDetailModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="boxResourceDetailTitle">CAJA</h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body" id="boxResourceDetailContent"></div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cerrar
+
+                    </button>
 
                 </div>
 

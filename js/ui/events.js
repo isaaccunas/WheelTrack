@@ -1,4 +1,5 @@
 import * as wheelRepository from "../data/wheelRepository.js";
+import { validateBoxAssignments } from "../domain/boxResourceModel.js";
 import {
     closeWheelOrder,
     completeWheelSubstage,
@@ -12,7 +13,6 @@ import {
     updateWheelPressureData,
     updateWheelServiceableData,
     updateWheelTireAssignment,
-    validateBoxAssignment,
     validateWheel,
     validateWheelClosure
 } from "../domain/wheelModel.js";
@@ -83,7 +83,8 @@ export function initializeEvents(renderWheels) {
             estacion: document.getElementById("estacion").value,
             ciclos: document.getElementById("ciclos").value,
             wheelType: document.getElementById("wheelType").value,
-            boxNumber: document.getElementById("boxNumber").value
+            primaryBoxNumber: document.getElementById("primaryBoxNumber").value,
+            secondaryBoxNumber: document.getElementById("secondaryBoxNumber").value
         });
 
         if (!validateWheel(formData)) {
@@ -95,13 +96,14 @@ export function initializeEvents(renderWheels) {
             return;
         }
 
-        if (!validateBoxAssignment(
+        if (!validateBoxAssignments(
             wheelRepository.getAll(),
-            formData.boxNumber,
+            formData.primaryBoxNumber,
+            formData.secondaryBoxNumber,
             editIndex
         )) {
 
-            alert("La caja seleccionada no está disponible.");
+            alert("Las cajas seleccionadas no están disponibles o son iguales entre sí.");
 
             return;
         }

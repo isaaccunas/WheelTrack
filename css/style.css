@@ -3593,3 +3593,126 @@ body.tv-monitor-open{
 .dashboard-row{
     align-items: flex-start;
 }
+
+.wheel-box-preview{
+    background: #fffaf6;
+    border: 1px solid #f0d4bc;
+    border-radius: 12px;
+    padding: 12px;
+    min-height: 74px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+.wheel-box-preview-title{
+    color: #666;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.wheel-box-preview strong{
+    color: #d95a00;
+    font-size: 1rem;
+}
+
+.wheel-box-preview span{
+    color: #444;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.box-resource-card{
+    width: 100%;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #f0d4bc;
+    border-left: 4px solid #ff6a00;
+    border-radius: 12px;
+    padding: 14px;
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.box-resource-card:hover,
+.box-resource-card:focus{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 106, 0, 0.14);
+    outline: none;
+}
+
+.box-resource-card-available{
+    border-left-color: #95a5a6;
+}
+
+.box-resource-title{
+    color: #d95a00;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.box-resource-usage,
+.box-resource-wheel,
+.box-resource-serial,
+.box-resource-last-usage,
+.box-resource-progress{
+    color: #555;
+    font-size: 0.84rem;
+}
+
+.box-resource-serial{
+    font-weight: 600;
+}
+
+.box-resource-status{
+    margin-top: auto;
+    color: #222;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.box-resource-available-label{
+    color: #27ae60;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.box-resource-empty{
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.box-detail-list{
+    margin: 0;
+}
+
+.box-detail-item{
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0d4bc;
+}
+
+.box-detail-item:last-child{
+    border-bottom: none;
+}
+
+.box-detail-item dt{
+    color: #666;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.box-detail-item dd{
+    margin: 0;
+    color: #222;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: right;
+}

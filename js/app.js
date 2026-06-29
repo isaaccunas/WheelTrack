@@ -5,6 +5,10 @@ import { initializeEvents } from "./ui/events.js";
 import { initializeRouteSheetView } from "./ui/routeSheetView.js";
 import { initializeWheelFormValidation } from "./ui/wheelFormValidationView.js";
 import { renderKpis } from "./ui/kpiView.js";
+import {
+    initializeBoxResourceView,
+    renderBoxesInUse
+} from "./ui/boxResourceView.js";
 import { initializeProductivityCharts } from "./ui/productivityChartsModal.js";
 import { initializeHistoricalTrendsModal } from "./ui/historicalTrendsModal.js";
 import { initializeTatAnalyticsModal } from "./ui/tatAnalyticsModal.js";
@@ -52,6 +56,8 @@ function renderWheels() {
 
     renderKpis(getDashboardKpis(allWheels));
 
+    renderBoxesInUse(allWheels);
+
     renderWorkshopMonitor(allWheels);
 
     refreshTvMonitorIfOpen(allWheels);
@@ -79,3 +85,5 @@ initializeProductivityCharts(() => wheelRepository.getAll());
 initializeHistoricalTrendsModal(() => wheelRepository.getAll());
 
 initializeTatAnalyticsModal(() => wheelRepository.getAll());
+
+initializeBoxResourceView(() => wheelRepository.getAll());
