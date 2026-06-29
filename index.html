@@ -1123,13 +1123,19 @@
         id="productivityChartModal"
         tabindex="-1">
 
-        <div class="modal-dialog modal-xl productivity-chart-modal-dialog">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable productivity-analytics-modal-dialog">
 
             <div class="modal-content rounded-4">
 
-                <div class="modal-header">
+                <div class="modal-header productivity-analytics-header">
 
-                    <h5 class="modal-title" id="productivityChartTitle"></h5>
+                    <div>
+
+                        <h5 class="modal-title mb-1" id="productivityChartTitle"></h5>
+
+                        <p class="productivity-analytics-subtitle mb-0" id="productivityChartSubtitle"></p>
+
+                    </div>
 
                     <button
                         type="button"
@@ -1139,12 +1145,86 @@
 
                 </div>
 
-                <div class="modal-body productivity-chart-modal-body">
+                <div class="modal-body productivity-analytics-body">
 
-                    <canvas
-                        id="productivityChartCanvas"
-                        height="120">
-                    </canvas>
+                    <div class="productivity-analytics-toolbar">
+
+                        <div class="productivity-analytics-month">
+
+                            <label
+                                class="form-label mb-1"
+                                for="productivityMonthSelect">
+
+                                Mes
+
+                            </label>
+
+                            <select
+                                class="form-select form-select-sm"
+                                id="productivityMonthSelect">
+                            </select>
+
+                        </div>
+
+                        <div class="productivity-analytics-legend">
+
+                            <span class="productivity-legend-item productivity-legend-active">
+                                Ruedas activas
+                            </span>
+
+                            <span class="productivity-legend-item productivity-legend-closed">
+                                Ruedas cerradas
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="productivity-analytics-layout">
+
+                        <div class="productivity-analytics-chart-wrap">
+
+                            <canvas id="productivityChartCanvas"></canvas>
+
+                        </div>
+
+                        <aside
+                            class="productivity-analytics-summary"
+                            id="productivityAnalyticsSummary">
+                        </aside>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer productivity-analytics-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        id="btnPrintProductivityChart">
+
+                        🖨 Imprimir gráfica
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-warning"
+                        id="btnDownloadProductivityChartPng">
+
+                        ⬇ Descargar PNG
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cerrar
+
+                    </button>
 
                 </div>
 

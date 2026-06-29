@@ -735,17 +735,152 @@ main.container-fluid{
     box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.35);
 }
 
-.productivity-chart-modal-dialog{
-    max-width: min(1140px, 96vw);
+.productivity-chart-modal-dialog,
+.productivity-analytics-modal-dialog{
+    max-width: min(1200px, 96vw);
+    max-height: 80vh;
 }
 
-.productivity-chart-modal-body{
-    min-height: 0;
+.productivity-analytics-modal-dialog .modal-content{
+    max-height: 80vh;
+}
+
+.productivity-analytics-body{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.productivity-analytics-subtitle{
+    color: #666;
+    font-size: 0.92rem;
+}
+
+.productivity-analytics-toolbar{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.productivity-analytics-month{
+    min-width: 220px;
+}
+
+.productivity-analytics-legend{
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.productivity-legend-item{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.productivity-legend-item::before{
+    content: "";
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.productivity-legend-active::before{
+    background: #1a5276;
+}
+
+.productivity-legend-closed::before{
+    background: #888888;
+}
+
+.productivity-analytics-layout{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 16px;
+    min-height: 420px;
+}
+
+.productivity-analytics-chart-wrap{
+    min-height: 420px;
+    height: 100%;
+}
+
+.productivity-analytics-summary{
+    background: #fffaf6;
+    border: 1px solid #f0d4bc;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.productivity-summary-title{
+    color: #d95a00;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.productivity-summary-list{
+    margin: 0;
+}
+
+.productivity-summary-item{
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0d4bc;
+}
+
+.productivity-summary-item:last-child{
+    border-bottom: none;
+}
+
+.productivity-summary-item dt{
+    color: #666;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.productivity-summary-item dd{
+    margin: 0;
+    color: #222;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.productivity-summary-detail{
+    display: block;
+    color: #666;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.productivity-analytics-footer{
+    justify-content: space-between;
 }
 
 #productivityChartCanvas{
     width: 100% !important;
+    height: 100% !important;
     max-height: 65vh;
+}
+
+@media (max-width: 992px){
+
+    .productivity-analytics-layout{
+        grid-template-columns: 1fr;
+    }
+
+    .productivity-analytics-chart-wrap{
+        min-height: 320px;
+    }
 }
 
 /* ==========================================
@@ -1451,6 +1586,13 @@ main.container-fluid{
     flex-direction: column;
     justify-content: space-between;
     gap: 8px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.operational-stage-card:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 106, 0, 0.12);
 }
 
 .operational-stage-name{
@@ -3039,6 +3181,16 @@ body.tv-monitor-open{
     flex-direction: column;
     justify-content: space-between;
     gap: 8px;
+}
+
+.historical-stage-card{
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.historical-stage-card:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 106, 0, 0.12);
 }
 
 .historical-metric-name,
