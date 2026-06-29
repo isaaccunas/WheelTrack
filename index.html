@@ -666,16 +666,12 @@
 
             <div class="col-12">
 
-                <div class="summary-card summary-light historical-card">
-
-                    <h3 class="summary-title mb-1">Cajas en uso</h3>
-
-                    <p class="summary-text mb-3">
-                        Estado operativo actual de las cajas del taller.
-                    </p>
-
-                    <div class="row g-3" id="workshopBoxesGrid"></div>
-
+                <div
+                    class="summary-card summary-light historical-card box-resources-summary-card"
+                    id="boxResourcesSummaryCard"
+                    role="button"
+                    tabindex="0"
+                    title="Abrir gestión de cajas del taller">
                 </div>
 
             </div>
@@ -1647,6 +1643,96 @@
                 <div class="modal-body">
 
                     <div id="detalleRuedaBody"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL GESTIÓN DE CAJAS -->
+
+    <div
+        class="modal fade"
+        id="boxResourcesModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable box-resources-modal-dialog">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h5 class="modal-title mb-1">Gestión de cajas del taller</h5>
+
+                        <p class="box-resources-modal-subtitle mb-0">
+                            Estado operativo completo de las cajas físicas.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body box-resources-modal-body">
+
+                    <div
+                        class="box-resources-filter-group"
+                        role="group"
+                        aria-label="Filtrar cajas">
+
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-warning active"
+                            data-box-filter="all">
+
+                            Todas
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-warning"
+                            data-box-filter="occupied">
+
+                            Ocupadas
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-warning"
+                            data-box-filter="available">
+
+                            Disponibles
+
+                        </button>
+
+                    </div>
+
+                    <div class="row g-3" id="boxResourcesModalGrid"></div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cerrar
+
+                    </button>
 
                 </div>
 
