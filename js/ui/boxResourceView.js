@@ -221,42 +221,6 @@ function bindBoxesGridEvents() {
     });
 }
 
-function bindWheelFormPreview() {
-
-    const previewFields = [
-        "numeroRueda",
-        "serialInner",
-        "serialOuter"
-    ];
-
-    previewFields.forEach((fieldId) => {
-
-        document.getElementById(fieldId)?.addEventListener("input", updateWheelFormPreview);
-    });
-}
-
-function updateWheelFormPreview() {
-
-    const previewElement = document.getElementById("wheelBoxAssignmentPreview");
-
-    if (!previewElement) {
-        return;
-    }
-
-    const wheelNumber = document.getElementById("numeroRueda")?.value.trim();
-    const serialInner = document.getElementById("serialInner")?.value.trim();
-    const serialOuter = document.getElementById("serialOuter")?.value.trim();
-    const serialSummary = serialInner && serialOuter
-        ? `${serialInner} / ${serialOuter}`
-        : serialInner || serialOuter || "—";
-
-    previewElement.innerHTML = `
-        <span class="wheel-box-preview-title">Referencia operacional</span>
-        <strong>${wheelNumber ? `#${wheelNumber}` : "Rueda #—"}</strong>
-        <span>S/N ${serialSummary}</span>
-    `;
-}
-
 export function initializeBoxResourceView(getWheelsFn) {
 
     if (typeof getWheelsFn !== "function") {
@@ -266,10 +230,4 @@ export function initializeBoxResourceView(getWheelsFn) {
     getWheels = getWheelsFn;
 
     bindBoxesGridEvents();
-    bindWheelFormPreview();
-    updateWheelFormPreview();
-}
-
-export function refreshWheelFormPreview() {
-    updateWheelFormPreview();
 }

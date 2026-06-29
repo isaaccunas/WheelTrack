@@ -3594,35 +3594,6 @@ body.tv-monitor-open{
     align-items: flex-start;
 }
 
-.wheel-box-preview{
-    background: #fffaf6;
-    border: 1px solid #f0d4bc;
-    border-radius: 12px;
-    padding: 12px;
-    min-height: 74px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-}
-
-.wheel-box-preview-title{
-    color: #666;
-    font-size: 0.78rem;
-    font-weight: 600;
-}
-
-.wheel-box-preview strong{
-    color: #d95a00;
-    font-size: 1rem;
-}
-
-.wheel-box-preview span{
-    color: #444;
-    font-size: 0.86rem;
-    font-weight: 600;
-}
-
 .box-resource-card{
     width: 100%;
     text-align: left;

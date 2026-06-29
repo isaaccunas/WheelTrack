@@ -7,7 +7,6 @@ import {
 } from "../domain/wheelModel.js";
 import { refs } from "./domRefs.js";
 import { clearWheelFormValidationErrors } from "./wheelFormValidationView.js";
-import { refreshWheelFormPreview } from "./boxResourceView.js";
 
 // ==========================================
 // MODAL DE FORMULARIO
@@ -31,7 +30,6 @@ export function resetWheelForm() {
 
     document.getElementById("formNuevaRueda").reset();
     clearWheelFormValidationErrors();
-    refreshWheelFormPreview();
 }
 
 function buildBoxSelectOptions(availableBoxes, currentValue = null) {
@@ -119,6 +117,4 @@ export function populateWheelForm(wheel) {
         assignments.primaryBox?.id ?? legacyBox ?? "";
     document.getElementById("secondaryBoxNumber").value =
         assignments.secondaryBox?.id ?? "";
-
-    refreshWheelFormPreview();
 }
