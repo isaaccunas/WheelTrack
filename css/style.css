@@ -872,6 +872,30 @@ main.container-fluid{
     max-height: 65vh;
 }
 
+.stage-micro-analytics-modal-dialog{
+    max-width: min(1200px, 96vw);
+    max-height: 80vh;
+}
+
+.stage-micro-analytics-modal-dialog .modal-content{
+    max-height: 80vh;
+}
+
+.stage-micro-analytics-toolbar{
+    align-items: flex-end;
+}
+
+#stageMicroAnalyticsCanvas{
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 65vh;
+}
+
+.stage-micro-empty-summary{
+    color: #666;
+    font-size: 0.9rem;
+}
+
 @media (max-width: 992px){
 
     .productivity-analytics-layout{

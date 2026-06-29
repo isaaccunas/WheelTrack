@@ -1284,6 +1284,130 @@
 
     </div>
 
+    <!-- MODAL MICROANÁLISIS POR SUBETAPAS -->
+
+    <div
+        class="modal fade"
+        id="stageMicroAnalyticsModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable stage-micro-analytics-modal-dialog">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header productivity-analytics-header">
+
+                    <div>
+
+                        <h5 class="modal-title mb-1" id="stageMicroAnalyticsTitle"></h5>
+
+                        <p class="productivity-analytics-subtitle mb-0" id="stageMicroAnalyticsSubtitle"></p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body productivity-analytics-body">
+
+                    <div class="productivity-analytics-toolbar stage-micro-analytics-toolbar">
+
+                        <div class="productivity-analytics-month">
+
+                            <label
+                                class="form-label mb-1"
+                                for="stageMicroMonthSelect">
+
+                                Mes
+
+                            </label>
+
+                            <select
+                                class="form-select form-select-sm"
+                                id="stageMicroMonthSelect">
+                            </select>
+
+                        </div>
+
+                        <div class="productivity-analytics-month">
+
+                            <label
+                                class="form-label mb-1"
+                                for="stageMicroWheelSelect">
+
+                                Rueda
+
+                            </label>
+
+                            <select
+                                class="form-select form-select-sm"
+                                id="stageMicroWheelSelect">
+                                <option value="all">Todas</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="productivity-analytics-layout">
+
+                        <div class="productivity-analytics-chart-wrap">
+
+                            <canvas id="stageMicroAnalyticsCanvas"></canvas>
+
+                        </div>
+
+                        <aside
+                            class="productivity-analytics-summary"
+                            id="stageMicroAnalyticsSummary">
+                        </aside>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer productivity-analytics-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        id="btnPrintStageMicroChart">
+
+                        🖨 Imprimir gráfica
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-warning"
+                        id="btnDownloadStageMicroChartPng">
+
+                        ⬇ Descargar PNG
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cerrar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
     <!-- MODAL ANÁLISIS HISTÓRICO DEL TALLER -->
 
     <div

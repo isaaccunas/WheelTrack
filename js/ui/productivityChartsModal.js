@@ -900,7 +900,6 @@ export function initializeProductivityCharts(getWheelsFn) {
     bindProductivityKpiCard("slowestStageCard", "slowest-stage");
     bindProductivityKpiCard("stageAveragesCard", "stage-average");
 
-    bindStageQuickViewGrid("historicalStageGrid", ".historical-stage-card");
     bindStageQuickViewGrid("stageAveragesGrid", ".operational-stage-card");
 
     document.getElementById("btnPrintProductivityChart")

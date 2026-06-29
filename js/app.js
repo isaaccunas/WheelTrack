@@ -12,6 +12,7 @@ import {
 import { initializeProductivityCharts } from "./ui/productivityChartsModal.js";
 import { initializeHistoricalTrendsModal } from "./ui/historicalTrendsModal.js";
 import { initializeTatAnalyticsModal } from "./ui/tatAnalyticsModal.js";
+import { initializeStageMicroAnalyticsModal } from "./ui/stageMicroAnalyticsModal.js";
 import { initializeProcessedHistoryModal, refreshProcessedHistoryModal } from "./ui/processedHistoryModal.js";
 import { renderProcessedWheelHistory } from "./ui/processedHistoryView.js";
 import { initializeArchiveWheelModal } from "./ui/archiveWheelModal.js";
@@ -93,6 +94,8 @@ initializeProductivityCharts(() => wheelRepository.getAll());
 initializeHistoricalTrendsModal(() => wheelRepository.getAll());
 
 initializeTatAnalyticsModal(() => wheelRepository.getAll());
+
+initializeStageMicroAnalyticsModal(() => wheelRepository.getAll());
 
 initializeBoxResourceView(() => wheelRepository.getAll());
 
