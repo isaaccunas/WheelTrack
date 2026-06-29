@@ -3158,6 +3158,183 @@ body.tv-monitor-open{
     min-height: auto;
 }
 
+.historical-dashboard-entry{
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.historical-dashboard-entry:hover,
+.historical-dashboard-entry:focus{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 106, 0, 0.18);
+    outline: none;
+}
+
+.historical-dashboard-entry:focus-visible{
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.35);
+}
+
+.historical-trends-modal-dialog{
+    max-width: min(1280px, 96vw);
+    max-height: 90vh;
+}
+
+.historical-trends-modal-dialog .modal-content{
+    max-height: 90vh;
+}
+
+.historical-trends-body{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.historical-trends-subtitle{
+    color: #666;
+    font-size: 0.92rem;
+}
+
+.historical-trends-filters{
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(280px, 1fr);
+    gap: 20px;
+}
+
+.historical-trends-filter-group{
+    margin: 0;
+}
+
+.historical-trends-filter-group legend{
+    float: none;
+    width: auto;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.historical-trends-wheel-types{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.historical-trends-radio,
+.historical-trends-checkbox{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.historical-trends-options{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 12px 14px;
+    background: #fffaf6;
+    border: 1px solid #f0d4bc;
+    border-radius: 12px;
+}
+
+.historical-trends-layout{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 16px;
+    min-height: 480px;
+}
+
+.historical-trends-chart-panel{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 480px;
+}
+
+.historical-trends-chart-title{
+    color: #d95a00;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin: 0;
+}
+
+.historical-trends-chart-wrap{
+    flex: 1;
+    min-height: 420px;
+}
+
+.historical-trends-summary{
+    background: #fffaf6;
+    border: 1px solid #f0d4bc;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.historical-trends-summary-title{
+    color: #d95a00;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.historical-trends-summary-list{
+    margin: 0;
+}
+
+.historical-trends-summary-item{
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0d4bc;
+}
+
+.historical-trends-summary-item:last-child{
+    border-bottom: none;
+}
+
+.historical-trends-summary-item dt{
+    color: #666;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.historical-trends-summary-item dd{
+    margin: 0;
+    color: #222;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.historical-trends-footer{
+    justify-content: space-between;
+}
+
+#historicalTrendsCanvas{
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 65vh;
+}
+
+@media (max-width: 992px){
+
+    .historical-trends-filters{
+        grid-template-columns: 1fr;
+    }
+
+    .historical-trends-layout{
+        grid-template-columns: 1fr;
+    }
+
+    .historical-trends-chart-wrap{
+        min-height: 320px;
+    }
+}
+
 .historical-metric-highlight{
     color: #ff6a00;
     font-size: 1.5rem;

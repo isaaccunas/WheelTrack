@@ -546,7 +546,12 @@
 
             <div class="col-12">
 
-                <div class="summary-card summary-light historical-summary-card">
+                <div
+                    class="summary-card summary-light historical-summary-card historical-dashboard-entry"
+                    id="historicalDashboardCard"
+                    role="button"
+                    tabindex="0"
+                    title="Abrir análisis histórico del taller">
 
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
 
@@ -1212,6 +1217,216 @@
                         type="button"
                         class="btn btn-outline-warning"
                         id="btnDownloadProductivityChartPng">
+
+                        ⬇ Descargar PNG
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cerrar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL ANÁLISIS HISTÓRICO DEL TALLER -->
+
+    <div
+        class="modal fade"
+        id="historicalTrendsModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable historical-trends-modal-dialog">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header historical-trends-header">
+
+                    <div>
+
+                        <h5 class="modal-title mb-1" id="historicalTrendsTitle">
+                            Análisis histórico del taller
+                        </h5>
+
+                        <p class="historical-trends-subtitle mb-0">
+                            Evolución histórica de los tiempos promedio de procesamiento del taller.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body historical-trends-body">
+
+                    <div class="historical-trends-filters">
+
+                        <div class="historical-trends-filter-group">
+
+                            <label
+                                class="form-label mb-1"
+                                for="historicalTrendsPeriodSelect">
+
+                                Periodo
+
+                            </label>
+
+                            <select
+                                class="form-select form-select-sm"
+                                id="historicalTrendsPeriodSelect">
+
+                                <option value="all">Todos los meses</option>
+                                <option value="last6">Últimos 6 meses</option>
+                                <option value="current-year">Año actual</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+
+                            </select>
+
+                        </div>
+
+                        <fieldset class="historical-trends-filter-group">
+
+                            <legend class="form-label mb-2">Tipo de rueda</legend>
+
+                            <div class="historical-trends-wheel-types">
+
+                                <label class="historical-trends-radio">
+
+                                    <input
+                                        type="radio"
+                                        name="historicalTrendsWheelType"
+                                        value="all"
+                                        checked>
+
+                                    Todas
+
+                                </label>
+
+                                <label class="historical-trends-radio">
+
+                                    <input
+                                        type="radio"
+                                        name="historicalTrendsWheelType"
+                                        value="MW">
+
+                                    MW (Principal)
+
+                                </label>
+
+                                <label class="historical-trends-radio">
+
+                                    <input
+                                        type="radio"
+                                        name="historicalTrendsWheelType"
+                                        value="NW">
+
+                                    NW (Nariz)
+
+                                </label>
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+
+                    <div class="historical-trends-options">
+
+                        <label class="historical-trends-checkbox">
+
+                            <input
+                                type="checkbox"
+                                id="historicalTrendsCriticalOnly"
+                                checked>
+
+                            Mostrar solo etapas críticas
+
+                        </label>
+
+                        <label class="historical-trends-checkbox">
+
+                            <input
+                                type="checkbox"
+                                id="historicalTrendsGeneralTrend"
+                                checked>
+
+                            Mostrar tendencia general del taller
+
+                        </label>
+
+                        <label class="historical-trends-checkbox">
+
+                            <input
+                                type="checkbox"
+                                id="historicalTrendsShowMinMax"
+                                checked>
+
+                            Mostrar máximos y mínimos
+
+                        </label>
+
+                    </div>
+
+                    <div class="historical-trends-layout">
+
+                        <div class="historical-trends-chart-panel">
+
+                            <h6
+                                class="historical-trends-chart-title"
+                                id="historicalTrendsChartTitle">
+
+                                Tendencia histórica por etapa — Todos los meses
+
+                            </h6>
+
+                            <div class="historical-trends-chart-wrap">
+
+                                <canvas id="historicalTrendsCanvas"></canvas>
+
+                            </div>
+
+                        </div>
+
+                        <aside
+                            class="historical-trends-summary"
+                            id="historicalTrendsSummary">
+                        </aside>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer historical-trends-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        id="btnPrintHistoricalTrendsChart">
+
+                        🖨 Imprimir gráfica histórica
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-warning"
+                        id="btnDownloadHistoricalTrendsChartPng">
 
                         ⬇ Descargar PNG
 
