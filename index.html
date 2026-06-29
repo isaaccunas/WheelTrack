@@ -583,7 +583,12 @@
 
             <div class="col-lg-4">
 
-                <div class="summary-card summary-light historical-card">
+                <div
+                    class="summary-card summary-light historical-card tat-analytics-card"
+                    id="averageMwCard"
+                    role="button"
+                    tabindex="0"
+                    title="Ver análisis histórico MW">
 
                     <h3 class="summary-title">Tiempo promedio MW</h3>
 
@@ -597,7 +602,12 @@
 
             <div class="col-lg-4">
 
-                <div class="summary-card summary-dark historical-card">
+                <div
+                    class="summary-card summary-dark historical-card tat-analytics-card"
+                    id="averageNwCard"
+                    role="button"
+                    tabindex="0"
+                    title="Ver análisis histórico NW">
 
                     <h3 class="summary-title">Tiempo promedio NW</h3>
 
@@ -611,7 +621,12 @@
 
             <div class="col-lg-4">
 
-                <div class="summary-card summary-light historical-card">
+                <div
+                    class="summary-card summary-light historical-card tat-analytics-card"
+                    id="workshopEfficiencyCard"
+                    role="button"
+                    tabindex="0"
+                    title="Ver análisis TAT del taller">
 
                     <h3 class="summary-title">Eficiencia general del taller</h3>
 
@@ -1427,6 +1442,145 @@
                         type="button"
                         class="btn btn-outline-warning"
                         id="btnDownloadHistoricalTrendsChartPng">
+
+                        ⬇ Descargar PNG
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cerrar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL ANÁLISIS TAT -->
+
+    <div
+        class="modal fade"
+        id="tatAnalyticsModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-xl tat-analytics-modal-dialog">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header tat-analytics-header">
+
+                    <div>
+
+                        <h5 class="modal-title mb-1" id="tatAnalyticsTitle"></h5>
+
+                        <p class="tat-analytics-subtitle mb-0" id="tatAnalyticsSubtitle"></p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body tat-analytics-body">
+
+                    <div class="tat-analytics-toolbar">
+
+                        <div class="tat-analytics-month">
+
+                            <label
+                                class="form-label mb-1"
+                                for="tatAnalyticsMonthSelect">
+
+                                Mes
+
+                            </label>
+
+                            <select
+                                class="form-select form-select-sm"
+                                id="tatAnalyticsMonthSelect">
+                            </select>
+
+                        </div>
+
+                        <div
+                            class="tat-analytics-options"
+                            id="tatAnalyticsExternalToggleWrap">
+
+                            <label class="tat-analytics-checkbox">
+
+                                <input
+                                    type="checkbox"
+                                    id="tatAnalyticsExternalTimes"
+                                    checked>
+
+                                Mostrar tiempos externos
+
+                            </label>
+
+                        </div>
+
+                        <div class="tat-analytics-legend">
+
+                            <span class="tat-legend-item tat-legend-good">
+                                TAT ≤ 1.5
+                            </span>
+
+                            <span class="tat-legend-item tat-legend-warning">
+                                1.5 &lt; TAT ≤ 1.8
+                            </span>
+
+                            <span class="tat-legend-item tat-legend-critical">
+                                TAT &gt; 1.8
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tat-analytics-layout">
+
+                        <div class="tat-analytics-chart-wrap">
+
+                            <canvas id="tatAnalyticsCanvas"></canvas>
+
+                        </div>
+
+                        <aside
+                            class="tat-analytics-summary"
+                            id="tatAnalyticsSummary">
+                        </aside>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer tat-analytics-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        id="btnPrintTatAnalyticsChart">
+
+                        🖨 Imprimir gráfica
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-warning"
+                        id="btnDownloadTatAnalyticsChartPng">
 
                         ⬇ Descargar PNG
 

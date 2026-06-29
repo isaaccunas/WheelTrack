@@ -7,6 +7,7 @@ import { initializeWheelFormValidation } from "./ui/wheelFormValidationView.js";
 import { renderKpis } from "./ui/kpiView.js";
 import { initializeProductivityCharts } from "./ui/productivityChartsModal.js";
 import { initializeHistoricalTrendsModal } from "./ui/historicalTrendsModal.js";
+import { initializeTatAnalyticsModal } from "./ui/tatAnalyticsModal.js";
 import { initializeProcessedHistoryModal } from "./ui/processedHistoryModal.js";
 import { renderProcessedWheelHistory } from "./ui/processedHistoryView.js";
 import {
@@ -76,3 +77,5 @@ initializeProcessedHistoryModal(() => wheelRepository.getAll());
 initializeProductivityCharts(() => wheelRepository.getAll());
 
 initializeHistoricalTrendsModal(() => wheelRepository.getAll());
+
+initializeTatAnalyticsModal(() => wheelRepository.getAll());

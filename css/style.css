@@ -3335,6 +3335,203 @@ body.tv-monitor-open{
     }
 }
 
+.tat-analytics-card{
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tat-analytics-card:hover,
+.tat-analytics-card:focus{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 106, 0, 0.18);
+    outline: none;
+}
+
+.tat-analytics-card:focus-visible{
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.35);
+}
+
+.tat-analytics-modal-dialog{
+    max-width: min(1200px, 96vw);
+    max-height: min(90vh, 900px);
+    margin: clamp(12px, 2vh, 24px) auto;
+}
+
+.tat-analytics-modal-dialog .modal-content{
+    max-height: min(90vh, 900px);
+    overflow: hidden;
+}
+
+.tat-analytics-body{
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 1.5vh, 16px);
+    overflow: hidden;
+}
+
+.tat-analytics-subtitle{
+    color: #666;
+    font-size: clamp(0.82rem, 1.6vw, 0.92rem);
+}
+
+.tat-analytics-toolbar{
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) minmax(180px, 1fr) minmax(220px, auto);
+    gap: clamp(10px, 2vw, 16px);
+    align-items: end;
+}
+
+.tat-analytics-month{
+    min-width: 0;
+}
+
+.tat-analytics-options{
+    min-width: 0;
+}
+
+.tat-analytics-checkbox{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: clamp(0.82rem, 1.6vw, 0.88rem);
+    font-weight: 600;
+    color: #444;
+}
+
+.tat-analytics-legend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(8px, 1.5vw, 14px);
+    justify-content: flex-end;
+}
+
+.tat-legend-item{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(0.78rem, 1.4vw, 0.86rem);
+    font-weight: 600;
+    color: #444;
+}
+
+.tat-legend-item::before{
+    content: "";
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.tat-legend-good::before{
+    background: #27ae60;
+}
+
+.tat-legend-warning::before{
+    background: #f1c40f;
+}
+
+.tat-legend-critical::before{
+    background: #e74c3c;
+}
+
+.tat-analytics-layout{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(220px, 28vw, 280px);
+    gap: clamp(10px, 2vw, 16px);
+    min-height: clamp(280px, 52vh, 480px);
+    flex: 1;
+    overflow: hidden;
+}
+
+.tat-analytics-chart-wrap{
+    min-height: clamp(260px, 50vh, 460px);
+    height: 100%;
+    overflow: hidden;
+}
+
+.tat-analytics-summary{
+    background: #fffaf6;
+    border: 1px solid #f0d4bc;
+    border-radius: 12px;
+    padding: clamp(12px, 2vw, 16px);
+    overflow: hidden;
+}
+
+.tat-summary-title{
+    color: #d95a00;
+    font-size: clamp(0.88rem, 1.8vw, 0.95rem);
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.tat-summary-list{
+    margin: 0;
+}
+
+.tat-summary-item{
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0d4bc;
+}
+
+.tat-summary-item:last-child{
+    border-bottom: none;
+}
+
+.tat-summary-item dt{
+    color: #666;
+    font-size: clamp(0.76rem, 1.4vw, 0.82rem);
+    font-weight: 600;
+}
+
+.tat-summary-item dd{
+    margin: 0;
+    color: #222;
+    font-size: clamp(0.82rem, 1.6vw, 0.88rem);
+    font-weight: 700;
+    text-align: right;
+}
+
+.tat-summary-detail{
+    display: block;
+    color: #666;
+    font-size: clamp(0.72rem, 1.3vw, 0.78rem);
+    font-weight: 600;
+}
+
+.tat-analytics-footer{
+    justify-content: space-between;
+}
+
+#tatAnalyticsCanvas{
+    width: 100% !important;
+    height: 100% !important;
+    max-height: min(65vh, 460px);
+}
+
+@media (max-width: 992px){
+
+    .tat-analytics-toolbar{
+        grid-template-columns: 1fr;
+    }
+
+    .tat-analytics-legend{
+        justify-content: flex-start;
+    }
+
+    .tat-analytics-layout{
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .tat-analytics-chart-wrap{
+        min-height: clamp(240px, 45vh, 360px);
+    }
+}
+
 .historical-metric-highlight{
     color: #ff6a00;
     font-size: 1.5rem;
