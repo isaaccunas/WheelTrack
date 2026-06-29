@@ -1,15 +1,15 @@
 import { formatDurationMinutes } from "../domain/kpiCalculator.js";
-import { normalizeStageTiming } from "../domain/processModel.js";
 import {
-    getWheelTotalProcessMinutes,
+    aggregateTatMetrics,
+    buildWheelTatMetrics,
+    computeOperationalEfficiency,
+    TAT_META
+} from "../domain/tatModel.js";
+import {
     isWheelClosed,
     normalizeOperationalStatus,
     normalizeWheelType
 } from "../domain/wheelModel.js";
-
-const TAT_META = 1.5;
-const MINUTES_PER_TAT = 24 * 60;
-const EXTERNAL_STAGE = "Espera de Material";
 
 const TAT_COLORS = {
     good: "#27ae60",
@@ -100,13 +100,13 @@ function getTatColor(tatValue) {
     return TAT_COLORS.critical;
 }
 
-function minutesToTat(minutes) {
+function formatParticipationPercent(participation) {
 
-    if (minutes === null || minutes === undefined) {
-        return null;
+    if (participation === null || participation === undefined) {
+        return "Sin datos";
     }
 
-    return minutes / MINUTES_PER_TAT;
+    return `${Math.round(participation)}%`;
 }
 
 function formatTatValue(tatValue) {
@@ -129,11 +129,21 @@ function formatEfficiencyPercent(efficiency) {
 
 function computeEfficiency(monthlyTat) {
 
-    if (monthlyTat === null || monthlyTat === undefined || monthlyTat <= 0) {
-        return null;
-    }
+    return computeOperationalEfficiency(monthlyTat);
+}
 
-    return Math.min((TAT_META / monthlyTat) * 100, 100);
+function renderSummaryMetric(label, value, tooltip = null) {
+
+    const tooltipAttribute = tooltip
+        ? ` title="${tooltip}"`
+        : "";
+
+    return `
+        <div class="tat-summary-item">
+            <dt${tooltipAttribute}>${label}</dt>
+            <dd>${value}</dd>
+        </div>
+    `;
 }
 
 function getCurrentMonthKey(referenceDate = new Date()) {
@@ -191,27 +201,6 @@ function getAvailableMonthKeys(wheels) {
     }
 
     return [...monthKeys].sort().reverse();
-}
-
-function getWheelWorkshopMinutes(wheel, includeExternalTimes) {
-
-    const totalMinutes = getWheelTotalProcessMinutes(wheel);
-
-    if (totalMinutes === null) {
-        return null;
-    }
-
-    if (includeExternalTimes) {
-        return totalMinutes;
-    }
-
-    const stageEntry = normalizeStageTiming(wheel.stageTiming).find(
-        (entry) => entry.stage === EXTERNAL_STAGE
-    );
-
-    const externalMinutes = stageEntry?.durationMinutes ?? 0;
-
-    return Math.max(0, totalMinutes - externalMinutes);
 }
 
 function getWeekIndexInMonth(closedAt, monthKey) {
@@ -273,7 +262,13 @@ function filterWheelsForAnalysis(wheels, monthKey, mode) {
     });
 }
 
-function buildWeeklyAnalysis(wheels, monthKey, includeExternalTimes) {
+function buildWeeklyAnalysis(wheels, monthKey, showTotalView) {
+
+    const wheelMetricsList = wheels
+        .map((wheel) => buildWheelTatMetrics(wheel))
+        .filter((metrics) => metrics !== null);
+
+    const aggregate = aggregateTatMetrics(wheelMetricsList);
 
     const weeks = [1, 2, 3, 4].map((weekIndex) => {
 
@@ -284,19 +279,11 @@ function buildWeeklyAnalysis(wheels, monthKey, includeExternalTimes) {
             return getWeekIndexInMonth(closedAt, monthKey) === weekIndex;
         });
 
-        const wheelStats = weekWheels
-            .map((wheel) => {
+        const weekMetrics = weekWheels
+            .map((wheel) => buildWheelTatMetrics(wheel))
+            .filter((metrics) => metrics !== null);
 
-                const minutes = getWheelWorkshopMinutes(wheel, includeExternalTimes);
-                const tat = minutesToTat(minutes);
-
-                return minutes === null || tat === null
-                    ? null
-                    : { minutes, tat };
-            })
-            .filter((entry) => entry !== null);
-
-        if (wheelStats.length === 0) {
+        if (weekMetrics.length === 0) {
 
             return {
                 weekIndex,
@@ -307,21 +294,21 @@ function buildWeeklyAnalysis(wheels, monthKey, includeExternalTimes) {
             };
         }
 
-        const totalMinutes = wheelStats.reduce(
-            (sum, entry) => sum + entry.minutes,
-            0
+        const chartTatValues = weekMetrics.map((metrics) =>
+            showTotalView ? metrics.totalTat : metrics.operationalTat
         );
-        const totalTat = wheelStats.reduce(
-            (sum, entry) => sum + entry.tat,
+        const totalMinutes = weekMetrics.reduce(
+            (sum, metrics) => sum + metrics.totalMinutes,
             0
         );
 
         return {
             weekIndex,
             label: `Semana ${weekIndex}`,
-            wheelCount: wheelStats.length,
-            tat: totalTat / wheelStats.length,
-            avgMinutes: Math.round(totalMinutes / wheelStats.length)
+            wheelCount: weekMetrics.length,
+            tat: chartTatValues.reduce((sum, value) => sum + value, 0)
+                / chartTatValues.length,
+            avgMinutes: Math.round(totalMinutes / weekMetrics.length)
         };
     });
 
@@ -336,13 +323,6 @@ function buildWeeklyAnalysis(wheels, monthKey, includeExternalTimes) {
         ? null
         : weeksWithWheels.reduce(
             (sum, week) => sum + (week.tat * week.wheelCount),
-            0
-        ) / totalWheels;
-
-    const monthlyAvgMinutes = totalWheels === 0
-        ? null
-        : weeksWithWheels.reduce(
-            (sum, week) => sum + (week.avgMinutes * week.wheelCount),
             0
         ) / totalWheels;
 
@@ -365,7 +345,8 @@ function buildWeeklyAnalysis(wheels, monthKey, includeExternalTimes) {
         weeksWithWheels,
         totalWheels,
         monthlyTat,
-        monthlyAvgMinutes,
+        monthlyAvgMinutes: aggregate.monthlyAvgMinutes,
+        aggregate,
         bestWeek,
         worstWeek
     };
@@ -469,11 +450,7 @@ function renderTypeSummaryPanel(analysis) {
     `;
 }
 
-function renderWorkshopSummaryPanel(
-    chartAnalysis,
-    totalAnalysis,
-    controllableAnalysis
-) {
+function renderWorkshopSummaryPanel(chartAnalysis, aggregate) {
 
     const summaryElement = document.getElementById("tatAnalyticsSummary");
 
@@ -490,41 +467,34 @@ function renderWorkshopSummaryPanel(
         : "Sin datos";
 
     summaryElement.innerHTML = `
-        <h6 class="tat-summary-title">Resumen TAT</h6>
+        <h6 class="tat-summary-title">Indicadores operacionales</h6>
 
         <dl class="tat-summary-list">
-            <div class="tat-summary-item">
-                <dt>TAT mensual:</dt>
-                <dd>${formatTatValue(chartAnalysis.monthlyTat)}</dd>
-            </div>
-            <div class="tat-summary-item">
-                <dt>Meta:</dt>
-                <dd>${TAT_META.toFixed(2)}</dd>
-            </div>
-            <div class="tat-summary-item">
-                <dt>Eficiencia:</dt>
-                <dd>${formatEfficiencyPercent(efficiency)}</dd>
-            </div>
-            <div class="tat-summary-item">
-                <dt>TAT controlable:</dt>
-                <dd>${formatTatValue(controllableAnalysis.monthlyTat)}</dd>
-            </div>
-            <div class="tat-summary-item">
-                <dt>TAT total:</dt>
-                <dd>${formatTatValue(totalAnalysis.monthlyTat)}</dd>
-            </div>
-            <div class="tat-summary-item">
-                <dt>Mejor semana:</dt>
-                <dd>${bestWeekText}</dd>
-            </div>
-            <div class="tat-summary-item">
-                <dt>Peor semana:</dt>
-                <dd>${worstWeekText}</dd>
-            </div>
-            <div class="tat-summary-item">
-                <dt>Ruedas analizadas:</dt>
-                <dd>${totalAnalysis.totalWheels}</dd>
-            </div>
+            ${renderSummaryMetric(
+                "TAT Total:",
+                formatTatValue(aggregate.monthlyTotalTat)
+            )}
+            ${renderSummaryMetric(
+                "TAT Operacional:",
+                formatTatValue(aggregate.monthlyOperationalTat),
+                "Tiempo controlable directamente por el taller."
+            )}
+            ${renderSummaryMetric(
+                "Tiempo Dependiente de Terceros:",
+                formatTatValue(aggregate.monthlyThirdPartyTat),
+                "Tiempo asociado a inspectores, NDT, almacén y documentación final."
+            )}
+            ${renderSummaryMetric(
+                "Participación de Terceros:",
+                formatParticipationPercent(aggregate.participationPercent),
+                "Porcentaje del TAT Total que depende de terceros."
+            )}
+            ${renderSummaryMetric("TAT mensual:", formatTatValue(chartAnalysis.monthlyTat))}
+            ${renderSummaryMetric("Meta:", TAT_META.toFixed(2))}
+            ${renderSummaryMetric("Eficiencia:", formatEfficiencyPercent(efficiency))}
+            ${renderSummaryMetric("Mejor semana:", bestWeekText)}
+            ${renderSummaryMetric("Peor semana:", worstWeekText)}
+            ${renderSummaryMetric("Ruedas analizadas:", chartAnalysis.totalWheels)}
         </dl>
     `;
 }
@@ -650,18 +620,17 @@ function renderTatAnalyticsChart() {
     );
 
     const totalAnalysis = buildWeeklyAnalysis(filteredWheels, monthKey, true);
-    const controllableAnalysis = buildWeeklyAnalysis(filteredWheels, monthKey, false);
+    const operationalAnalysis = buildWeeklyAnalysis(filteredWheels, monthKey, false);
     const chartAnalysis = filterState.mode === ANALYSIS_MODES.WORKSHOP &&
         !filterState.includeExternalTimes
-        ? controllableAnalysis
+        ? operationalAnalysis
         : totalAnalysis;
 
     if (filterState.mode === ANALYSIS_MODES.WORKSHOP) {
 
         renderWorkshopSummaryPanel(
             chartAnalysis,
-            totalAnalysis,
-            controllableAnalysis
+            totalAnalysis.aggregate
         );
 
     } else {

@@ -3487,6 +3487,12 @@ body.tv-monitor-open{
     font-weight: 600;
 }
 
+.tat-summary-item dt[title]{
+    cursor: help;
+    text-decoration: underline dotted;
+    text-underline-offset: 2px;
+}
+
 .tat-summary-item dd{
     margin: 0;
     color: #222;
