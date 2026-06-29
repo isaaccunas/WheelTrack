@@ -11,7 +11,7 @@ import {
 import {
     getWheelTotalProcessMinutes,
     isWheelActive,
-    isWheelClosed,
+    isWheelProcessed,
     normalizeOperationalStatus
 } from "../domain/wheelModel.js";
 
@@ -180,7 +180,7 @@ function getAvailableMonthKeys(wheels) {
 
     wheels.forEach((wheel) => {
 
-        if (isWheelClosed(wheel)) {
+        if (isWheelProcessed(wheel)) {
 
             const monthKey = getMonthKeyFromIso(
                 normalizeOperationalStatus(wheel.operationalStatus).closedAt
@@ -207,7 +207,7 @@ function getAvailableMonthKeys(wheels) {
 
 function isWheelInMonth(wheel, monthKey) {
 
-    if (isWheelClosed(wheel)) {
+    if (isWheelProcessed(wheel)) {
 
         const closedMonth = getMonthKeyFromIso(
             normalizeOperationalStatus(wheel.operationalStatus).closedAt
@@ -657,7 +657,7 @@ function renderCurrentAnalysis() {
 
         stats = {
             activeCount: filteredWheels.filter((wheel) => isWheelActive(wheel)).length,
-            closedCount: filteredWheels.filter((wheel) => isWheelClosed(wheel)).length,
+            closedCount: filteredWheels.filter((wheel) => isWheelProcessed(wheel)).length,
             averageMinutes: averageValues.length === 0
                 ? null
                 : Math.round(

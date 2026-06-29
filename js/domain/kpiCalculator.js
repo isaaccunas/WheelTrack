@@ -4,7 +4,7 @@ import {
     normalizeStageTiming,
     PROCESS_STAGES
 } from "./processModel.js";
-import { normalizeWheelType, normalizeBoxData, normalizeOperationalStatus, isWheelClosed } from "./wheelModel.js";
+import { normalizeWheelType, normalizeBoxData, normalizeOperationalStatus, isWheelProcessed } from "./wheelModel.js";
 
 // ==========================================
 // CONSTANTES DE NEGOCIO
@@ -278,7 +278,7 @@ export function getFlowMetrics(wheels) {
 
 export function getClosedWheels(wheels) {
 
-    return wheels.filter((wheel) => isWheelClosed(wheel));
+    return wheels.filter((wheel) => isWheelProcessed(wheel));
 }
 
 function averageTotalTimeByWheelType(wheels, wheelType) {

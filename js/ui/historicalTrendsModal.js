@@ -2,7 +2,7 @@ import { formatDurationMinutes } from "../domain/kpiCalculator.js";
 import { PROCESS_STAGES, normalizeStageTiming } from "../domain/processModel.js";
 import {
     getWheelTotalProcessMinutes,
-    isWheelClosed,
+    isWheelProcessed,
     normalizeOperationalStatus,
     normalizeWheelType
 } from "../domain/wheelModel.js";
@@ -189,7 +189,7 @@ function getAllClosedMonthKeys(wheels) {
 
     const monthKeys = new Set();
 
-    wheels.filter(isWheelClosed).forEach((wheel) => {
+    wheels.filter(isWheelProcessed).forEach((wheel) => {
 
         const monthKey = getClosedMonthKey(wheel);
 
@@ -228,7 +228,7 @@ function filterMonthKeysByPeriod(allMonthKeys, period) {
 
 function getFilteredClosedWheels(wheels, monthKeys, wheelType) {
 
-    let closedWheels = wheels.filter(isWheelClosed);
+    let closedWheels = wheels.filter(isWheelProcessed);
 
     if (wheelType !== "all") {
 

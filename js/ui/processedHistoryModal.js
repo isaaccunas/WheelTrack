@@ -6,6 +6,7 @@ import {
 
 let processedHistoryModal = null;
 let allProcessedEntries = [];
+let getWheels = null;
 
 function filterProcessedEntries(entries, query) {
 
@@ -75,16 +76,17 @@ export function openProcessedHistoryModal(wheels) {
     processedHistoryModal.show();
 }
 
-export function initializeProcessedHistoryModal(getWheels) {
+export function initializeProcessedHistoryModal(getWheelsFn) {
 
     const modalElement = document.getElementById("modalProcessedHistory");
     const searchInput = document.getElementById("processedHistoryModalSearch");
     const kpiCard = document.getElementById("totalProcessedKpiCard");
 
-    if (!modalElement || typeof getWheels !== "function") {
+    if (!modalElement || typeof getWheelsFn !== "function") {
         return;
     }
 
+    getWheels = getWheelsFn;
     processedHistoryModal = new bootstrap.Modal(modalElement);
 
     if (kpiCard) {
@@ -118,4 +120,24 @@ export function initializeProcessedHistoryModal(getWheels) {
 
         openProcessedHistoryModal(getWheels());
     };
+}
+
+export function refreshProcessedHistoryModal() {
+
+    const modalElement = document.getElementById("modalProcessedHistory");
+
+    if (!modalElement?.classList.contains("show")) {
+        return;
+    }
+
+    const searchInput = document.getElementById("processedHistoryModalSearch");
+    const query = searchInput?.value ?? "";
+
+    allProcessedEntries = getProcessedWheelEntries(
+        typeof getWheels === "function" ? getWheels() : []
+    );
+
+    renderProcessedHistoryModalList(
+        filterProcessedEntries(allProcessedEntries, query)
+    );
 }

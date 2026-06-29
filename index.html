@@ -678,6 +678,25 @@
 
             <div class="col-12">
 
+                <div
+                    class="summary-card summary-light historical-card archived-wheels-summary-card"
+                    id="archivedWheelsSummaryCard"
+                    role="button"
+                    tabindex="0"
+                    title="Abrir papelera histórica">
+
+                    <h3 class="summary-title mb-1">Papelera histórica</h3>
+
+                    <p class="summary-text mb-0">
+                        0 rueda(s) archivada(s)
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-12">
+
                 <div class="summary-card summary-light historical-card">
 
                     <h3 class="summary-title mb-3">Tiempo promedio histórico por etapa</h3>
@@ -1775,6 +1794,274 @@
                         data-bs-dismiss="modal">
 
                         Cerrar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL CONFIRMAR ARCHIVO -->
+
+    <div
+        class="modal fade"
+        id="archiveWheelModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered archive-wheel-modal-dialog">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header border-0 pb-0">
+
+                    <h5 class="modal-title archive-wheel-modal-title">
+
+                        ⚠️ Archivar rueda procesada
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body archive-wheel-modal-body">
+
+                    <div class="archive-wheel-modal-wheel">
+
+                        <p class="mb-1">
+
+                            <strong>Rueda:</strong>
+
+                            <span id="archiveWheelNumber">#-</span>
+
+                        </p>
+
+                        <p class="mb-0">
+
+                            <strong>S/N:</strong>
+
+                            <span id="archiveWheelSerial">-</span>
+
+                        </p>
+
+                    </div>
+
+                    <p class="archive-wheel-modal-text mb-2">
+
+                        Esta acción moverá la rueda a la papelera histórica.
+
+                    </p>
+
+                    <p class="archive-wheel-modal-recommendation mb-2">
+
+                        <strong>Recomendación:</strong>
+
+                        descargue el PDF o imprima el registro antes de continuar.
+
+                    </p>
+
+                    <p class="archive-wheel-modal-text mb-0">
+
+                        La rueda podrá restaurarse posteriormente.
+
+                    </p>
+
+                </div>
+
+                <div class="modal-footer border-0 pt-0">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-warning"
+                        id="btnDownloadArchiveWheelPdf">
+
+                        Descargar PDF
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-warning"
+                        id="btnConfirmArchiveWheel">
+
+                        Archivar rueda
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL PAPELERA HISTÓRICA -->
+
+    <div
+        class="modal fade"
+        id="archivedWheelsModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-lg modal-dialog-scrollable processed-history-modal-dialog">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title mb-0">
+
+                        Papelera histórica
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body processed-history-modal-body">
+
+                    <div
+                        class="archived-wheels-filter-group"
+                        role="group"
+                        aria-label="Filtrar ruedas archivadas">
+
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-secondary active"
+                            data-archived-filter="all">
+
+                            Todas
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-secondary"
+                            data-archived-filter="MW">
+
+                            MW
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-secondary"
+                            data-archived-filter="NW">
+
+                            NW
+
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="archivedWheelsModalList"
+                        class="processed-history-modal-list">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cerrar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL ELIMINACIÓN DEFINITIVA -->
+
+    <div
+        class="modal fade"
+        id="deleteArchivedWheelModal"
+        tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered delete-archived-wheel-modal-dialog">
+
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header border-0 pb-0">
+
+                    <h5 class="modal-title delete-archived-wheel-modal-title">
+
+                        ⚠️ Eliminación definitiva
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body delete-archived-wheel-modal-body">
+
+                    <p class="mb-2">
+
+                        Esta acción <strong>NO</strong> podrá deshacerse.
+
+                    </p>
+
+                    <p class="mb-0">
+
+                        ¿Continuar?
+
+                    </p>
+
+                </div>
+
+                <div class="modal-footer border-0 pt-0">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        id="btnConfirmDeleteArchivedWheel">
+
+                        Eliminar definitivamente
 
                     </button>
 

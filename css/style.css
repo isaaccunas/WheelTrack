@@ -3771,3 +3771,81 @@ body.tv-monitor-open{
     font-weight: 700;
     text-align: right;
 }
+
+/* ==========================================
+   PAPELERA HISTÓRICA Y ARCHIVO
+========================================== */
+
+.archived-wheels-summary-card{
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.archived-wheels-summary-card:hover,
+.archived-wheels-summary-card:focus{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(136, 136, 136, 0.22);
+    outline: none;
+}
+
+.archived-wheels-summary-card:focus-visible{
+    box-shadow: 0 0 0 3px rgba(136, 136, 136, 0.35);
+}
+
+.archived-wheels-filter-group{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.archived-wheel-row{
+    border-left-color: #999;
+}
+
+.processed-history-action-archive:hover{
+    background: #f5f5f5;
+    border-color: #888;
+}
+
+.processed-history-action-delete:hover{
+    background: #fff5f5;
+    border-color: #dc3545;
+}
+
+.processed-history-serial{
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.archive-wheel-modal-dialog,
+.delete-archived-wheel-modal-dialog{
+    max-width: min(520px, 92vw);
+}
+
+.archive-wheel-modal-title,
+.delete-archived-wheel-modal-title{
+    color: #d95a00;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.archive-wheel-modal-wheel{
+    background: #fffaf6;
+    border: 1px solid #f0d4bc;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+}
+
+.archive-wheel-modal-text,
+.archive-wheel-modal-recommendation{
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.delete-archived-wheel-modal-body{
+    color: #444;
+    font-size: 0.95rem;
+}

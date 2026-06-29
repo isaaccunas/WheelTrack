@@ -4,6 +4,7 @@ import { normalizeWheelProcess, normalizeWheelStageTiming } from "../domain/proc
 import {
     normalizeWheelBoxData,
     normalizeWheelBoxAssignments,
+    normalizeWheelLifecycle,
     normalizeWheelInspectorData,
     normalizeWheelOperationalStatus,
     normalizeWheelPressureData,
@@ -66,6 +67,7 @@ export function load() {
         .map(normalizeWheelWheelType)
         .map(normalizeWheelBoxData)
         .map(normalizeWheelBoxAssignments)
+        .map(normalizeWheelLifecycle)
         .map(normalizeWheelOperationalStatus)
         .map(normalizeWheelWheelSerialData)
         .map(normalizeWheelTireOffData);

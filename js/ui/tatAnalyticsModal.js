@@ -6,7 +6,7 @@ import {
     TAT_META
 } from "../domain/tatModel.js";
 import {
-    isWheelClosed,
+    isWheelProcessed,
     normalizeOperationalStatus,
     normalizeWheelType
 } from "../domain/wheelModel.js";
@@ -187,7 +187,7 @@ function getAvailableMonthKeys(wheels) {
 
     const monthKeys = new Set();
 
-    wheels.filter(isWheelClosed).forEach((wheel) => {
+    wheels.filter(isWheelProcessed).forEach((wheel) => {
 
         const monthKey = getClosedMonthKey(wheel);
 
@@ -242,7 +242,7 @@ function filterWheelsForAnalysis(wheels, monthKey, mode) {
 
     return wheels.filter((wheel) => {
 
-        if (!isWheelClosed(wheel)) {
+        if (!isWheelProcessed(wheel)) {
             return false;
         }
 

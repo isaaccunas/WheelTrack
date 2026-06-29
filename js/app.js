@@ -12,8 +12,14 @@ import {
 import { initializeProductivityCharts } from "./ui/productivityChartsModal.js";
 import { initializeHistoricalTrendsModal } from "./ui/historicalTrendsModal.js";
 import { initializeTatAnalyticsModal } from "./ui/tatAnalyticsModal.js";
-import { initializeProcessedHistoryModal } from "./ui/processedHistoryModal.js";
+import { initializeProcessedHistoryModal, refreshProcessedHistoryModal } from "./ui/processedHistoryModal.js";
 import { renderProcessedWheelHistory } from "./ui/processedHistoryView.js";
+import { initializeArchiveWheelModal } from "./ui/archiveWheelModal.js";
+import {
+    initializeArchivedWheelsModal,
+    refreshArchivedWheelsModal,
+    renderArchivedWheelsSummary
+} from "./ui/archivedWheelsModal.js";
 import {
     filterWheels,
     getCurrentFilters,
@@ -58,6 +64,8 @@ function renderWheels() {
 
     renderBoxesInUse(allWheels);
 
+    renderArchivedWheelsSummary(allWheels);
+
     renderWorkshopMonitor(allWheels);
 
     refreshTvMonitorIfOpen(allWheels);
@@ -87,3 +95,27 @@ initializeHistoricalTrendsModal(() => wheelRepository.getAll());
 initializeTatAnalyticsModal(() => wheelRepository.getAll());
 
 initializeBoxResourceView(() => wheelRepository.getAll());
+
+function handleWheelArchiveMutation(index, updatedWheel, isPermanentDelete = false) {
+
+    if (isPermanentDelete) {
+        wheelRepository.remove(index);
+    } else {
+        wheelRepository.update(index, updatedWheel);
+    }
+
+    renderWheels();
+    refreshArchivedWheelsModal();
+    refreshProcessedHistoryModal();
+}
+
+initializeArchiveWheelModal(
+    () => wheelRepository.getAll(),
+    (index, archivedWheel) => handleWheelArchiveMutation(index, archivedWheel)
+);
+
+initializeArchivedWheelsModal(
+    () => wheelRepository.getAll(),
+    (index, updatedWheel, isPermanentDelete) =>
+        handleWheelArchiveMutation(index, updatedWheel, isPermanentDelete)
+);

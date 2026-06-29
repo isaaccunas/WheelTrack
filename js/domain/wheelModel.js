@@ -362,6 +362,48 @@ function buildBoxDataFromForm(data, existingBoxData = null) {
 // ESTADO OPERACIONAL DE ÓRDENES
 // ==========================================
 
+export const WHEEL_STATUS = {
+    ACTIVE: "ACTIVE",
+    PROCESSED: "PROCESSED",
+    ARCHIVED: "ARCHIVED"
+};
+
+export function resolveWheelStatus(wheel) {
+
+    const status = wheel?.status;
+
+    if (
+        status === WHEEL_STATUS.ACTIVE ||
+        status === WHEEL_STATUS.PROCESSED ||
+        status === WHEEL_STATUS.ARCHIVED
+    ) {
+        return status;
+    }
+
+    return isWheelClosed(wheel)
+        ? WHEEL_STATUS.PROCESSED
+        : WHEEL_STATUS.ACTIVE;
+}
+
+export function normalizeWheelLifecycle(wheel) {
+
+    return {
+        ...wheel,
+        status: resolveWheelStatus(wheel),
+        archivedAt: wheel?.archivedAt ?? null
+    };
+}
+
+export function isWheelProcessed(wheel) {
+
+    return resolveWheelStatus(wheel) === WHEEL_STATUS.PROCESSED;
+}
+
+export function isWheelArchived(wheel) {
+
+    return resolveWheelStatus(wheel) === WHEEL_STATUS.ARCHIVED;
+}
+
 export function createOperationalStatus() {
 
     return {
@@ -412,10 +454,29 @@ export function closeWheelOrder(wheel) {
 
     return {
         ...wheel,
+        status: WHEEL_STATUS.PROCESSED,
         operationalStatus: {
             active: false,
             closedAt: new Date().toISOString()
         }
+    };
+}
+
+export function archiveProcessedWheel(wheel) {
+
+    return {
+        ...wheel,
+        status: WHEEL_STATUS.ARCHIVED,
+        archivedAt: new Date().toISOString()
+    };
+}
+
+export function restoreArchivedWheel(wheel) {
+
+    return {
+        ...wheel,
+        status: WHEEL_STATUS.PROCESSED,
+        archivedAt: null
     };
 }
 
@@ -1006,6 +1067,7 @@ export function createWheel(data) {
         boxNumber: data.primaryBoxNumber
     });
     wheel.operationalStatus = createOperationalStatus();
+    wheel.status = WHEEL_STATUS.ACTIVE;
 
     syncWheelStageSnapshot(wheel);
 

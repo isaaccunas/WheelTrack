@@ -1,24 +1,21 @@
-import { formatDurationMinutes } from "../domain/kpiCalculator.js";
 import {
     formatBoxLabel,
     formatClosedDate,
+    getWheelSerialSummary,
     getWheelTotalProcessMinutes,
     getWheelTypeLabel,
-    isWheelClosed,
+    isWheelProcessed,
     normalizeOperationalStatus
 } from "../domain/wheelModel.js";
+import { formatDurationMinutes } from "../domain/kpiCalculator.js";
 
 const DASHBOARD_PROCESSED_LIMIT = 3;
-
-// ==========================================
-// CONSULTAS
-// ==========================================
 
 export function getProcessedWheelEntries(wheels) {
 
     return wheels
         .map((wheel, index) => ({ wheel, index }))
-        .filter(({ wheel }) => isWheelClosed(wheel))
+        .filter(({ wheel }) => isWheelProcessed(wheel))
         .sort((entryA, entryB) => {
 
             const closedAtA = normalizeOperationalStatus(
@@ -32,11 +29,9 @@ export function getProcessedWheelEntries(wheels) {
         });
 }
 
-// ==========================================
-// RENDER
-// ==========================================
-
 export function renderProcessedWheelCard({ wheel, index }) {
+
+    const serialSummary = getWheelSerialSummary(wheel);
 
     return `
         <div class="processed-history-row">
@@ -46,8 +41,12 @@ export function renderProcessedWheelCard({ wheel, index }) {
                 <div class="processed-history-main">
 
                     <strong class="processed-history-number">
-                        Nº ${wheel.numeroRueda || "-"}
+                        #${wheel.numeroRueda || "-"}
                     </strong>
+
+                    <span class="processed-history-serial">
+                        S/N ${serialSummary}
+                    </span>
 
                     <span class="processed-history-aircraft">
                         ${wheel.avion || "-"}
@@ -95,6 +94,16 @@ export function renderProcessedWheelCard({ wheel, index }) {
                     onclick="downloadProcessedRouteSheetPdf(${index})">
 
                     📥
+
+                </button>
+
+                <button
+                    type="button"
+                    class="processed-history-action-btn processed-history-action-archive"
+                    title="Archivar rueda"
+                    onclick="openArchiveWheelModal(${index})">
+
+                    📦
 
                 </button>
 
